@@ -1,0 +1,61 @@
+﻿SELECT SUM((1 - (n.[Close] / t.[Close])) * 100)
+
+  FROM [StockGraphAnalyser].[dbo].[DataPoints] t
+  INNER JOIN [StockGraphAnalyser].[dbo].[DataPoints] n ON t.Symbol = n.Symbol AND n.Date = '2014-02-28' 
+  WHERE t.[Close] < t.MovingAverageFiftyDay  And t.[Date] = '2014-02-03'  and t.[Close] < t.LowerBollingerBand and t.[close] > 30
+
+
+
+
+/****** Script for SelectTopNRows command from SSMS  ******/
+
+/*
+SELECT 
+      [Symbol]
+      ,[Date]
+
+      ,[Close]
+	  ,[MovingAverageFiftyDay]
+      ,[MovingAverageTwoHundredDay]
+      
+      ,[UpperBollingerBand],
+	  [Close] / MovingAverageFiftyDay as HowOverBought
+
+  FROM [StockGraphAnalyser].[dbo].[DataPoints] 
+  WHERE [Close] > MovingAverageFiftyDay And Date = '2014-07-10' and [Close] > UpperBollingerBand order by HowOverBought;
+  */
+
+  /****** Script for SelectTopNRows command from SSMS  ******/
+SELECT  t.[Id]
+      ,t.[Symbol] as mySymbol
+      ,t.[Date]
+
+      ,t.[Close]
+	  , n.[Close]
+		, n.[Close] - t.[Close] as MovmentPoints
+		, (1 - (n.[Close] / t.[Close])) * 100
+	  ,t.[MovingAverageFiftyDay]
+      ,t.[MovingAverageTwoHundredDay]
+      
+      ,t.[LowerBollingerBand],
+	  t.[Close] / t.MovingAverageFiftyDay as HowOverSold,
+	  t.[Close] / t.LowerBollingerBand as HowOverSoldBollinger
+  FROM [StockGraphAnalyser].[dbo].[DataPoints] t
+  INNER JOIN [StockGraphAnalyser].[dbo].[DataPoints] n ON t.Symbol = n.Symbol AND n.Date = '2014-02-28' 
+  WHERE t.[Close] < t.MovingAverageFiftyDay  And t.[Date] = '2014-02-03'  and t.[Close] < t.LowerBollingerBand
+    order by HowOverSold
+
+SELECT  [Id]
+      ,[Symbol] as mySymbol
+      ,[Date]
+
+      ,[Close]
+
+	  ,[MovingAverageFiftyDay]
+      ,[MovingAverageTwoHundredDay]
+      
+      ,[LowerBollingerBand],
+	  [Close] / MovingAverageFiftyDay as HowOverSold,
+	  [Close] / LowerBollingerBand as HowOverSoldBollinger
+  FROM [StockGraphAnalyser].[dbo].[DataPoints] WHERE [Close] < MovingAverageFiftyDay  And Date = '2014-04-10'  and [Close] < LowerBollingerBand
+    order by HowOverSold

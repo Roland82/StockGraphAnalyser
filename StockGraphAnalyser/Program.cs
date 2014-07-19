@@ -2,11 +2,11 @@
 {
     using System;
     using System.Linq;
+    using Domain.Web;
     using StockGraphAnalyser.Domain;
     using StockGraphAnalyser.Domain.Repository;
     using StockGraphAnalyser.Processing;
     using StockGraphAnalyser.Processing.Calculators;
-    using StockGraphAnalyser.Web;
 
     internal class Program
     {
@@ -54,7 +54,7 @@
                         dataPoints = dataPoints.MapNewDataPoint(fiftyDayMaTask.Result, (p, d) => p.MovingAverageFiftyDay = d);
                         dataPoints = dataPoints.MapNewDataPoint(lowerBollingerBandTask.Result, (p, d) => p.LowerBollingerBand = d);
                         dataPoints = dataPoints.MapNewDataPoint(upperBollingerBandTask.Result, (p, d) => p.UpperBollingerBand = d);
-
+                        dataPoints = dataPoints.UpdateAll(x => x.IsProcessed = true);
                         r.UpdateAll(dataPoints);
                     }
                 }

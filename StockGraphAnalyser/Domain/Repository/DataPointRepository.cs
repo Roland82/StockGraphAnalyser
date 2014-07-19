@@ -2,12 +2,15 @@
 
 namespace StockGraphAnalyser.Domain.Repository
 {
+    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Linq;
     using Dapper;
+    using Interfaces;
 
-    public class DataPointRepository
+    public class DataPointRepository : IDataPointRepository
     {
         private const string ConnectionString = @"Server=ROLAND-PC\SQLEXPRESS;Database=StockGraphAnalyser;Trusted_Connection=True;";
 
@@ -28,6 +31,17 @@ namespace StockGraphAnalyser.Domain.Repository
                 return connection.Query<DataPoints>(string.Format("SELECT * FROM DataPoints WHERE Symbol = '{0}'", symbol));
             }
         }
+
+        public DateTime? FindLatestDataPointDateForSymbol(string symbol) {
+            using (IDbConnection connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    return transaction.Connection.Query<DateTime>("SELECT Max(Date) FROM DataPoints WHERE Symbol = '{0}' GROUP BY Symbol", symbol).FirstOrDefault();
+                }
+            }
+        } 
 
         public void UpdateAll(IEnumerable<DataPoints> dataPoints)
         {

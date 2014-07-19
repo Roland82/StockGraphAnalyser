@@ -5,7 +5,7 @@ namespace StockGraphAnalyser.Processing
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using StockGraphAnalyser.Domain;
+    using Domain;
 
     public static class LinqExtensions
     {
@@ -26,5 +26,13 @@ namespace StockGraphAnalyser.Processing
                                                return x;
                                            });
         }
+
+        public static IEnumerable<T> UpdateAll<T>(this IEnumerable<T> originalList, Action<T> function) {
+            return originalList.Select(x =>
+                {
+                    function(x);
+                    return x;
+                });
+        } 
     }
 }

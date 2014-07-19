@@ -2,7 +2,7 @@
 namespace StockGraphAnalyser.Domain
 {
     using System;
-    using StockGraphAnalyser.Processing.Types;
+    using Processing.Types;
 
     public class DataPoints
     {
@@ -17,10 +17,21 @@ namespace StockGraphAnalyser.Domain
         public decimal? MovingAverageFiftyDay { get; set; }
         public decimal? UpperBollingerBand { get; set; }
         public decimal? LowerBollingerBand { get; set; }
+        public bool IsProcessed { get; set; }
 
         public static DataPoints CreateFromQuote(Quote quote)
         {
-            return new DataPoints{ Id = Guid.NewGuid(), Date = quote.Date, Close = quote.Close, High = quote.High, Low = quote.Low, Open = quote.Open, Symbol = quote.Symbol};
+            return new DataPoints
+                {
+                    Id = Guid.NewGuid(), 
+                    Date = quote.Date, 
+                    Close = quote.Close, 
+                    High = quote.High, 
+                    Low = quote.Low, 
+                    Open = quote.Open, 
+                    Symbol = quote.Symbol, 
+                    IsProcessed = false
+                };
         }
     }
 }

@@ -18,6 +18,20 @@
             return returnDictionary;
         }
 
+        public static Dictionary<DateTime, decimal> CreateCandlestickGraph(DateTime startDate, decimal[] values, bool skipWeekends = false)
+        {
+            var returnDictionary = new Dictionary<DateTime, decimal>();
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                returnDictionary.Add(startDate, values[i]);
+                startDate = startDate.AddDaysSkippingWeekends(1);
+            }
+
+            return returnDictionary;
+        }
+
+
         private static DateTime AddDaysSkippingWeekends(this DateTime d, int numberOfDays)
         {
             if (d.AddDays(numberOfDays).DayOfWeek == DayOfWeek.Saturday || d.AddDays(numberOfDays).DayOfWeek == DayOfWeek.Sunday)

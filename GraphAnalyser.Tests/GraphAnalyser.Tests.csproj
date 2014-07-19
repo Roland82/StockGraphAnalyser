@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Domain\Service\DataPointManagementServiceTests.cs" />
     <Compile Include="Processing\Calculators\AverageTrueRangeCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\StandardDeviationCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\DailyMovingAverageCalculatorTests.cs" />
@@ -54,8 +55,10 @@
     <Compile Include="Processing\Calculators\Indicators\OverTradedIndicator.cs" />
     <Compile Include="Processing\Calculators\MacdHistogramCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\MomentumCalculatorTests.cs" />
+    <Compile Include="Processing\BullishKickerPatternRecogniserTests.cs" />
     <Compile Include="Processing\LinqExtensionsTests.cs" />
     <Compile Include="Processing\MathExtensionsTests.cs" />
+    <Compile Include="Processing\Types\QuoteTests.cs" />
     <Compile Include="Processing\UtilitiesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtilities\GraphPlottingUtilities.cs" />

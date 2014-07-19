@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace GraphAnalyser.Tests.Web
 {
     using NUnit.Framework;
-    using StockGraphAnalyser.Web;
+    using StockGraphAnalyser.Domain.Web;
 
     public class SymbolFinderServiceTests
     {

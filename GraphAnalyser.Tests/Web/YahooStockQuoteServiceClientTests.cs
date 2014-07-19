@@ -4,8 +4,8 @@ namespace GraphAnalyser.Tests.Web
 {
     using System;
     using NUnit.Framework;
-    using StockGraphAnalyser.Web;
     using System.Linq;
+    using StockGraphAnalyser.Domain.Web;
 
     [TestFixture]
     public class YahooStockQuoteServiceClientTests

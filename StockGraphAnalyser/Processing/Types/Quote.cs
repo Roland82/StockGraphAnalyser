@@ -9,6 +9,8 @@ namespace StockGraphAnalyser.Processing.Types
     /// </summary>
     public class Quote
     {
+        private decimal? openToClosePercentageMovement;
+
         private Quote(string symbol, DateTime date, decimal open, decimal close, decimal high, decimal low)
         {
             this.Symbol = symbol;
@@ -30,5 +32,16 @@ namespace StockGraphAnalyser.Processing.Types
         public decimal Low { get; private set; }
         public decimal Close { get; private set; }
         public string Symbol { get; set; }
+
+        public decimal OpenToClosePercentageMovement {
+            get {
+                if (!this.openToClosePercentageMovement.HasValue)
+                {
+                    this.openToClosePercentageMovement = ((this.Close/this.Open) - 1) * 100;
+                }
+
+                return Math.Round(this.openToClosePercentageMovement.Value, 2);
+            }
+        }
     }
 }

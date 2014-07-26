@@ -16,7 +16,7 @@
 
             series: [{
                 name: 'AAPL',
-                data: data,
+                data: data.Data,
                 tooltip: {
                     valueDecimals: 2
                 }

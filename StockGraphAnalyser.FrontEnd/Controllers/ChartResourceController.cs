@@ -4,13 +4,13 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net;
-    using System.Net.Http;
     using System.Web.Http;
+    using System.Web.Mvc;
+    using StockGraphAnalyser.FrontEnd.Infrastructure;
 
     public class ChartResourceController : ApiController
     {
-        public HttpResponseMessage GetProduct() {
+        public ActionResult GetProduct() {
             var dictionary = new Dictionary<DateTime, decimal>
                 {
                     {DateTime.Today, 1m},
@@ -21,8 +21,14 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
                 };
 
             var outputDictionary = dictionary.ToDictionary(e => e.Key.Ticks, e => e.Value);
-           
-            return Request.CreateResponse(HttpStatusCode.OK, outputDictionary.ToArray());
+            var list = new List<decimal[]>();
+            foreach (var price in outputDictionary)
+            {
+                list.Add(new[] { price.Key, price.Value });
+            }
+
+
+            return JsonNetResult.Create(list);
         }
     }
 }

@@ -20,12 +20,13 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
                     {DateTime.Today.AddDays(4), 5m}
                 };
 
-            var outputDictionary = dictionary.ToDictionary(e => e.Key.Ticks, e => e.Value);
-            var list = new List<decimal[]>();
+            var outputDictionary = dictionary.ToDictionary(e => e.Key, e => e.Value);
+            var list = new List<object[]>();
             foreach (var price in outputDictionary)
             {
-                list.Add(new[] { price.Key, price.Value });
+                list.Add(new object[] { price.Key.ToEpoch(), price.Value });
             }
+
 
 
             return JsonNetResult.Create(list);

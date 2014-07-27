@@ -1,6 +1,6 @@
 ﻿$(function () {
 
-    $.getJSON('http://localhost:53110/api/ChartResource/GetProduct', function (data) {
+    $.getJSON('http://localhost:53110/api/ChartResource/GetProduct', function (jsonData) {
         // Create the chart
         $('#container').highcharts('StockChart', {
 
@@ -13,15 +13,23 @@
             title: {
                 text: 'AAPL Stock Price'
             },
+            
+            xAxis: {
+                type: 'datetime'
+            },
 
             series: [{
                 name: 'AAPL',
-                data: data.Data,
+                data: jsonData.Data,
                 tooltip: {
                     valueDecimals: 2
                 }
             }]
-        });
+            
+            
+        }
+
+        );
     });
 
 });

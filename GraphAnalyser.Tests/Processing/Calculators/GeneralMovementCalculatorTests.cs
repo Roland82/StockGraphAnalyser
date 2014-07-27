@@ -24,7 +24,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
         public void SixDayThresholdTest() {
             var calculator = new GeneralMovementCalculator(this.priceAction, 6);
             var expectedResult = new Dictionary<DateTime, decimal> {{DateTime.Today.AddDays(6), 0}};
-            Assert.AreEqual(expectedResult, calculator.Calculate());
+            Assert.AreEqual(expectedResult, calculator.Calculate().Result);
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
                     {DateTime.Today.AddDays(6), 0}
                 };
 
-            Assert.AreEqual(expectedResult, calculator.Calculate());
+            Assert.AreEqual(expectedResult, calculator.Calculate().Result);
         }
     }
 }

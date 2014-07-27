@@ -30,7 +30,8 @@ namespace StockGraphAnalyser.Domain.Web
                                                 reader.GetField<decimal>("Open"),
                                                 reader.GetField<decimal>("Close"),
                                                 reader.GetField<decimal>("High"),
-                                                reader.GetField<decimal>("Low")
+                                                reader.GetField<decimal>("Low"),
+                                                reader.GetField<long>("Volume")
                                        ));
                 }
 

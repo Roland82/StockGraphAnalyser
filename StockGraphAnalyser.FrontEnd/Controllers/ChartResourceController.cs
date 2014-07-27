@@ -24,10 +24,7 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
             var repository = new DataPointRepository();
             var dataPointToUse = indicatorMap[indicatorName];
             var datapoints = repository.FindAll(symbol);           
-            var outputDictionary = datapoints.ToDictionary(e => e.Date, dataPointToUse);
-            var list = outputDictionary.Select(price => new object[] {price.Key.ToEpoch(), price.Value}).ToList();
-
-
+            var list = datapoints.Select(d => new object[] { d.Date.ToEpoch(), dataPointToUse(d) }).ToList();
             return JsonNetResult.Create(list);
         }
 

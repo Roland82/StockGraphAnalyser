@@ -25,12 +25,6 @@
             this.band = band;
         }
 
-        public BollingerBandCalculator(Dictionary<DateTime, decimal> ma20Day, Dictionary<DateTime, decimal> standardDeviation)
-        {
-            this.ma20Day = ma20Day;
-            this.standardDeviation = standardDeviation;
-        }
-
         public Task<Dictionary<DateTime, decimal>> Calculate()
         {
             return Task.Run(() =>

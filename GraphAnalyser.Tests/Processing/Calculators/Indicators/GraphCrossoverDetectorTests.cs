@@ -2,10 +2,8 @@
 namespace GraphAnalyser.Tests.Processing.Calculators.Indicators
 {
     using NUnit.Framework;
-    using StockGraphAnalyser.Processing.Calculators;
     using StockGraphAnalyser.Processing.Calculators.Indicators;
     using System;
-    using System.Linq;
     using TestUtilities;
 
     public class GraphCrossoverDetectorTests

@@ -35,7 +35,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             );
 
             var calculator = new MomentumCalculator(closingPrices, period);
-            Assert.AreEqual(expectedMomentum, calculator.Calculate());
+            Assert.AreEqual(expectedMomentum, calculator.Calculate().Result);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             );
 
             var calculator = new MomentumCalculator(closingPrices, period);
-            Assert.AreEqual(expectedMomentum, calculator.Calculate());
+            Assert.AreEqual(expectedMomentum, calculator.Calculate().Result);
         }
     }
 }

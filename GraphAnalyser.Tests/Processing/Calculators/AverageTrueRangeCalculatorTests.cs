@@ -21,8 +21,8 @@ namespace GraphAnalyser.Tests.Processing.Calculators
         {
             var quoteList = new []
                 {
-                    Quote.Create("SGP.L", DateTime.Today.AddDays(-1), open: 1, close: 2, high: 100, low: 0),
-                    Quote.Create("SGP.L", DateTime.Today, open: 2, close: 4, high: 100, low: 0)
+                    Quote.Create("SGP.L", DateTime.Today.AddDays(-1), open: 1, close: 2, high: 100, low: 0, volume: 100),
+                    Quote.Create("SGP.L", DateTime.Today, open: 2, close: 4, high: 100, low: 0, volume: 100)
                 };
 
             var calculator = new AverageTrueRangeCalculator(quoteList, 2);
@@ -36,8 +36,8 @@ namespace GraphAnalyser.Tests.Processing.Calculators
         {
             var quoteList = new[]
                 {
-                    Quote.Create("SGP.L", DateTime.Today.AddDays(-1), open: 1, close: 2, high: 100, low: 0),
-                    Quote.Create("SGP.L", DateTime.Today, open: 2, close: 4, high: 100, low: 99)
+                    Quote.Create("SGP.L", DateTime.Today.AddDays(-1), open: 1, close: 2, high: 100, low: 0, volume: 100),
+                    Quote.Create("SGP.L", DateTime.Today, open: 2, close: 4, high: 100, low: 99, volume: 100)
                 };
 
             var calculator = new AverageTrueRangeCalculator(quoteList, 2);
@@ -51,8 +51,8 @@ namespace GraphAnalyser.Tests.Processing.Calculators
         {
             var quoteList = new[]
                 {
-                    Quote.Create("SGP.L", DateTime.Today.AddDays(-1), open: 100, close: 102, high: 200, low: 0),
-                    Quote.Create("SGP.L", DateTime.Today, open: 2, close: 4, high: 50, low: 48)
+                    Quote.Create("SGP.L", DateTime.Today.AddDays(-1), open: 100, close: 102, high: 200, low: 0, volume: 100),
+                    Quote.Create("SGP.L", DateTime.Today, open: 2, close: 4, high: 50, low: 48, volume: 100)
                 };
 
             var calculator = new AverageTrueRangeCalculator(quoteList, 2);

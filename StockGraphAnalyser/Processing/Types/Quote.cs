@@ -11,7 +11,7 @@ namespace StockGraphAnalyser.Processing.Types
     {
         private decimal? openToClosePercentageMovement;
 
-        private Quote(string symbol, DateTime date, decimal open, decimal close, decimal high, decimal low)
+        private Quote(string symbol, DateTime date, decimal open, decimal close, decimal high, decimal low, long volume)
         {
             this.Symbol = symbol;
             this.Date = date;
@@ -19,11 +19,12 @@ namespace StockGraphAnalyser.Processing.Types
             this.High = high;
             this.Low = low;
             this.Close = close;
+            this.Volume = volume;
         }
 
-        public static Quote Create(string symbol, DateTime date, decimal open, decimal close, decimal high, decimal low)
+        public static Quote Create(string symbol, DateTime date, decimal open, decimal close, decimal high, decimal low, long volume)
         {
-            return new Quote(symbol, date, open, close, high, low);
+            return new Quote(symbol, date, open, close, high, low, volume);
         }
 
         public DateTime Date { get; private set; }
@@ -32,6 +33,7 @@ namespace StockGraphAnalyser.Processing.Types
         public decimal Low { get; private set; }
         public decimal Close { get; private set; }
         public string Symbol { get; set; }
+        public long Volume { get; private set; }
 
         public decimal OpenToClosePercentageMovement {
             get {

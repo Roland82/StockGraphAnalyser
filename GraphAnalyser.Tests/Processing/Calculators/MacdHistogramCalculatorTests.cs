@@ -2,7 +2,6 @@
 namespace GraphAnalyser.Tests.Processing.Calculators
 {
     using System;
-    using System.IO;
     using NUnit.Framework;
     using StockGraphAnalyser.Processing.Calculators;
     using TestUtilities;

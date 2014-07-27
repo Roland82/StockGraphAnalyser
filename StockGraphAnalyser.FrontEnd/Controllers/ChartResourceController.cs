@@ -12,11 +12,12 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
 
     public class ChartResourceController : ApiController
     {
-        public ActionResult GetProduct(string symbol, string indicatorName = "")
+        public ActionResult GetInidcator(string symbol, string indicatorName = "Close")
         {
             var indicatorMap = new Dictionary<string, Func<DataPoints, decimal?>>{
-                                                                                    { "", points => points.Close },
-                                                                                    { "MovingAverageTwoHundredDay", points => points.MovingAverageTwoHundredDay}
+                                                                                    { "Close", points => points.Close },
+                                                                                    { "MovingAverageTwoHundredDay", points => points.MovingAverageTwoHundredDay},
+                                                                                    { "MovingAverageFiftyDay", points => points.MovingAverageFiftyDay}
                                                                                 };
 
             var repository = new DataPointRepository();
@@ -27,6 +28,13 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
 
 
             return JsonNetResult.Create(list);
+        }
+
+        public ActionResult GetCandleSticks(string ticker)
+        {
+            var repository = new DataPointRepository();
+            var datapoints = repository.FindAll(ticker);
+            return JsonNetResult.Create(datapoints.Select(d => new object[] { d.Date.ToEpoch(), d.Open, d.High, d.Low, d.Close }));
         }
     }
 }

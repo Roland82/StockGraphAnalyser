@@ -2,10 +2,9 @@
 
     $(function() {
         var seriesOptions = [],
-            yAxisOptions = [],
             seriesCounter = 0,
-            dataPoints = ['MovingAverageTwoHundredDay', 'MovingAverageFiftyDay'],
-            colors = Highcharts.getOptions().colors;
+            dataPoints = ['MovingAverageTwoHundredDay', 'MovingAverageFiftyDay'];
+
 
         $.each(dataPoints, function(i, name) {
 
@@ -21,12 +20,13 @@
                 seriesCounter++;
 
                 if (seriesCounter == dataPoints.length) {
-                    //createChart();
+                    createChart();
                 }
             });
         });
 
-        $.getJSON('http://localhost:53110/api/chartresource/GetCandleSticks/?ticker=' + $('#symbol').attr('value'), function (candlestickData) {
+
+        $.getJSON('http://localhost:53110/api/chartresource/GetCandleSticks/?ticker=' + $('#symbol').attr('value'), function(candlestickData) {
 
             $('#container').highcharts('StockChart', {
                 rangeSelector: {
@@ -52,74 +52,36 @@
                 },
             });
         });
-        
-        //// create the chart when all data is loaded
-        //function createChart() {
-        //    $('#container').highcharts('StockChart', {
 
-        //        rangeSelector: {
-        //            inputEnabled: $('#container').width() > 480,
-        //            selected: 4
-        //        },
+        // create the chart when all data is loaded
 
-        //        yAxis: {
-        //            labels: {
-        //                formatter: function () {
-        //                    return this.value + 'p';
-        //                }
-        //            },
-        //            plotLines: [{
-        //                value: 0,
-        //                width: 2,
-        //                color: 'silver'
-        //            }]
-        //        },
+        function createChart() {
+            $('#container').highcharts('StockChart', {
+                rangeSelector: {
+                    inputEnabled: $('#container').width() > 480,
+                    selected: 4
+                },
 
-        //        tooltip: {
-        //            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
-        //            valueDecimals: 2
-        //        },
+                yAxis: {
+                    labels: {
+                        formatter: function() {
+                            return this.value + 'p';
+                        }
+                    },
+                    plotLines: [{
+                        value: 0,
+                        width: 2,
+                        color: 'silver'
+                    }]
+                },
 
+                tooltip: {
+                    pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+                    valueDecimals: 2
+                },
 
-        //        series: seriesOptions
-        //    });
-        //}
-
-
-
+                series: seriesOptions
+            });
+        }
     });
-
-
-    //$.getJSON('http://localhost:53110/api/ChartResource/GetProduct/?symbol=' + $('#symbol').attr('value'), function (jsonData) {
-    //    // Create the chart
-    //    $('#container').highcharts('StockChart', {
-
-
-    //        rangeSelector: {
-    //            selected: 1,
-    //            inputEnabled: $('#container').width() > 480
-    //        },
-
-    //        title: {
-    //            text: $('#symbol').attr('value') + ' Stock Price'
-    //        },
-
-    //        xAxis: {
-    //            type: 'datetime'
-    //        },
-
-    //        series: [{
-    //            name: $('#symbol').attr('value'),
-    //            data: jsonData.Data,
-    //            tooltip: {
-    //                valueDecimals: 2
-    //            }
-    //        }]
-
-
-    //    }
-
-    //    );
-    //});
-
 });

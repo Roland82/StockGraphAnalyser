@@ -6,28 +6,24 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
     using System.Linq;
     using System.Web.Http;
     using System.Web.Mvc;
+    using StockGraphAnalyser.Domain;
+    using StockGraphAnalyser.Domain.Repository;
     using StockGraphAnalyser.FrontEnd.Infrastructure;
 
     public class ChartResourceController : ApiController
     {
-        public ActionResult GetProduct() {
-            var dictionary = new Dictionary<DateTime, decimal>
-                {
-                    {DateTime.Today, 1m},
-                    {DateTime.Today.AddDays(1), 2m},
-                    {DateTime.Today.AddDays(2), 3m},
-                    {DateTime.Today.AddDays(3), 4m},
-                    {DateTime.Today.AddDays(4), 5m}
-                };
+        public ActionResult GetProduct(string symbol, string indicatorName = "")
+        {
+            var indicatorMap = new Dictionary<string, Func<DataPoints, decimal?>>{
+                                                                                    { "", points => points.Close },
+                                                                                    { "MovingAverageTwoHundredDay", points => points.MovingAverageTwoHundredDay}
+                                                                                };
 
-            var outputDictionary = dictionary.ToDictionary(e => e.Key, e => e.Value);
-            var list = new List<object[]>();
-            foreach (var price in outputDictionary)
-            {
-                Console.WriteLine("Fuck you");
-                list.Add(new object[] { price.Key.ToEpoch(), price.Value });
-            }
-
+            var repository = new DataPointRepository();
+            var dataPointToUse = indicatorMap[indicatorName];
+            var datapoints = repository.FindAll(symbol);           
+            var outputDictionary = datapoints.ToDictionary(e => e.Date, dataPointToUse);
+            var list = outputDictionary.Select(price => new object[] {price.Key.ToEpoch(), price.Value}).ToList();
 
 
             return JsonNetResult.Create(list);

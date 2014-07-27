@@ -1,7 +1,8 @@
-﻿@model dynamic
+﻿@model StockGraphAnalyser.FrontEnd.Models.Views.TechnicalsViewModel
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Technicals for " + @Model.Ticker;
 }
 
 <div id="container"></div>
+<input type="hidden" id="symbol" value="@Model.Ticker" />

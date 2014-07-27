@@ -222,6 +222,7 @@
     <Compile Include="Infrastructure\DateTimeExtensions.cs" />
     <Compile Include="Infrastructure\JsonNetResult.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\Views\TechnicalsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

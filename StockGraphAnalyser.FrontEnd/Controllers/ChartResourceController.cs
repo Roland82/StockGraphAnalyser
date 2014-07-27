@@ -12,12 +12,13 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
 
     public class ChartResourceController : ApiController
     {
-        public ActionResult GetInidcator(string symbol, string indicatorName = "Close")
+        public ActionResult GetInidcator(string symbol, string indicatorName)
         {
             var indicatorMap = new Dictionary<string, Func<DataPoints, decimal?>>{
-                                                                                    { "Close", points => points.Close },
                                                                                     { "MovingAverageTwoHundredDay", points => points.MovingAverageTwoHundredDay},
-                                                                                    { "MovingAverageFiftyDay", points => points.MovingAverageFiftyDay}
+                                                                                    { "MovingAverageFiftyDay", points => points.MovingAverageFiftyDay},
+                                                                                    { "UpperBollingerBand", points => points.UpperBollingerBand},
+                                                                                    { "LowerBollingerBand", points => points.LowerBollingerBand}
                                                                                 };
 
             var repository = new DataPointRepository();

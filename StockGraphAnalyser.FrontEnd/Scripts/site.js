@@ -3,16 +3,24 @@
     $(function() {
         var seriesOptions = [],
             seriesCounter = 0,
-            dataPoints = ['MovingAverageTwoHundredDay', 'MovingAverageFiftyDay'];
+            dataPoints = [
+                { name: 'MovingAverageTwoHundredDay', color: '#FF0000', lineStyle: '' },
+                { name: 'MovingAverageFiftyDay', color: '#0047B2', lineStyle: '' },
+                { name: 'UpperBollingerBand', color: '#FFAE42', lineStyle: 'longdash' },
+                { name: 'LowerBollingerBand', color: '#FFAE42', lineStyle: 'longdash' }
+            ];
 
 
-        $.each(dataPoints, function(i, name) {
+        $.each(dataPoints, function(i, datapoint) {
 
-            $.getJSON('http://localhost:53110/api/ChartResource/GetInidcator/?symbol=' + $('#symbol').attr('value') + "&indicatorName=" + name, function(data) {
+            $.getJSON('http://localhost:53110/api/ChartResource/GetInidcator/?symbol=' + $('#symbol').attr('value') + "&indicatorName=" + datapoint.name, function(data) {
 
                 seriesOptions[i] = {
-                    name: name,
-                    data: data.Data
+                    color: datapoint.color,
+                    name: datapoint.name,
+                    data: data.Data,
+                    lineWidth: 1,
+                    dashStyle: datapoint.lineStyle
                 };
 
                 // As we're loading the data asynchronously, we don't know what order it will arrive. So
@@ -20,40 +28,22 @@
                 seriesCounter++;
 
                 if (seriesCounter == dataPoints.length) {
-                    createChart();
+
+
+                    $.getJSON('http://localhost:53110/api/chartresource/GetCandleSticks/?ticker=' + $('#symbol').attr('value'), function(candlestickData) {
+                        seriesOptions.push({
+                            type: 'candlestick',
+                            name: $('#symbol').attr('value') + ' Price (p)',
+                            data: candlestickData.Data
+                        });
+
+                        seriesCounter += 1;
+                        createChart();
+                    });
                 }
             });
         });
 
-
-        $.getJSON('http://localhost:53110/api/chartresource/GetCandleSticks/?ticker=' + $('#symbol').attr('value'), function(candlestickData) {
-
-            $('#container').highcharts('StockChart', {
-                rangeSelector: {
-                    inputEnabled: $('#container').width() > 480,
-                    selected: 1
-                },
-
-                title: {
-                    text: $('#symbol').attr('value')
-                },
-
-                series: [{
-                    type: 'candlestick',
-                    name: $('#symbol').attr('value') + ' Price (p)',
-                    data: candlestickData.Data
-                }],
-
-                plotOptions: {
-                    candlestick: {
-                        color: 'red',
-                        upColor: 'green'
-                    }
-                },
-            });
-        });
-
-        // create the chart when all data is loaded
 
         function createChart() {
             $('#container').highcharts('StockChart', {
@@ -76,11 +66,18 @@
                 },
 
                 tooltip: {
-                    pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+                    pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
                     valueDecimals: 2
                 },
 
-                series: seriesOptions
+                series: seriesOptions,
+                
+                plotOptions: {
+                    candlestick: {
+                        color: 'red',
+                        upColor: 'green'
+                    }
+                }
             });
         }
     });

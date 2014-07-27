@@ -14,15 +14,15 @@ namespace StockGraphAnalyser.FrontEnd.Infrastructure
         /// </summary>
         /// <param name="aDate">DateTime to convert</param>
         /// <returns>Number of seconds passed since 1/1/1970 UTC </returns>
-        public static int ToEpoch(this DateTime aDate) {
+        public static long ToEpoch(this DateTime aDate) {
             if (aDate == DateTime.MinValue)
             {
                 return -1;
             }
 
  
-            var span = (aDate.ToLocalTime() - UnixEpoch);
-            return (int) Math.Floor(span.TotalMilliseconds);
+            var span = (aDate- UnixEpoch);
+            return (long) Math.Floor(span.TotalMilliseconds);
         }
     }
 }

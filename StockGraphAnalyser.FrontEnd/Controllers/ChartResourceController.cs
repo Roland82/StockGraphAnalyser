@@ -24,6 +24,7 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
             var list = new List<object[]>();
             foreach (var price in outputDictionary)
             {
+                Console.WriteLine("Fuck you");
                 list.Add(new object[] { price.Key.ToEpoch(), price.Value });
             }
 

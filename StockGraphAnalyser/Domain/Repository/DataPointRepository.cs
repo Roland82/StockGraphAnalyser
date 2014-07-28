@@ -27,7 +27,7 @@ namespace StockGraphAnalyser.Domain.Repository
         {
             using (IDbConnection connection = new SqlConnection(ConnectionString))
             {
-                connection.Open();
+               connection.Open();
                 return connection.Query<DataPoints>(string.Format("SELECT * FROM DataPoints WHERE Symbol = '{0}'", symbol));
             }
         }

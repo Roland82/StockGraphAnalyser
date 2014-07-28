@@ -85,7 +85,7 @@
     <Compile Include="Processing\Calculators\DailyMovingAverageCalculator.cs" />
     <Compile Include="Processing\Calculators\DirectionalMovement\PositiveDI.cs" />
     <Compile Include="Processing\Calculators\ExponentialMovingAverageCalculator.cs" />
-    <Compile Include="Processing\Calculators\FractalSearcher.cs" />
+    <Compile Include="Processing\Calculators\ForceIndexCalculator.cs" />
     <Compile Include="Processing\Calculators\GeneralMovementCalculator.cs" />
     <Compile Include="Processing\Calculators\IGraphPlotter.cs" />
     <Compile Include="Processing\Calculators\Indicators\GraphCrossoverDetector.cs" />

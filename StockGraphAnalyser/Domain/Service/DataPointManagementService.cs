@@ -6,7 +6,6 @@ namespace StockGraphAnalyser.Domain.Service
     using System.Collections.Generic;
     using Processing;
     using Processing.Calculators;
-    using Repository;
     using Repository.Interfaces;
     using Web.Interfaces;
     using System.Linq;
@@ -59,6 +58,7 @@ namespace StockGraphAnalyser.Domain.Service
             var fiftyDayMa = new DailyMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 50);
             var twentyDayMa = new DailyMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 20);
             var standardDeviationCalculator = new StandardDeviationCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close));
+            var onePeriodForceIndexCalculator = new ForceIndexCalculator(dataPoints.Select(d => new Tuple<DateTime, decimal, long>(d.Date, d.Close, d.Volume)));
 
 
             // Bollinger bands         
@@ -66,18 +66,18 @@ namespace StockGraphAnalyser.Domain.Service
             var twoHundredDayMaTask = twoHundredDayMa.Calculate();
             var fiftyDayMaTask = fiftyDayMa.Calculate();
             var standardDeviationTask = standardDeviationCalculator.Calculate();
+            var onePeriodForceIndexTask = onePeriodForceIndexCalculator.Calculate();
             var twentyDayMaResult = twentyDayMaCalc.Result;
             var standardDeviationResult = standardDeviationTask.Result;
 
-
             var upperBollingerBandTask = new BollingerBandCalculator(twentyDayMaResult, standardDeviationResult, BollingerBandCalculator.Band.Upper).Calculate();
             var lowerBollingerBandTask = new BollingerBandCalculator(twentyDayMaResult, standardDeviationResult,BollingerBandCalculator.Band.Lower).Calculate();
-
 
             dataPoints = dataPoints.MapNewDataPoint(twoHundredDayMaTask.Result, (p, d) => p.MovingAverageTwoHundredDay = d);
             dataPoints = dataPoints.MapNewDataPoint(fiftyDayMaTask.Result, (p, d) => p.MovingAverageFiftyDay = d);
             dataPoints = dataPoints.MapNewDataPoint(lowerBollingerBandTask.Result, (p, d) => p.LowerBollingerBand = d);
             dataPoints = dataPoints.MapNewDataPoint(upperBollingerBandTask.Result, (p, d) => p.UpperBollingerBand = d);
+            dataPoints = dataPoints.MapNewDataPoint(onePeriodForceIndexTask.Result, (p, d) => p.ForceIndexOnePeriod = d);
             dataPoints = dataPoints.UpdateAll(x => x.IsProcessed = true);
             return dataPoints;
         }

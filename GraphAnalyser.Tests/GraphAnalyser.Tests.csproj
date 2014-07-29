@@ -48,6 +48,7 @@
     <Compile Include="Class1.cs" />
     <Compile Include="Domain\Service\DataPointManagementServiceTests.cs" />
     <Compile Include="Processing\Calculators\AverageTrueRangeCalculatorTests.cs" />
+    <Compile Include="Processing\Calculators\ExponentialMovingAverageTests.cs" />
     <Compile Include="Processing\Calculators\ForceIndexCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\StandardDeviationCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\DailyMovingAverageCalculatorTests.cs" />

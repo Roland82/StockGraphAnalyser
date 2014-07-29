@@ -18,13 +18,22 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
                                                                                     { "MovingAverageTwoHundredDay", points => points.MovingAverageTwoHundredDay},
                                                                                     { "MovingAverageFiftyDay", points => points.MovingAverageFiftyDay},
                                                                                     { "UpperBollingerBand", points => points.UpperBollingerBand},
-                                                                                    { "LowerBollingerBand", points => points.LowerBollingerBand}
+                                                                                    { "LowerBollingerBand", points => points.LowerBollingerBand},
+                                                                                    { "Volume", points => points.Volume}
                                                                                 };
 
             var repository = new DataPointRepository();
             var dataPointToUse = indicatorMap[indicatorName];
             var datapoints = repository.FindAll(symbol);           
             var list = datapoints.Select(d => new object[] { d.Date.ToEpoch(), dataPointToUse(d) }).ToList();
+            return JsonNetResult.Create(list);
+        }
+
+        public ActionResult Get(string symbol)
+        {
+            var repository = new DataPointRepository();
+            var datapoints = repository.FindAll(symbol);
+            var list = datapoints.Select(d => new []{ d.Date.ToEpoch(), d.Open, d.High, d.Low, d.Close, d.Volume, d.ForceIndexOnePeriod, d.ForceIndexThirteenPeriod }).ToList();
             return JsonNetResult.Create(list);
         }
 

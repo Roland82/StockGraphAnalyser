@@ -19,7 +19,10 @@ namespace StockGraphAnalyser.Domain.Repository
             using (IDbConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                connection.Execute(@"INSERT INTO DataPoints VALUES (@Id,@Symbol,@Date,@Open,@Close,@High,@Low,@MovingAverageTwoHundredDay,@MovingAverageFiftyDay,@UpperBollingerBand,@LowerBollingerBand)", dataPoints); 
+                connection.Execute(@"INSERT INTO DataPoints 
+                                    VALUES (@Id,@Symbol,@Date,@Open,@Close,@High,@Low,@Volume,@MovingAverageTwoHundredDay,
+                                            @MovingAverageFiftyDay,@UpperBollingerBand,@LowerBollingerBand,
+                                            @ForceIndexOnePeriod, @ForceIndexThirteenPeriod)", dataPoints); 
             }
         }
 
@@ -36,10 +39,7 @@ namespace StockGraphAnalyser.Domain.Repository
             using (IDbConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                using (var transaction = connection.BeginTransaction())
-                {
-                    return transaction.Connection.Query<DateTime>("SELECT Max(Date) FROM DataPoints WHERE Symbol = '{0}' GROUP BY Symbol", symbol).FirstOrDefault();
-                }
+                return connection.Query<DateTime>(string.Format("SELECT Max(Date) FROM DataPoints WHERE Symbol = '{0}' GROUP BY Symbol", symbol)).FirstOrDefault();
             }
         } 
 
@@ -57,9 +57,13 @@ namespace StockGraphAnalyser.Domain.Repository
                                             SET MovingAverageTwoHundredDay = @MovingAverageTwoHundredDay, 
                                             MovingAverageFiftyDay = @MovingAverageFiftyDay,
                                             UpperBollingerBand = @UpperBollingerBand,
-                                            LowerBollingerBand = @LowerBollingerBand
+                                            LowerBollingerBand = @LowerBollingerBand,
+                                            ForceIndexOnePeriod = @ForceIndexOnePeriod, 
+                                            ForceIndexThirteenPeriod = @ForceIndexThirteenPeriod
                                             WHERE Id = @Id",
                                            new{
+                                                  ForceIndexOnePeriod = dataPoint.ForceIndexOnePeriod,
+                                                  ForceIndexThirteenPeriod = dataPoint.ForceIndexThirteenPeriod,
                                                   MovingAverageTwoHundredDay = dataPoint.MovingAverageTwoHundredDay,
                                                   MovingAverageFiftyDay = dataPoint.MovingAverageFiftyDay,
                                                   LowerBollingerBand = dataPoint.LowerBollingerBand,

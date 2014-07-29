@@ -19,6 +19,7 @@ namespace StockGraphAnalyser.Domain
         public decimal? UpperBollingerBand { get; set; }
         public decimal? LowerBollingerBand { get; set; }
         public decimal? ForceIndexOnePeriod { get; set; }
+        public decimal? ForceIndexThirteenPeriod { get; set; }
         public bool IsProcessed { get; set; }
 
         public static DataPoints CreateFromQuote(Quote quote)

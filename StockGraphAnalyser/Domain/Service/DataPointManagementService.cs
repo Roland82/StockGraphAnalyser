@@ -69,15 +69,19 @@ namespace StockGraphAnalyser.Domain.Service
             var onePeriodForceIndexTask = onePeriodForceIndexCalculator.Calculate();
             var twentyDayMaResult = twentyDayMaCalc.Result;
             var standardDeviationResult = standardDeviationTask.Result;
+            var forceIndexOnePeriodResult = onePeriodForceIndexTask.Result;
 
             var upperBollingerBandTask = new BollingerBandCalculator(twentyDayMaResult, standardDeviationResult, BollingerBandCalculator.Band.Upper).Calculate();
             var lowerBollingerBandTask = new BollingerBandCalculator(twentyDayMaResult, standardDeviationResult,BollingerBandCalculator.Band.Lower).Calculate();
+            var thirteenPeriodForceIndex = new ExponentialMovingAverageCalculator(forceIndexOnePeriodResult.ToDictionary(f => f.Key, f => f.Value), 13);
+            var thirteenPeriodForceIndexTask = thirteenPeriodForceIndex.Calculate();
 
             dataPoints = dataPoints.MapNewDataPoint(twoHundredDayMaTask.Result, (p, d) => p.MovingAverageTwoHundredDay = d);
             dataPoints = dataPoints.MapNewDataPoint(fiftyDayMaTask.Result, (p, d) => p.MovingAverageFiftyDay = d);
             dataPoints = dataPoints.MapNewDataPoint(lowerBollingerBandTask.Result, (p, d) => p.LowerBollingerBand = d);
             dataPoints = dataPoints.MapNewDataPoint(upperBollingerBandTask.Result, (p, d) => p.UpperBollingerBand = d);
             dataPoints = dataPoints.MapNewDataPoint(onePeriodForceIndexTask.Result, (p, d) => p.ForceIndexOnePeriod = d);
+            dataPoints = dataPoints.MapNewDataPoint(thirteenPeriodForceIndexTask.Result, (p, d) => p.ForceIndexThirteenPeriod = d);
             dataPoints = dataPoints.UpdateAll(x => x.IsProcessed = true);
             return dataPoints;
         }

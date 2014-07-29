@@ -7,7 +7,7 @@ namespace StockGraphAnalyser.Processing.Calculators
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class ExponentialMovingAverageCalculator :ICalculationTool
+    public class ExponentialMovingAverageCalculator : ICalculationTool
     {
         private readonly int timePeriod;
         private readonly Dictionary<DateTime, decimal> closingPrices;

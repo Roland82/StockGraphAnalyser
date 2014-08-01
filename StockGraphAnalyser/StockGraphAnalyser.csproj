@@ -83,7 +83,6 @@
     <Compile Include="Processing\Calculators\AverageTrueRangeCalculator.cs" />
     <Compile Include="Processing\Calculators\BollingerBandCalculator.cs" />
     <Compile Include="Processing\Calculators\DailyMovingAverageCalculator.cs" />
-    <Compile Include="Processing\Calculators\DirectionalMovement\PositiveDI.cs" />
     <Compile Include="Processing\Calculators\ExponentialMovingAverageCalculator.cs" />
     <Compile Include="Processing\Calculators\ForceIndexCalculator.cs" />
     <Compile Include="Processing\Calculators\GeneralMovementCalculator.cs" />
@@ -94,7 +93,6 @@
     <Compile Include="Processing\Calculators\StandardDeviationCalculator.cs" />
     <Compile Include="Processing\Candlestick\IDetectPattern.cs" />
     <Compile Include="Processing\Candlestick\BullishKickerPatternRecogniser.cs" />
-    <Compile Include="Processing\Graph.cs" />
     <Compile Include="Processing\Calculators\ICalculationTool.cs" />
     <Compile Include="Processing\LinqExtensions.cs" />
     <Compile Include="Processing\Math.cs" />

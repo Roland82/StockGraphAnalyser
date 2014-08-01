@@ -38,7 +38,7 @@ namespace StockGraphAnalyser.Domain.Service
         }
 
         public void InsertNewQuotesToDb(string symbol) {
-            var quotes = this.stockQuoteClient.GetQuotes(symbol);
+            var quotes = this.stockQuoteClient.GetQuotes(symbol).Where(q => q.Date > DateTime.Today.AddYears(-2));
             var maxDataInDb = this.repository.FindLatestDataPointDateForSymbol(symbol);
             var dataPointsToInsert = quotes.Where(q => q.Date > maxDataInDb).Select(DataPoints.CreateFromQuote);
             if (dataPointsToInsert.Any())

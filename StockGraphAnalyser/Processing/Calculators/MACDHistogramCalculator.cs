@@ -33,5 +33,9 @@ namespace StockGraphAnalyser.Processing.Calculators
                                     return histogram;
                                 });
         }
+
+        public Task<Dictionary<DateTime, decimal>> Calculate(DateTime fromDate) {
+            throw new NotImplementedException();
+        }
     }
 }

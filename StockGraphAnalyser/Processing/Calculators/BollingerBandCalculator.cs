@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    internal class BollingerBandCalculator : ICalculationTool
+    public class BollingerBandCalculator : ICalculationTool
     {
         public enum Band
         {
@@ -14,7 +14,6 @@
         }
 
         private readonly Band band;
-
         private readonly Dictionary<DateTime, decimal> ma20Day;
         private readonly Dictionary<DateTime, decimal> standardDeviation;
 
@@ -27,13 +26,19 @@
 
         public Task<Dictionary<DateTime, decimal>> Calculate()
         {
-            return Task.Run(() =>
-                                {
-                                    Console.WriteLine("Getting Bollinger Band " + this.band);
-                                    var result = this.ma20Day.ToDictionary(m => m.Key, m => (this.standardDeviation[m.Key]*(decimal) this.band) + m.Value);
-                                    Console.WriteLine("Got bollinger band");
-                                    return result;
-                                });
+            return Task.Run(() => this.Process(DateTime.MinValue));
         }
+
+        public Task<Dictionary<DateTime, decimal>> Calculate(DateTime fromDate) {
+            return Task.Run(() => this.Process(fromDate));
+        }
+
+        private Dictionary<DateTime, decimal> Process(DateTime fromDate) {
+            var result = this.ma20Day
+                .Where(e => e.Key >= fromDate)
+                .ToDictionary(m => m.Key, 
+                              m => Math.Round(this.standardDeviation[m.Key] * (decimal)this.band, 2) + m.Value);
+            return result;
+        } 
     }
 }

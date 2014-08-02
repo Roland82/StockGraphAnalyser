@@ -8,5 +8,6 @@ namespace StockGraphAnalyser.Processing
     public interface ICalculationTool
     {
         Task<Dictionary<DateTime, decimal>> Calculate();
+        Task<Dictionary<DateTime, decimal>> Calculate(DateTime fromDate);
     }
 }

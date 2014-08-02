@@ -22,20 +22,25 @@ namespace StockGraphAnalyser.Processing.Calculators
             }
         }
 
-        public Task<Dictionary<DateTime, decimal>> Calculate()
-        {
+        public Task<Dictionary<DateTime, decimal>> Calculate() {
             return Task.Run(() =>
-                                                               {
-                                                                   var momentum = new Dictionary<DateTime, decimal>();
+                {
+                    var momentum = new Dictionary<DateTime, decimal>();
 
-                                                                   for (var i = 0; i < this.closingPrices.Count - this.periodGap; i++)
-                                                                   {
-                                                                       var calculatedMomentum = this.closingPrices.ElementAt(i + periodGap).Value/this.closingPrices.ElementAt(i).Value;
-                                                                       momentum.Add(this.closingPrices.ElementAt(i + periodGap).Key, Math.Round(calculatedMomentum*100m, 1));
-                                                                   }
+                    for (var i = 0; i < this.closingPrices.Count - this.periodGap; i++)
+                    {
+                        var calculatedMomentum = this.closingPrices.ElementAt(i + periodGap).Value/
+                                                 this.closingPrices.ElementAt(i).Value;
+                        momentum.Add(this.closingPrices.ElementAt(i + periodGap).Key,
+                                     Math.Round(calculatedMomentum*100m, 1));
+                    }
 
-                                                                   return momentum;
-                                                               });
+                    return momentum;
+                });
+        }
+
+        public Task<Dictionary<DateTime, decimal>> Calculate(DateTime fromDate) {
+            throw new NotImplementedException();
         }
     }
 }

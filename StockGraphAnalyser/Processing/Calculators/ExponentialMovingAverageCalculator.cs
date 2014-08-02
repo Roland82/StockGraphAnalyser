@@ -22,10 +22,10 @@ namespace StockGraphAnalyser.Processing.Calculators
             return Task.Run(() =>
                 {
                     var orderedClosingPrices = this.closingPrices.OrderBy(p => p.Key);
-                    var startingEmaValue = Math.Round(orderedClosingPrices.Take(this.timePeriod).Average(e => e.Value), 2);
-                    var startingEmaDate = orderedClosingPrices.Skip(timePeriod - 1).First().Key;
+                    var startingEmaValue = Math.Round(orderedClosingPrices.Take(this.timePeriod - 1).Average(e => e.Value), 2);
+                    var startingEmaDate = orderedClosingPrices.Skip(timePeriod).First().Key;
 
-                    var multiplier = (decimal)Math.Round(2 / (decimal)(this.timePeriod + 1), 2);
+                    var multiplier = (decimal)2 / (decimal)(this.timePeriod + 1);
                     var ema = new Dictionary<DateTime, decimal> { { startingEmaDate, startingEmaValue } };
 
                     var closingPricesToWorkWith =
@@ -39,6 +39,10 @@ namespace StockGraphAnalyser.Processing.Calculators
 
                     return ema;
                 });
+        }
+
+        public Task<Dictionary<DateTime, decimal>> Calculate(DateTime fromDate) {
+            throw new NotImplementedException();
         }
     }
 }

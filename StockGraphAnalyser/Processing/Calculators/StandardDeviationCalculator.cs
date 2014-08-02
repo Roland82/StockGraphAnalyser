@@ -19,7 +19,6 @@ namespace StockGraphAnalyser.Processing.Calculators
         {
             return Task.Run(() =>
                                 {
-                                    Console.WriteLine("Getting Standard Deviation");
                                     var returnDictionary = new Dictionary<DateTime, decimal>();
 
                                     for (var i = 0; i <= this.closingPrices.Count() - StandardDeviationSampleSize; i++)
@@ -30,9 +29,12 @@ namespace StockGraphAnalyser.Processing.Calculators
                                             );
                                     }
 
-                                    Console.WriteLine("Got Standard Deviation");
                                     return returnDictionary;
                                 });
+        }
+
+        public Task<Dictionary<DateTime, decimal>> Calculate(DateTime fromDate) {
+            throw new NotImplementedException();
         }
     }
 }

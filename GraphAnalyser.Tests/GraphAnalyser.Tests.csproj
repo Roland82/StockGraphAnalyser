@@ -48,6 +48,7 @@
     <Compile Include="Class1.cs" />
     <Compile Include="Domain\Service\DataPointManagementServiceTests.cs" />
     <Compile Include="Processing\Calculators\AverageTrueRangeCalculatorTests.cs" />
+    <Compile Include="Processing\Calculators\BollingerBandCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\ExponentialMovingAverageTests.cs" />
     <Compile Include="Processing\Calculators\ForceIndexCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\StandardDeviationCalculatorTests.cs" />
@@ -58,8 +59,10 @@
     <Compile Include="Processing\Calculators\MacdHistogramCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\MomentumCalculatorTests.cs" />
     <Compile Include="Processing\BullishKickerPatternRecogniserTests.cs" />
+    <Compile Include="Processing\Calculators\Stub.cs" />
     <Compile Include="Processing\LinqExtensionsTests.cs" />
     <Compile Include="Processing\MathExtensionsTests.cs" />
+    <Compile Include="Processing\TradingSignalDetectors\OverboughtInDowntrendSignalTests.cs" />
     <Compile Include="Processing\Types\QuoteTests.cs" />
     <Compile Include="Processing\UtilitiesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

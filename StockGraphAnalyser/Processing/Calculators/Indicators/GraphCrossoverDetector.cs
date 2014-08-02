@@ -1,4 +1,4 @@
-﻿
+﻿ 
 
 namespace StockGraphAnalyser.Processing.Calculators.Indicators
 {

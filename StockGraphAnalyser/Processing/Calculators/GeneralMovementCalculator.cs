@@ -48,5 +48,9 @@ namespace StockGraphAnalyser.Processing.Calculators
                                     return returnCalculations;
                                 });
         }
+
+        public Task<Dictionary<DateTime, decimal>> Calculate(DateTime fromDate) {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -45,6 +45,10 @@ namespace StockGraphAnalyser.Processing.Calculators
                                 });
         }
 
+        public Task<Dictionary<DateTime, decimal>> Calculate(DateTime fromDate) {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Calculate all the true ranges for each day.
         /// </summary>

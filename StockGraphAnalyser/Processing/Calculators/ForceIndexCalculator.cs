@@ -15,18 +15,34 @@ namespace StockGraphAnalyser.Processing.Calculators
         }
 
         public Task<Dictionary<DateTime, decimal>> Calculate() {
-            return Task.Run(() =>
+            return Task.Run(() => this.Process(DateTime.MinValue));
+        }
+
+        public Task<Dictionary<DateTime, decimal>> Calculate(DateTime fromDate) {
+            return Task.Run(() => this.Process(fromDate));
+        }
+
+        private Dictionary<DateTime, decimal> Process(DateTime fromDate) {        
+            var forceIndexData = new Dictionary<DateTime, decimal>();
+            var safeDateToStartFrom = this.data.FirstOrDefault(d => d.Item1 >= fromDate);
+
+            if (safeDateToStartFrom != null)
+            {
+                var orderedDataToProcess = this.data.OrderByDescending(t => t.Item1);
+                var indexOfDate = orderedDataToProcess.IndexOf(t => t.Item1 == safeDateToStartFrom.Item1) + 1;
+
+                for (var i = 0; i < indexOfDate; i++)
                 {
-                    var forceIndexData = new Dictionary<DateTime, decimal>();
+                    if (i == orderedDataToProcess.Count() - 1) continue;
 
-                    for (var i = 0; i < data.Count() - 1; i++)
-                    {
-                        forceIndexData.Add(data.ElementAt(i + 1).Item1, 
-                        ((data.ElementAt(i).Item2 - data.ElementAt(i + 1).Item2) * data.ElementAt(i + 1).Item3) * -1);    
-                    }
+                    forceIndexData.Add(orderedDataToProcess.ElementAt(i).Item1,
+                                       ((orderedDataToProcess.ElementAt(i).Item2 -
+                                         orderedDataToProcess.ElementAt(i + 1).Item2)*
+                                        orderedDataToProcess.ElementAt(i).Item3));
+                }
+            }
 
-                    return forceIndexData;
-                });
+            return forceIndexData.OrderBy(t => t.Key).ToDictionary(d => d.Key, d => d.Value);
         }
     }
 }

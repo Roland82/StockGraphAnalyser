@@ -91,6 +91,7 @@
     <Compile Include="Processing\Calculators\MACDHistogramCalculator.cs" />
     <Compile Include="Processing\Calculators\MomentumCalculator.cs" />
     <Compile Include="Processing\Calculators\StandardDeviationCalculator.cs" />
+    <Compile Include="Processing\Calculators\TradingSignalDetectors\OverboughtInDowntrendSignal.cs" />
     <Compile Include="Processing\Candlestick\IDetectPattern.cs" />
     <Compile Include="Processing\Candlestick\BullishKickerPatternRecogniser.cs" />
     <Compile Include="Processing\Calculators\ICalculationTool.cs" />
@@ -127,6 +128,10 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Processing\SearchCriteria\Bearish\" />
+    <Folder Include="Processing\SearchCriteria\Bullish\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

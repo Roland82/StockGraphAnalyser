@@ -7,12 +7,12 @@ namespace StockGraphAnalyser.Domain
     public class DataPoints
     {
         public Guid Id { get; private set; }
-        public DateTime Date { get; private set; }
-        public decimal Open { get; private set; }
-        public decimal High { get; private set; }
-        public decimal Low { get; private set; }
-        public decimal Close { get; private set; }
-        public long Volume { get; private set; }
+        public DateTime Date { get; set; }
+        public decimal Open { get; set; }
+        public decimal High { get; set; }
+        public decimal Low { get; set; }
+        public decimal Close { get; set; }
+        public long Volume { get; set; }
         public string Symbol { get; set; }
         public decimal? MovingAverageTwoHundredDay { get; set; }
         public decimal? MovingAverageFiftyDay { get; set; }

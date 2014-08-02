@@ -14,6 +14,21 @@ namespace StockGraphAnalyser.Processing
             return dictionary.Where(e => e.Key >= startDate && e.Key <= endDate).ToDictionary(e => e.Key, e => e.Value);
         }
 
+        public static int? IndexOf<T>(this IEnumerable<T> list, Func<T, bool> predicate) {
+            var i = 0;
+            foreach (var k in list)
+            {
+                if (predicate(k))
+                {
+                    return i;
+                }
+
+                i++;
+            }
+
+            return null;
+        }
+
         public static IEnumerable<DataPoints> MapNewDataPoint(this IEnumerable<DataPoints> originalList, Dictionary<DateTime, decimal> mappingDictionary, Action<DataPoints, decimal> function)
         {
             return originalList.Select(x =>

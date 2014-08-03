@@ -82,11 +82,11 @@
     <Compile Include="Domain\Web\YahooStockQuoteServiceClient.cs" />
     <Compile Include="Processing\Calculators\AverageTrueRangeCalculator.cs" />
     <Compile Include="Processing\Calculators\BollingerBandCalculator.cs" />
+    <Compile Include="Processing\Calculators\CalculatorFactory.cs" />
     <Compile Include="Processing\Calculators\DailyMovingAverageCalculator.cs" />
     <Compile Include="Processing\Calculators\ExponentialMovingAverageCalculator.cs" />
     <Compile Include="Processing\Calculators\ForceIndexCalculator.cs" />
-    <Compile Include="Processing\Calculators\GeneralMovementCalculator.cs" />
-    <Compile Include="Processing\Calculators\IGraphPlotter.cs" />
+    <Compile Include="Processing\Calculators\ICalculatorFactory.cs" />
     <Compile Include="Processing\Calculators\Indicators\GraphCrossoverDetector.cs" />
     <Compile Include="Processing\Calculators\MACDHistogramCalculator.cs" />
     <Compile Include="Processing\Calculators\MomentumCalculator.cs" />
@@ -100,7 +100,6 @@
     <Compile Include="Processing\Types\Company.cs" />
     <Compile Include="Processing\Types\Quote.cs" />
     <Compile Include="Processing\Utilities.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

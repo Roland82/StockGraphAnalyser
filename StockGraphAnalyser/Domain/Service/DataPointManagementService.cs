@@ -14,12 +14,13 @@ namespace StockGraphAnalyser.Domain.Service
     {
         private readonly IDataPointRepository repository;
         private readonly IYahooStockQuoteServiceClient stockQuoteClient;
-        private readonly Dictionary<ICalculationTool, Action<DataPoints, decimal>> processorJobs;
+        private readonly ICalculatorFactory calculatorFactory;
         private const short MinQuoteRequirementForProcessing = 200;
 
-        public DataPointManagementService(IDataPointRepository repository, IYahooStockQuoteServiceClient stockQuoteClient) {
+        public DataPointManagementService(IDataPointRepository repository, IYahooStockQuoteServiceClient stockQuoteClient, ICalculatorFactory calculatorFactory) {
             this.repository = repository;
             this.stockQuoteClient = stockQuoteClient;
+            this.calculatorFactory = calculatorFactory;
         }
 
         public void FillInMissingProcessedData(string symbol) {
@@ -30,11 +31,9 @@ namespace StockGraphAnalyser.Domain.Service
             if (lastFullyProcessedDataPoint == null || lastFullyProcessedDataPoint.Date < datapoints.Max(q => q.Date) && datapoints.Count() > MinQuoteRequirementForProcessing)
             {
                 var minDateToUpdateInDb = lastFullyProcessedDataPoint == null ? DateTime.MinValue : lastFullyProcessedDataPoint.Date;
-                var datapointsToUpdate = this.AddProcessedData(datapoints).Where(d => d.Date > minDateToUpdateInDb);
+                var datapointsToUpdate = this.AddProcessedData(datapoints, minDateToUpdateInDb).Where(d => d.Date > minDateToUpdateInDb);
                 this.repository.UpdateAll(datapointsToUpdate);
             }
-
-            
         }
 
         public void InsertNewQuotesToDb(string symbol) {
@@ -52,29 +51,31 @@ namespace StockGraphAnalyser.Domain.Service
         /// </summary>
         /// <param name="dataPoints"></param>
         /// <returns></returns>
-        private IEnumerable<DataPoints> AddProcessedData(IEnumerable<DataPoints> dataPoints) {
+        private IEnumerable<DataPoints> AddProcessedData(IEnumerable<DataPoints> dataPoints, DateTime dateToProcessFrom) {
 
-            var twoHundredDayMa = new DailyMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 200);
-            var fiftyDayMa = new DailyMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 50);
-            var twentyDayMa = new DailyMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 20);
-            var standardDeviationCalculator = new StandardDeviationCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close));
-            var onePeriodForceIndexCalculator = new ForceIndexCalculator(dataPoints.Select(d => new Tuple<DateTime, decimal, long>(d.Date, d.Close, d.Volume)));
-
+            var twoHundredDayMa = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 200);
+            var fiftyDayMa = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 50);
+            var twentyDayMa = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 20);
+            var standardDeviationCalculator = this.calculatorFactory.CreateStandardDeviationCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 20);
+            var onePeriodForceIndexCalculator = this.calculatorFactory.CreateForceIndexCalculator(dataPoints.Select(d => new Tuple<DateTime, decimal, long>(d.Date, d.Close, d.Volume)));
 
             // Bollinger bands         
-            var twentyDayMaCalc = twentyDayMa.Calculate();
-            var twoHundredDayMaTask = twoHundredDayMa.Calculate();
-            var fiftyDayMaTask = fiftyDayMa.Calculate();
-            var standardDeviationTask = standardDeviationCalculator.Calculate();
-            var onePeriodForceIndexTask = onePeriodForceIndexCalculator.Calculate();
+            var twentyDayMaCalc = twentyDayMa.Calculate(dateToProcessFrom);
+            var twoHundredDayMaTask = twoHundredDayMa.Calculate(dateToProcessFrom);
+            var fiftyDayMaTask = fiftyDayMa.Calculate(dateToProcessFrom);
+            var standardDeviationTask = standardDeviationCalculator.Calculate(dateToProcessFrom);
+            var onePeriodForceIndexTask = onePeriodForceIndexCalculator.Calculate(dateToProcessFrom);
             var twentyDayMaResult = twentyDayMaCalc.Result;
             var standardDeviationResult = standardDeviationTask.Result;
             var forceIndexOnePeriodResult = onePeriodForceIndexTask.Result;
 
-            var upperBollingerBandTask = new BollingerBandCalculator(twentyDayMaResult, standardDeviationResult, BollingerBandCalculator.Band.Upper).Calculate();
-            var lowerBollingerBandTask = new BollingerBandCalculator(twentyDayMaResult, standardDeviationResult,BollingerBandCalculator.Band.Lower).Calculate();
-            var thirteenPeriodForceIndex = new ExponentialMovingAverageCalculator(forceIndexOnePeriodResult.ToDictionary(f => f.Key, f => f.Value), 13);
-            var thirteenPeriodForceIndexTask = thirteenPeriodForceIndex.Calculate();
+            var upperBollingerBand = this.calculatorFactory.CreateBollingerBandCalculator(twentyDayMaResult, standardDeviationResult, BollingerBandCalculator.Band.Upper);
+            var lowerBollingerBand = this.calculatorFactory.CreateBollingerBandCalculator(twentyDayMaResult, standardDeviationResult, BollingerBandCalculator.Band.Lower);
+            var thirteenPeriodForceIndex = this.calculatorFactory.CreateExponentialMovingAverageCalculator(forceIndexOnePeriodResult.ToDictionary(f => f.Key, f => f.Value), 13);
+            
+            var thirteenPeriodForceIndexTask = thirteenPeriodForceIndex.Calculate(dateToProcessFrom);
+            var upperBollingerBandTask = upperBollingerBand.Calculate(dateToProcessFrom);
+            var lowerBollingerBandTask = lowerBollingerBand.Calculate(dateToProcessFrom);
 
             dataPoints = dataPoints.MapNewDataPoint(twoHundredDayMaTask.Result, (p, d) => p.MovingAverageTwoHundredDay = d);
             dataPoints = dataPoints.MapNewDataPoint(fiftyDayMaTask.Result, (p, d) => p.MovingAverageFiftyDay = d);

@@ -48,6 +48,6 @@ namespace StockGraphAnalyser.Processing
                     function(x);
                     return x;
                 });
-        } 
+        }
     }
 }

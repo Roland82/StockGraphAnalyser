@@ -9,32 +9,35 @@ namespace StockGraphAnalyser.Processing.Calculators
     public class StandardDeviationCalculator : ICalculationTool
     {
         private readonly Dictionary<DateTime, decimal> closingPrices;
-        private const int StandardDeviationSampleSize = 20;
+        private readonly int sampleSize;
 
-        public StandardDeviationCalculator(Dictionary<DateTime, decimal> closingPrices) {
+        public StandardDeviationCalculator(Dictionary<DateTime, decimal> closingPrices, int sampleSize) {
             this.closingPrices = closingPrices;
+            this.sampleSize = sampleSize;
         }
 
         public Task<Dictionary<DateTime, decimal>> Calculate()
         {
-            return Task.Run(() =>
-                                {
-                                    var returnDictionary = new Dictionary<DateTime, decimal>();
-
-                                    for (var i = 0; i <= this.closingPrices.Count() - StandardDeviationSampleSize; i++)
-                                    {
-                                        returnDictionary.Add(
-                                            this.closingPrices.Keys.ElementAt(i + StandardDeviationSampleSize - 1),
-                                            Math.Round(MathExtras.StandardDeviation(this.closingPrices.Skip(i).Take(StandardDeviationSampleSize).Select(e => e.Value)), 2)
-                                            );
-                                    }
-
-                                    return returnDictionary;
-                                });
+            return Task.Run(() => this.Process(DateTime.MinValue));
         }
 
         public Task<Dictionary<DateTime, decimal>> Calculate(DateTime fromDate) {
             throw new NotImplementedException();
         }
+
+        private Dictionary<DateTime, decimal> Process(DateTime fromDate)
+        {
+            var returnDictionary = new Dictionary<DateTime, decimal>();
+
+            for (var i = 0; i <= this.closingPrices.Count() - this.sampleSize; i++)
+            {
+                returnDictionary.Add(
+                    this.closingPrices.Keys.ElementAt(i + this.sampleSize - 1),
+                    Math.Round(MathExtras.StandardDeviation(this.closingPrices.Skip(i).Take(this.sampleSize).Select(e => e.Value)), 2)
+                    );
+            }
+
+            return returnDictionary;
+        } 
     }
 }

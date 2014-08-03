@@ -17,11 +17,8 @@
         [TestCase(1, 0, 1)]
         [TestCase(1, 1, 0)]
         public void DifferenceTest(decimal number1, decimal number2, int expectedResult)
-
         {
             Assert.AreEqual(expectedResult, number1.Difference(number2));
         }
-
-
     }
 }

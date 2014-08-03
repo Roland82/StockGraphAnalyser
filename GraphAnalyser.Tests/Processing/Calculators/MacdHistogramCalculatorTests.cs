@@ -17,7 +17,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             var graphPlotter = new MacdHistogramCalculator(fastMa, slowMa);
             var expectedReturnDictionary = GraphPlottingUtilities.CreateGraph(DateTime.MinValue,
                                                                               new[] { 1m, 0m, -1m, -3m, 4m});
-            Assert.AreEqual(graphPlotter.Calculate().Result, expectedReturnDictionary.Values);
+            Assert.AreEqual(graphPlotter.Calculate().Result, expectedReturnDictionary);
         }
     }
 }

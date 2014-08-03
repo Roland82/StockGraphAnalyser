@@ -9,17 +9,20 @@
     using StockGraphAnalyser.Domain.Repository.Interfaces;
     using StockGraphAnalyser.Domain.Service;
     using StockGraphAnalyser.Domain.Web.Interfaces;
+    using StockGraphAnalyser.Processing.Calculators;
     using StockGraphAnalyser.Processing.Types;
 
     public class DataPointManagementServiceTests
     {
         private Mock<IDataPointRepository> mockRepository;
         private Mock<IYahooStockQuoteServiceClient> mockYahooServiceClient;
+        private Mock<ICalculatorFactory> mockCalculatorFactory;
 
         [SetUp]
         public void Setup() {
             this.mockRepository = new Mock<IDataPointRepository>();
             this.mockYahooServiceClient = new Mock<IYahooStockQuoteServiceClient>();
+            this.mockCalculatorFactory = new Mock<ICalculatorFactory>();
         }
 
         [Test]
@@ -30,7 +33,7 @@
 
             var expectedDataPoints = returnedQuotes.Select(DataPoints.CreateFromQuote).Skip(2);
             this.mockYahooServiceClient.Setup(m => m.GetQuotes("SGP.L")).Returns(returnedQuotes);
-            var service = new DataPointManagementService(this.mockRepository.Object, this.mockYahooServiceClient.Object);
+            var service = new DataPointManagementService(this.mockRepository.Object, this.mockYahooServiceClient.Object, this.mockCalculatorFactory.Object);
             service.InsertNewQuotesToDb("SGP.L");
 
             this.mockRepository.Verify(m => m.InsertAll(It.Is<IEnumerable<DataPoints>>(d =>
@@ -52,7 +55,7 @@
             var returnedQuotes = GetYahooQuotes();
 
             this.mockYahooServiceClient.Setup(m => m.GetQuotes("SGP.L")).Returns(returnedQuotes);
-            var service = new DataPointManagementService(this.mockRepository.Object, this.mockYahooServiceClient.Object);
+            var service = new DataPointManagementService(this.mockRepository.Object, this.mockYahooServiceClient.Object, this.mockCalculatorFactory.Object);
             service.InsertNewQuotesToDb("SGP.L");
 
             this.mockRepository.Verify(m => m.InsertAll(It.IsAny<IEnumerable<DataPoints>>()), Times.Never);

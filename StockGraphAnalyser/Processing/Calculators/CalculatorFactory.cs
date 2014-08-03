@@ -7,15 +7,18 @@ namespace StockGraphAnalyser.Processing.Calculators
 
     public class CalculatorFactory : ICalculatorFactory
     {
-        public ICalculationTool CreateMovingAverageCalculator(Dictionary<DateTime, decimal> dailyFigures, int period) {
+        public ICalculationTool CreateMovingAverageCalculator(Dictionary<DateTime, decimal> dailyFigures, int period) 
+        {
             return new DailyMovingAverageCalculator(dailyFigures, period);
         }
 
-        public ICalculationTool CreateBollingerBandCalculator(Dictionary<DateTime, decimal> dailyFigures, Dictionary<DateTime, decimal> dailyStandardDeviation, BollingerBandCalculator.Band band) {
+        public ICalculationTool CreateBollingerBandCalculator(Dictionary<DateTime, decimal> dailyFigures, Dictionary<DateTime, decimal> dailyStandardDeviation, BollingerBandCalculator.Band band) 
+        {
             return new BollingerBandCalculator(dailyFigures, dailyStandardDeviation, band);
         }
 
-        public ICalculationTool CreateStandardDeviationCalculator(Dictionary<DateTime, decimal> dailyFigures, int sampleSize) {
+        public ICalculationTool CreateStandardDeviationCalculator(Dictionary<DateTime, decimal> dailyFigures, int sampleSize) 
+        {
             return new StandardDeviationCalculator(dailyFigures, sampleSize);
         }
 
@@ -27,6 +30,11 @@ namespace StockGraphAnalyser.Processing.Calculators
         public ICalculationTool CreateExponentialMovingAverageCalculator(Dictionary<DateTime, decimal> dailyFigures, int sampleSize)
         {
             return new ExponentialMovingAverageCalculator(dailyFigures, sampleSize);
+        }
+
+        public ICalculationTool CreateMomentumCalculator(Dictionary<DateTime, decimal> dailyFigures, int periodGap) 
+        {
+            return new MomentumCalculator(dailyFigures, periodGap);
         }
     }
 }

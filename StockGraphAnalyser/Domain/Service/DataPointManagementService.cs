@@ -15,7 +15,6 @@ namespace StockGraphAnalyser.Domain.Service
         private readonly IDataPointRepository repository;
         private readonly IYahooStockQuoteServiceClient stockQuoteClient;
         private readonly ICalculatorFactory calculatorFactory;
-        private const short MinQuoteRequirementForProcessing = 200;
 
         public DataPointManagementService(IDataPointRepository repository, IYahooStockQuoteServiceClient stockQuoteClient, ICalculatorFactory calculatorFactory) {
             this.repository = repository;
@@ -27,8 +26,8 @@ namespace StockGraphAnalyser.Domain.Service
             var datapoints = this.repository.FindAll(symbol).OrderBy(d => d.Date);
             var lastFullyProcessedDataPoint = datapoints.OrderByDescending(q => q.Date).FirstOrDefault(q => q.IsProcessed);
             
-            // If minimum data is present and there are quotes to process then go for it
-            if (lastFullyProcessedDataPoint == null || lastFullyProcessedDataPoint.Date < datapoints.Max(q => q.Date) && datapoints.Count() > MinQuoteRequirementForProcessing)
+            // If there are quotes to process then go for it
+            if (lastFullyProcessedDataPoint == null || lastFullyProcessedDataPoint.Date < datapoints.Max(q => q.Date))
             {
                 var minDateToUpdateInDb = lastFullyProcessedDataPoint == null ? DateTime.MinValue : lastFullyProcessedDataPoint.Date;
                 var datapointsToUpdate = this.AddProcessedData(datapoints, minDateToUpdateInDb).Where(d => d.Date > minDateToUpdateInDb);
@@ -36,6 +35,8 @@ namespace StockGraphAnalyser.Domain.Service
             }
         }
 
+        /// <summary>Inserts the new quotes into database.</summary>
+        /// <param name="symbol">The symbol.</param>
         public void InsertNewQuotesToDb(string symbol) {
             var quotes = this.stockQuoteClient.GetQuotes(symbol).Where(q => q.Date > DateTime.Today.AddYears(-2));
             var maxDataInDb = this.repository.FindLatestDataPointDateForSymbol(symbol);
@@ -46,10 +47,9 @@ namespace StockGraphAnalyser.Domain.Service
             }
         }
 
-        /// <summary>
-        /// Takes in all datapoints and adds all processed data;
-        /// </summary>
-        /// <param name="dataPoints"></param>
+        /// <summary>Takes in all datapoints and adds all processed data;</summary>
+        /// <param name="dataPoints">The data points.</param>
+        /// <param name="dateToProcessFrom">The date to process from.</param>
         /// <returns></returns>
         private IEnumerable<DataPoints> AddProcessedData(IEnumerable<DataPoints> dataPoints, DateTime dateToProcessFrom) {
 
@@ -60,11 +60,11 @@ namespace StockGraphAnalyser.Domain.Service
             var onePeriodForceIndexCalculator = this.calculatorFactory.CreateForceIndexCalculator(dataPoints.Select(d => new Tuple<DateTime, decimal, long>(d.Date, d.Close, d.Volume)));
 
             // Bollinger bands         
-            var twentyDayMaCalc = twentyDayMa.Calculate(dateToProcessFrom);
-            var twoHundredDayMaTask = twoHundredDayMa.Calculate(dateToProcessFrom);
-            var fiftyDayMaTask = fiftyDayMa.Calculate(dateToProcessFrom);
-            var standardDeviationTask = standardDeviationCalculator.Calculate(dateToProcessFrom);
-            var onePeriodForceIndexTask = onePeriodForceIndexCalculator.Calculate(dateToProcessFrom);
+            var twentyDayMaCalc = twentyDayMa.CalculateAsync(dateToProcessFrom);
+            var twoHundredDayMaTask = twoHundredDayMa.CalculateAsync(dateToProcessFrom);
+            var fiftyDayMaTask = fiftyDayMa.CalculateAsync(dateToProcessFrom);
+            var standardDeviationTask = standardDeviationCalculator.CalculateAsync(dateToProcessFrom);
+            var onePeriodForceIndexTask = onePeriodForceIndexCalculator.CalculateAsync(dateToProcessFrom);
             
             var twentyDayMaResult = twentyDayMaCalc.Result;
             var standardDeviationResult = standardDeviationTask.Result;
@@ -74,9 +74,9 @@ namespace StockGraphAnalyser.Domain.Service
             var lowerBollingerBand = this.calculatorFactory.CreateBollingerBandCalculator(twentyDayMaResult, standardDeviationResult, BollingerBandCalculator.Band.Lower);
             var thirteenPeriodForceIndex = this.calculatorFactory.CreateExponentialMovingAverageCalculator(forceIndexOnePeriodResult.ToDictionary(f => f.Key, f => f.Value), 13);
             
-            var thirteenPeriodForceIndexTask = thirteenPeriodForceIndex.Calculate(dateToProcessFrom);
-            var upperBollingerBandTask = upperBollingerBand.Calculate(dateToProcessFrom);
-            var lowerBollingerBandTask = lowerBollingerBand.Calculate(dateToProcessFrom);
+            var thirteenPeriodForceIndexTask = thirteenPeriodForceIndex.CalculateAsync(dateToProcessFrom);
+            var upperBollingerBandTask = upperBollingerBand.CalculateAsync(dateToProcessFrom);
+            var lowerBollingerBandTask = lowerBollingerBand.CalculateAsync(dateToProcessFrom);
 
             dataPoints = dataPoints.MapNewDataPoint(twoHundredDayMaTask.Result, (p, d) => p.MovingAverageTwoHundredDay = d);
             dataPoints = dataPoints.MapNewDataPoint(fiftyDayMaTask.Result, (p, d) => p.MovingAverageFiftyDay = d);

@@ -33,7 +33,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
                 };
 
             var calculator = new ForceIndexCalculator(dataList);
-            var result = calculator.Calculate().Result;
+            var result = calculator.CalculateAsync().Result;
             Assert.AreEqual(expectedOutput, result);
         }
 
@@ -47,7 +47,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
                 };
 
             var calculator = new ForceIndexCalculator(dataList);
-            var result = calculator.Calculate(new DateTime(2010, 7, 2)).Result;
+            var result = calculator.CalculateAsync(new DateTime(2010, 7, 2)).Result;
             Assert.AreEqual(expectedOutput, result);
         }
 
@@ -60,7 +60,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
                 };
 
             var calculator = new ForceIndexCalculator(dataList);
-            var result = calculator.Calculate(new DateTime(2010, 7, 6)).Result;
+            var result = calculator.CalculateAsync(new DateTime(2010, 7, 6)).Result;
             Assert.AreEqual(expectedOutput, result);
         }
 
@@ -68,7 +68,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
         public void DateIsAheadOfLatestData() {
             var expectedOutput = new Dictionary<DateTime, decimal?>();
             var calculator = new ForceIndexCalculator(dataList);
-            var result = calculator.Calculate(new DateTime(2111, 7, 6)).Result;
+            var result = calculator.CalculateAsync(new DateTime(2111, 7, 6)).Result;
             Assert.AreEqual(expectedOutput, result);
         }
     }

@@ -16,5 +16,7 @@
         ICalculationTool CreateForceIndexCalculator(IEnumerable<Tuple<DateTime, decimal, long>> data);
 
         ICalculationTool CreateExponentialMovingAverageCalculator(Dictionary<DateTime, decimal> dailyFigures, int sampleSize);
+
+        ICalculationTool CreateMomentumCalculator(Dictionary<DateTime, decimal> dailyFigures, int periodGap);
     }
 }

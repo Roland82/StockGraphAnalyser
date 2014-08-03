@@ -14,9 +14,11 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             var closingPrices = GraphPlottingUtilities.CreateGraph(
                 DateTime.MinValue,
                 new[] { 98m, 99m, 100m, 100m }
-            );  
+            );
+
+            var calculator = new MomentumCalculator(closingPrices, 4);
             
-            Assert.Throws<ArgumentException>(() => new MomentumCalculator(closingPrices, 4));
+            Assert.AreEqual(0, calculator.CalculateAsync().Result.Count);
         }
 
         [Test]
@@ -35,7 +37,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             );
 
             var calculator = new MomentumCalculator(closingPrices, period);
-            Assert.AreEqual(expectedMomentum, calculator.Calculate().Result);
+            Assert.AreEqual(expectedMomentum, calculator.CalculateAsync().Result);
         }
 
         [Test]
@@ -53,7 +55,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             );
 
             var calculator = new MomentumCalculator(closingPrices, period);
-            Assert.AreEqual(expectedMomentum, calculator.Calculate().Result);
+            Assert.AreEqual(expectedMomentum, calculator.CalculateAsync().Result);
         }
     }
 }

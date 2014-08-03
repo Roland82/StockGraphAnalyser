@@ -26,7 +26,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
                 };
 
             var calculator = new AverageTrueRangeCalculator(quoteList, 2);
-            var atrs = calculator.Calculate().Result;
+            var atrs = calculator.CalculateAsync().Result;
             Assert.AreEqual(1, atrs.Count);
             Assert.AreEqual(100m, atrs.ElementAt(0).Value);
         }
@@ -41,7 +41,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
                 };
 
             var calculator = new AverageTrueRangeCalculator(quoteList, 2);
-            var atrs = calculator.Calculate().Result;
+            var atrs = calculator.CalculateAsync().Result;
             Assert.AreEqual(1, atrs.Count);
             Assert.AreEqual(99m, atrs.ElementAt(0).Value);
         }
@@ -56,7 +56,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
                 };
 
             var calculator = new AverageTrueRangeCalculator(quoteList, 2);
-            var atrs = calculator.Calculate().Result;
+            var atrs = calculator.CalculateAsync().Result;
             Assert.AreEqual(1, atrs.Count);
             Assert.AreEqual(127m, atrs.ElementAt(0).Value);
         }

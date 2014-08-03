@@ -21,7 +21,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             var bollingerBandCalculator = new BollingerBandCalculator(movingAverage, standardDeviation,BollingerBandCalculator.Band.Upper);
 
             var expectedResult = GraphPlottingUtilities.CreateGraph(monday, new[] { 91.29m, 91.95m, 92.62m, 92.93m, 93.31m, 93.73m });
-            var actualResult = bollingerBandCalculator.Calculate().Result;
+            var actualResult = bollingerBandCalculator.CalculateAsync().Result;
             Assert.AreEqual(expectedResult, actualResult);
         }
 
@@ -31,7 +31,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             var bollingerBandCalculator = new BollingerBandCalculator(movingAverage, standardDeviation, BollingerBandCalculator.Band.Upper);
 
             var expectedResult = GraphPlottingUtilities.CreateGraph(monday.AddDays(2), new[] { 92.62m, 92.93m, 93.31m, 93.73m });
-            var actualResult = bollingerBandCalculator.Calculate(monday.AddDays(2)).Result;
+            var actualResult = bollingerBandCalculator.CalculateAsync(monday.AddDays(2)).Result;
             Assert.AreEqual(expectedResult, actualResult);
         }
 
@@ -41,7 +41,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             var bollingerBandCalculator = new BollingerBandCalculator(movingAverage, standardDeviation, BollingerBandCalculator.Band.Upper);
 
             var expectedResult = GraphPlottingUtilities.CreateGraph(monday.AddDays(7), new[] { 93.73m });
-            var actualResult = bollingerBandCalculator.Calculate(monday.AddDays(5)).Result;
+            var actualResult = bollingerBandCalculator.CalculateAsync(monday.AddDays(5)).Result;
             Assert.AreEqual(expectedResult, actualResult);
         }
 
@@ -51,7 +51,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             var bollingerBandCalculator = new BollingerBandCalculator(movingAverage, standardDeviation, BollingerBandCalculator.Band.Lower);
 
             var expectedResult = GraphPlottingUtilities.CreateGraph(monday, new[] { 86.13m, 86.15m, 85.86m, 85.85m, 85.71m, 85.65m });
-            var actualResult = bollingerBandCalculator.Calculate().Result;
+            var actualResult = bollingerBandCalculator.CalculateAsync().Result;
             Assert.AreEqual(expectedResult, actualResult);
         }
     }

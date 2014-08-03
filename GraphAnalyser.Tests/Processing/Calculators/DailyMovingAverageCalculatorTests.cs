@@ -19,7 +19,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             var closingPrices = GraphPlottingUtilities.CreateGraph(monday, new[] {11m, 12m, 13m, 14m, 15m, 16m, 100m, 90m, 80m});
             var expectedResult = GraphPlottingUtilities.CreateGraph(monday.AddDays(4), new[] { 13m, 14m, 31.6m, 47, 60.2m });
             var calculator = new DailyMovingAverageCalculator(closingPrices, 5);
-            var result = calculator.Calculate().Result;
+            var result = calculator.CalculateAsync().Result;
             Assert.AreEqual(expectedResult, result);
         }
 
@@ -30,7 +30,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             var finalDay = closingPrices.Last().Key;
             var expectedResult = GraphPlottingUtilities.CreateGraph(finalDay, new[] { 60.2m });
             var calculator = new DailyMovingAverageCalculator(closingPrices, 5);
-            var result = calculator.Calculate(finalDay).Result;
+            var result = calculator.CalculateAsync(finalDay).Result;
             Assert.AreEqual(expectedResult, result);
         }
 
@@ -41,7 +41,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             var finalDay = closingPrices.ElementAt(6).Key;
             var expectedResult = GraphPlottingUtilities.CreateGraph(finalDay, new[] { 31.6m, 47, 60.2m });
             var calculator = new DailyMovingAverageCalculator(closingPrices, 5);
-            var result = calculator.Calculate(finalDay).Result;
+            var result = calculator.CalculateAsync(finalDay).Result;
             Assert.AreEqual(expectedResult, result);
         }
 
@@ -51,7 +51,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             var closingPrices = GraphPlottingUtilities.CreateGraph(monday, new[] { 11m, 12m, 13m, 14m, 15m, 16m, 100m, 90m, 80m });
             var expectedPrices = GraphPlottingUtilities.CreateGraph(monday.AddDays(7), new[] {14m, 31.6m, 47, 60.2m});
             var calculator = new DailyMovingAverageCalculator(closingPrices, 5);
-            var result = calculator.Calculate(monday.AddDays(5)).Result;
+            var result = calculator.CalculateAsync(monday.AddDays(5)).Result;
             Assert.AreEqual(expectedPrices, result);
         }
 
@@ -60,7 +60,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
         {
             var closingPrices = GraphPlottingUtilities.CreateGraph(monday, new[] { 11m, 12m, 13m, 14m, 15m, 16m, 100m, 90m, 80m });
             var calculator = new DailyMovingAverageCalculator(closingPrices, 5);
-            var result = calculator.Calculate(DateTime.Today.AddYears(10)).Result;
+            var result = calculator.CalculateAsync(DateTime.Today.AddYears(10)).Result;
             Assert.AreEqual(new Dictionary<DateTime, decimal>(), result);
         }
     }

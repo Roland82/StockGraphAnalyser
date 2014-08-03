@@ -15,32 +15,28 @@ namespace StockGraphAnalyser.Processing.Calculators
         public MomentumCalculator(Dictionary<DateTime, decimal> closingPrices, int periodGap) {
             this.closingPrices = closingPrices;
             this.periodGap = periodGap;
-            
-            if (closingPrices.Count <= this.periodGap)
-            {
-                throw new ArgumentException("The period gap given exceeds the amount of prices passed in.");
-            }
         }
 
-        public Task<Dictionary<DateTime, decimal>> Calculate() {
-            return Task.Run(() =>
-                {
-                    var momentum = new Dictionary<DateTime, decimal>();
-
-                    for (var i = 0; i < this.closingPrices.Count - this.periodGap; i++)
-                    {
-                        var calculatedMomentum = this.closingPrices.ElementAt(i + periodGap).Value/
-                                                 this.closingPrices.ElementAt(i).Value;
-                        momentum.Add(this.closingPrices.ElementAt(i + periodGap).Key,
-                                     Math.Round(calculatedMomentum*100m, 1));
-                    }
-
-                    return momentum;
-                });
+        public Task<Dictionary<DateTime, decimal>> CalculateAsync() {
+            return Task.Run(() => this.Process(DateTime.MinValue));
         }
 
-        public Task<Dictionary<DateTime, decimal>> Calculate(DateTime fromDate) {
+        public Task<Dictionary<DateTime, decimal>> CalculateAsync(DateTime fromDate) {
             throw new NotImplementedException();
         }
+
+        private Dictionary<DateTime, decimal> Process(DateTime fromDate) {
+            var momentum = new Dictionary<DateTime, decimal>();
+
+            for (var i = 0; i < this.closingPrices.Count - this.periodGap; i++)
+            {
+                var calculatedMomentum = this.closingPrices.ElementAt(i + periodGap).Value /
+                                         this.closingPrices.ElementAt(i).Value;
+                momentum.Add(this.closingPrices.ElementAt(i + periodGap).Key,
+                             Math.Round(calculatedMomentum * 100m, 1));
+            }
+
+            return momentum;
+        } 
     }
 }

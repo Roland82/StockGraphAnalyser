@@ -1,5 +1,5 @@
 ﻿
-namespace StockGraphAnalyser.Processing
+namespace StockGraphAnalyser.Processing.Calculators
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@ namespace StockGraphAnalyser.Processing
 
     public interface ICalculationTool
     {
-        Task<Dictionary<DateTime, decimal>> Calculate();
-        Task<Dictionary<DateTime, decimal>> Calculate(DateTime fromDate);
+        Task<Dictionary<DateTime, decimal>> CalculateAsync();
+        Task<Dictionary<DateTime, decimal>> CalculateAsync(DateTime fromDate);
     }
 }

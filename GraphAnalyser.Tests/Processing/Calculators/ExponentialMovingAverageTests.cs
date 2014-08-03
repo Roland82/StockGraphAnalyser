@@ -27,7 +27,7 @@
                 }, daysToSkip);
 
             var emaCalculator = new ExponentialMovingAverageCalculator(closingPrices, 10);
-            var result = emaCalculator.Calculate().Result;
+            var result = emaCalculator.CalculateAsync().Result;
             Assert.AreEqual(expectedResult, result);
         }
 
@@ -37,7 +37,7 @@
             var expectedResult = GraphPlottingUtilities.CreateGraph(this.startDate.AddDays(16), new[] { 22.24m, 22.27m, 22.33m, 22.52m, 22.80m}, daysToSkip);
             
             var emaCalculator = new ExponentialMovingAverageCalculator(closingPrices, 10);
-            var result = emaCalculator.Calculate(this.startDate.AddDays(16)).Result;
+            var result = emaCalculator.CalculateAsync(this.startDate.AddDays(16)).Result;
             Assert.AreEqual(expectedResult, result);
         }
     }

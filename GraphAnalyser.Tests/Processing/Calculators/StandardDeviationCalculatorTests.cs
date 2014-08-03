@@ -25,7 +25,7 @@
                 };
 
             var calculator = new StandardDeviationCalculator(closingPrices, 20);
-            var result = calculator.Calculate().Result;
+            var result = calculator.CalculateAsync().Result;
             Assert.AreEqual(expectedResult, result);
 
         }

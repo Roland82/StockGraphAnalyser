@@ -25,7 +25,7 @@ namespace StockGraphAnalyser.Processing.Calculators
             this.sampleSize = sampleSize;
         }
 
-        public Task<Dictionary<DateTime, decimal>> Calculate()
+        public Task<Dictionary<DateTime, decimal>> CalculateAsync()
         {
             return Task.Run(() =>
                                 {
@@ -45,7 +45,7 @@ namespace StockGraphAnalyser.Processing.Calculators
                                 });
         }
 
-        public Task<Dictionary<DateTime, decimal>> Calculate(DateTime fromDate) {
+        public Task<Dictionary<DateTime, decimal>> CalculateAsync(DateTime fromDate) {
             throw new NotImplementedException();
         }
 

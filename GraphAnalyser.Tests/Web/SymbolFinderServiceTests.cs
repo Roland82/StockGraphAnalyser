@@ -10,7 +10,8 @@ namespace GraphAnalyser.Tests.Web
         public void Test()
         {
             var service = new SymbolFinderService();
-            service.GetAllSymbols();
+            var companies = service.GetAllSymbols();
+            Assert.True(companies.Count > 100);
         }
     }
 }

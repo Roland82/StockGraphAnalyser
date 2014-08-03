@@ -13,7 +13,7 @@ namespace GraphAnalyser.Tests.Web
         [Test]
         public void WebRequestTest() {
             var client = new YahooStockQuoteServiceClient();
-            var quotes = client.GetQuotes("SGP").ToList();
+            var quotes = client.GetQuotes("SGP.L").ToList();
             Assert.True(quotes.Any());
 
             var testQuote = quotes.First(q => q.Date == new DateTime(2014, 5, 2));

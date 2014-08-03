@@ -10,7 +10,7 @@
         public void StandtesterardDeviationTest()
         {
             var dataPoints = new[] { 12m, 15m, 18m, 100m, 39m, 14m };
-            Assert.AreEqual(34.28119m, MathExtras.StandardDeviation(dataPoints));
+            Assert.AreEqual(31.2943019307562m, MathExtras.StandardDeviation(dataPoints));
         }
 
         [TestCase(1, 2, 1)]

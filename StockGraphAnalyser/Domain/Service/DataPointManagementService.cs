@@ -65,6 +65,7 @@ namespace StockGraphAnalyser.Domain.Service
             var fiftyDayMaTask = fiftyDayMa.Calculate(dateToProcessFrom);
             var standardDeviationTask = standardDeviationCalculator.Calculate(dateToProcessFrom);
             var onePeriodForceIndexTask = onePeriodForceIndexCalculator.Calculate(dateToProcessFrom);
+            
             var twentyDayMaResult = twentyDayMaCalc.Result;
             var standardDeviationResult = standardDeviationTask.Result;
             var forceIndexOnePeriodResult = onePeriodForceIndexTask.Result;

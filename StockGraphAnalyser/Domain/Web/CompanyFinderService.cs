@@ -23,7 +23,6 @@ namespace StockGraphAnalyser.Domain.Web
             foreach (var letter in alphabet)
             {
                 var responseStream = WebRequest.Create("http://uk.advfn.com/exchanges/LSE/" + letter).GetResponse().GetResponseStream();
-                new StreamReader(responseStream).ReadToEnd();
                 document.LoadHtml(new StreamReader(responseStream).ReadToEnd());
                 var tickerRows = document.DocumentNode.SelectNodes("//tr[@class='even'or @class='odd' or @class='odd first']").Skip(1);
                 tickerRows.ToList().ForEach(r => symbolList.Add(r.ChildNodes.ElementAt(1).InnerText, r.ChildNodes.ElementAt(0).InnerText));

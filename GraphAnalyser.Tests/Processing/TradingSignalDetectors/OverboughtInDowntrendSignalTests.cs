@@ -11,7 +11,7 @@ namespace GraphAnalyser.Tests.Processing.TradingSignalDetectors
 
     public class OverboughtInDowntrendSignalTests
     {
-        [Test]
+        // TODO: Implement this test when class finished
         public void TestOne() {
             var closes = new[] {5m, 6m, 7m, 8m, 9m};
             var upperBollinger = new[] {7m, 7m, 7m, 8m, 9m};

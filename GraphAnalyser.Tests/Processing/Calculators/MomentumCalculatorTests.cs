@@ -48,7 +48,7 @@ namespace GraphAnalyser.Tests.Processing.Calculators
             );
 
             var expectedMomentum = GraphPlottingUtilities.CreateGraph(
-                DateTime.MinValue.AddDays(10), 
+                DateTime.MinValue.AddDays(14), 
                 new[] {103.1m, 104m, 105m}
             );
 

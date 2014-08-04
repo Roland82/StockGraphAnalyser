@@ -45,7 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Service\DataPointManagementServiceTests.cs" />
+    <Compile Include="Domain\Service\DataPointManagementServiceInsertQuotesTests.cs" />
+    <Compile Include="Domain\Service\DataPointManagementServiceUpdateProcessedDataTests.cs" />
     <Compile Include="Processing\Calculators\AverageTrueRangeCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\BollingerBandCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\ExponentialMovingAverageTests.cs" />

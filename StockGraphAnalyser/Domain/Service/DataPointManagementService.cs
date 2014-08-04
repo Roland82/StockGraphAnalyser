@@ -22,9 +22,24 @@ namespace StockGraphAnalyser.Domain.Service
             this.calculatorFactory = calculatorFactory;
         }
 
+
+        /// <summary>Inserts the new quotes into database.</summary>
+        /// <param name="symbol">The symbol.</param>
+        public void InsertNewQuotesToDb(string symbol)
+        {
+            var quotes = this.stockQuoteClient.GetQuotes(symbol).Where(q => q.Date > DateTime.Today.AddYears(-2));
+            var maxDataInDb = this.repository.FindLatestDataPointDateForSymbol(symbol);
+            var dataPointsToInsert = quotes.Where(q => q.Date > maxDataInDb).Select(DataPoints.CreateFromQuote);
+            if (dataPointsToInsert.Any())
+            {
+                this.repository.InsertAll(dataPointsToInsert);
+            }
+        }
+
+
         public void FillInMissingProcessedData(string symbol) {
             var datapoints = this.repository.FindAll(symbol).OrderBy(d => d.Date);
-            var lastFullyProcessedDataPoint = datapoints.OrderByDescending(q => q.Date).FirstOrDefault(q => q.IsProcessed);
+            var lastFullyProcessedDataPoint = datapoints.LastOrDefault(q => q.IsProcessed);
             
             // If there are quotes to process then go for it
             if (lastFullyProcessedDataPoint == null || lastFullyProcessedDataPoint.Date < datapoints.Max(q => q.Date))
@@ -35,17 +50,6 @@ namespace StockGraphAnalyser.Domain.Service
             }
         }
 
-        /// <summary>Inserts the new quotes into database.</summary>
-        /// <param name="symbol">The symbol.</param>
-        public void InsertNewQuotesToDb(string symbol) {
-            var quotes = this.stockQuoteClient.GetQuotes(symbol).Where(q => q.Date > DateTime.Today.AddYears(-2));
-            var maxDataInDb = this.repository.FindLatestDataPointDateForSymbol(symbol);
-            var dataPointsToInsert = quotes.Where(q => q.Date > maxDataInDb).Select(DataPoints.CreateFromQuote);
-            if (dataPointsToInsert.Any())
-            {
-                this.repository.InsertAll(dataPointsToInsert);
-            }
-        }
 
         /// <summary>Takes in all datapoints and adds all processed data;</summary>
         /// <param name="dataPoints">The data points.</param>

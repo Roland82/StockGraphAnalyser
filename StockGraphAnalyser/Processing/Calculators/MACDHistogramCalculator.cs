@@ -23,16 +23,19 @@ namespace StockGraphAnalyser.Processing.Calculators
         }
 
         public Task<Dictionary<DateTime, decimal>> CalculateAsync(DateTime fromDate) {
-            throw new NotImplementedException();
+            return Task.Run(() => Process(fromDate));
         }
 
         private Dictionary<DateTime, decimal> Process(DateTime fromDate)
         {
-            var sharedRange = Utilities.CalculateSharedDateRange(this.fastExponentialMovingAverage.Select(s => s.Key), this.slowExponentialMovingAverage.Select(s => s.Key));
-            var slowMa = this.slowExponentialMovingAverage.SubsetBetween(sharedRange.Item1, sharedRange.Item2);
-            var fastMa = this.fastExponentialMovingAverage.SubsetBetween(sharedRange.Item1, sharedRange.Item2);
+            var sharedRange = Utilities.CalculateSharedDateRange(
+                this.fastExponentialMovingAverage.Select(s => s.Key), 
+                this.slowExponentialMovingAverage.Select(s => s.Key));
+
+            var slowMa = this.slowExponentialMovingAverage.SubsetBetween(sharedRange.Item1, sharedRange.Item2).Where(d => d.Key >= fromDate);
+            var fastMa = this.fastExponentialMovingAverage.SubsetBetween(sharedRange.Item1, sharedRange.Item2).Where(d => d.Key >= fromDate);
             var histogram = new Dictionary<DateTime, decimal>();
-            for (var i = 0; i < slowMa.Count; i++)
+            for (var i = 0; i < slowMa.Count(); i++)
             {
                 histogram.Add(slowMa.ElementAt(i).Key, slowMa.ElementAt(i).Value - fastMa.ElementAt(i).Value);
             }

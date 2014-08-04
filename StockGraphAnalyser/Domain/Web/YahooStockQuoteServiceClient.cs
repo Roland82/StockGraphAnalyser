@@ -37,7 +37,7 @@ namespace StockGraphAnalyser.Domain.Web
 
                 return returnList.OrderBy(q => q.Date).ToList();
             }
-            catch (WebException e)
+            catch (WebException)
             {
                 Console.Write("Cannot get quotes for " + ticker);
                 return new List<Quote>();

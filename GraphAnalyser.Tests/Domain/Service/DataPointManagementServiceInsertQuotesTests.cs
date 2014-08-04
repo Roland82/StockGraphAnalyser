@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Threading.Tasks;
     using Moq;
     using NUnit.Framework;
     using StockGraphAnalyser.Domain;
@@ -12,7 +11,6 @@
     using StockGraphAnalyser.Domain.Service;
     using StockGraphAnalyser.Domain.Web.Interfaces;
     using StockGraphAnalyser.Processing.Calculators;
-    using StockGraphAnalyser.Processing.Types;
     using TestUtilities;
 
     public partial class DataPointManagementServiceTests
@@ -22,13 +20,6 @@
         private Mock<IYahooStockQuoteServiceClient> mockYahooServiceClient;
         private Mock<ICalculatorFactory> mockCalculatorFactory;
 
-        private DataPoints CreateDataPoint(int addDays, bool processed) {
-            return new DataPoints
-                {
-                    Symbol = "SGP.L", Date = monday.AddDays(addDays), Open = 1m,
-                    Close = 2m, High = 3m, Low = 1m, Volume = 100, IsProcessed = processed
-                };
-        }
 
         private IEnumerable<DataPoints> TestDataPoints {
             get {
@@ -106,11 +97,12 @@
                             Volume = 100,
                             MovingAverageTwoHundredDay = 6m,
                             MovingAverageFiftyDay = 7,
+                            MovingAverageTwentyDay = 8,
                             LowerBollingerBand = 9,
                             UpperBollingerBand = 10,
                             ForceIndexOnePeriod = 11m,
-                            ForceIndexThirteenPeriod = It.IsAny<Decimal>(),
-                            IsProcessed = true
+                            ForceIndexThirteenPeriod = 12m,
+                            IsProcessed = 1
                         },
                     new DataPoints
                         {
@@ -123,14 +115,16 @@
                             Volume = 100,
                             MovingAverageTwoHundredDay = 7m,
                             MovingAverageFiftyDay = 8m,
+                            MovingAverageTwentyDay = 9,
                             LowerBollingerBand = 10,
                             UpperBollingerBand = 11,
                             ForceIndexOnePeriod = 12m,
-                            ForceIndexThirteenPeriod = It.IsAny<Decimal>(),
-                            IsProcessed = true
+                            ForceIndexThirteenPeriod = 13m,
+                            IsProcessed = 1
                         },
                 };
-            this.mockRepository.Verify(f => f.UpdateAll(expectedDatapointsUpdated));
+
+            this.mockRepository.Verify(f => f.UpdateAll(It.Is<List<DataPoints>>(c => c.Equals(expectedDatapointsUpdated.ToList()))));
         }
 
         private void BuildCalcuatorFactory() {
@@ -184,5 +178,21 @@
                 .Setup(calculatorFactorySetup)
                 .Returns(calculator.Object);
         }
+
+        private DataPoints CreateDataPoint(int addDays, bool processed)
+        {
+            return new DataPoints
+            {
+                Symbol = "SGP.L",
+                Date = monday.AddDays(addDays),
+                Open = 1m,
+                Close = 2m,
+                High = 3m,
+                Low = 1m,
+                Volume = 100,
+                IsProcessed = processed ? (short)1 : (short)0
+            };
+        }
+
     }
 }

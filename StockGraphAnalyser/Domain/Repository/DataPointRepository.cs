@@ -21,8 +21,8 @@ namespace StockGraphAnalyser.Domain.Repository
                 connection.Open();
                 connection.Execute(@"INSERT INTO DataPoints 
                                     VALUES (@Id,@Symbol,@Date,@Open,@Close,@High,@Low,@Volume,@MovingAverageTwoHundredDay,
-                                            @MovingAverageFiftyDay,@UpperBollingerBand,@LowerBollingerBand,
-                                            @ForceIndexOnePeriod, @ForceIndexThirteenPeriod)", dataPoints); 
+                                            @MovingAverageFiftyDay,@MovingAverageTwentyDay,@UpperBollingerBand,@LowerBollingerBand,
+                                            @ForceIndexOnePeriod, @ForceIndexThirteenPeriod, @IsProcessed)", dataPoints); 
             }
         }
 
@@ -55,19 +55,23 @@ namespace StockGraphAnalyser.Domain.Repository
                     {
                         transaction.Connection.Execute(@"UPDATE DataPoints 
                                             SET MovingAverageTwoHundredDay = @MovingAverageTwoHundredDay, 
+                                            MovingAverageTwentyDay = @MovingAverageTwentyDay,
                                             MovingAverageFiftyDay = @MovingAverageFiftyDay,
                                             UpperBollingerBand = @UpperBollingerBand,
                                             LowerBollingerBand = @LowerBollingerBand,
                                             ForceIndexOnePeriod = @ForceIndexOnePeriod, 
-                                            ForceIndexThirteenPeriod = @ForceIndexThirteenPeriod
+                                            ForceIndexThirteenPeriod = @ForceIndexThirteenPeriod,
+                                            IsProcessed = @IsProcessed
                                             WHERE Id = @Id",
                                            new{
                                                   ForceIndexOnePeriod = dataPoint.ForceIndexOnePeriod,
                                                   ForceIndexThirteenPeriod = dataPoint.ForceIndexThirteenPeriod,
                                                   MovingAverageTwoHundredDay = dataPoint.MovingAverageTwoHundredDay,
                                                   MovingAverageFiftyDay = dataPoint.MovingAverageFiftyDay,
+                                                  MovingAverageTwentyDay = dataPoint.MovingAverageTwentyDay,
                                                   LowerBollingerBand = dataPoint.LowerBollingerBand,
                                                   UpperBollingerBand = dataPoint.UpperBollingerBand,
+                                                  IsProcessed = dataPoint.IsProcessed,
                                                   Id = dataPoint.Id
                                               }, transaction: transaction);
                     }

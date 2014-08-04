@@ -22,7 +22,7 @@ namespace StockGraphAnalyser.Processing.Calculators
         }
 
         public Task<Dictionary<DateTime, decimal>> CalculateAsync(DateTime fromDate) {
-            throw new NotImplementedException();
+            return Task.Run(() => this.Process(fromDate));
         }
 
         private Dictionary<DateTime, decimal> Process(DateTime fromDate)
@@ -37,7 +37,9 @@ namespace StockGraphAnalyser.Processing.Calculators
                     );
             }
 
-            return returnDictionary;
+
+            // TODO: Don't process everything when doing partial calculation
+            return returnDictionary.Where(d => d.Key >= fromDate).ToDictionary(d => d.Key, d => d.Value);
         } 
     }
 }

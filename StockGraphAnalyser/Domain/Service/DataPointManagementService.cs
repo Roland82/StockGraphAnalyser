@@ -39,13 +39,13 @@ namespace StockGraphAnalyser.Domain.Service
 
         public void FillInMissingProcessedData(string symbol) {
             var datapoints = this.repository.FindAll(symbol).OrderBy(d => d.Date);
-            var lastFullyProcessedDataPoint = datapoints.LastOrDefault(q => q.IsProcessed);
+            var lastFullyProcessedDataPoint = datapoints.LastOrDefault(q => q.IsProcessed == 1);
             
             // If there are quotes to process then go for it
             if (lastFullyProcessedDataPoint == null || lastFullyProcessedDataPoint.Date < datapoints.Max(q => q.Date))
             {
                 var minDateToUpdateInDb = lastFullyProcessedDataPoint == null ? DateTime.MinValue : lastFullyProcessedDataPoint.Date;
-                var datapointsToUpdate = this.AddProcessedData(datapoints, minDateToUpdateInDb).Where(d => d.Date > minDateToUpdateInDb);
+                var datapointsToUpdate = this.AddProcessedData(datapoints, minDateToUpdateInDb).Where(d => d.Date > minDateToUpdateInDb).ToList();
                 this.repository.UpdateAll(datapointsToUpdate);
             }
         }
@@ -57,38 +57,45 @@ namespace StockGraphAnalyser.Domain.Service
         /// <returns></returns>
         private IEnumerable<DataPoints> AddProcessedData(IEnumerable<DataPoints> dataPoints, DateTime dateToProcessFrom) {
 
-            var twoHundredDayMa = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 200);
-            var fiftyDayMa = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 50);
-            var twentyDayMa = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 20);
-            var standardDeviationCalculator = this.calculatorFactory.CreateStandardDeviationCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 20);
-            var onePeriodForceIndexCalculator = this.calculatorFactory.CreateForceIndexCalculator(dataPoints.Select(d => new Tuple<DateTime, decimal, long>(d.Date, d.Close, d.Volume)));
+            var twoHundredDayMaCalc = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 200);
+            var fiftyDayMaCalc = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 50);
+            var twentyDayMaCalc = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 20);
+            var standardDeviationCalc = this.calculatorFactory.CreateStandardDeviationCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 20);
+            var onePeriodForceIndexCalc = this.calculatorFactory.CreateForceIndexCalculator(dataPoints.Select(d => new Tuple<DateTime, decimal, long>(d.Date, d.Close, d.Volume))); 
 
-            // Bollinger bands         
-            var twentyDayMaCalc = twentyDayMa.CalculateAsync(dateToProcessFrom);
-            var twoHundredDayMaTask = twoHundredDayMa.CalculateAsync(dateToProcessFrom);
-            var fiftyDayMaTask = fiftyDayMa.CalculateAsync(dateToProcessFrom);
-            var standardDeviationTask = standardDeviationCalculator.CalculateAsync(dateToProcessFrom);
-            var onePeriodForceIndexTask = onePeriodForceIndexCalculator.CalculateAsync(dateToProcessFrom);
-            
-            var twentyDayMaResult = twentyDayMaCalc.Result;
-            var standardDeviationResult = standardDeviationTask.Result;
-            var forceIndexOnePeriodResult = onePeriodForceIndexTask.Result;
-
-            var upperBollingerBand = this.calculatorFactory.CreateBollingerBandCalculator(twentyDayMaResult, standardDeviationResult, BollingerBandCalculator.Band.Upper);
-            var lowerBollingerBand = this.calculatorFactory.CreateBollingerBandCalculator(twentyDayMaResult, standardDeviationResult, BollingerBandCalculator.Band.Lower);
-            var thirteenPeriodForceIndex = this.calculatorFactory.CreateExponentialMovingAverageCalculator(forceIndexOnePeriodResult.ToDictionary(f => f.Key, f => f.Value), 13);
-            
-            var thirteenPeriodForceIndexTask = thirteenPeriodForceIndex.CalculateAsync(dateToProcessFrom);
-            var upperBollingerBandTask = upperBollingerBand.CalculateAsync(dateToProcessFrom);
-            var lowerBollingerBandTask = lowerBollingerBand.CalculateAsync(dateToProcessFrom);
+            var twoHundredDayMaTask = twoHundredDayMaCalc.CalculateAsync(dateToProcessFrom);
+            var fiftyDayMaTask = fiftyDayMaCalc.CalculateAsync(dateToProcessFrom);
+            var twentyDayMaTask = twentyDayMaCalc.CalculateAsync(dateToProcessFrom);
+            var standardDeviationTask = standardDeviationCalc.CalculateAsync(dateToProcessFrom);
+            var onePeriodForceIndexTask = onePeriodForceIndexCalc.CalculateAsync(dateToProcessFrom);           
 
             dataPoints = dataPoints.MapNewDataPoint(twoHundredDayMaTask.Result, (p, d) => p.MovingAverageTwoHundredDay = d);
             dataPoints = dataPoints.MapNewDataPoint(fiftyDayMaTask.Result, (p, d) => p.MovingAverageFiftyDay = d);
-            dataPoints = dataPoints.MapNewDataPoint(lowerBollingerBandTask.Result, (p, d) => p.LowerBollingerBand = d);
-            dataPoints = dataPoints.MapNewDataPoint(upperBollingerBandTask.Result, (p, d) => p.UpperBollingerBand = d);
+            dataPoints = dataPoints.MapNewDataPoint(twentyDayMaTask.Result, (p, d) => p.MovingAverageTwentyDay = d);
             dataPoints = dataPoints.MapNewDataPoint(onePeriodForceIndexTask.Result, (p, d) => p.ForceIndexOnePeriod = d);
+
+            var upperBollingerBandCalc = this.calculatorFactory.CreateBollingerBandCalculator(
+                dataPoints.Where(d => d.MovingAverageTwentyDay.HasValue).ToDictionary(d => d.Date, d => d.MovingAverageTwentyDay.Value),
+                standardDeviationTask.Result, 
+                BollingerBandCalculator.Band.Upper);
+
+            var lowerBollingerBandCalc = this.calculatorFactory.CreateBollingerBandCalculator(
+                dataPoints.Where(d => d.MovingAverageTwentyDay.HasValue).ToDictionary(d => d.Date, d => d.MovingAverageTwentyDay.Value),
+                standardDeviationTask.Result,
+                BollingerBandCalculator.Band.Lower);
+
+            var thirteenPeriodForceIndexCalc = this.calculatorFactory.CreateExponentialMovingAverageCalculator(
+                dataPoints.Where(d => d.ForceIndexOnePeriod.HasValue).ToDictionary(f => f.Date, f => f.ForceIndexOnePeriod.Value), 
+                13);
+            
+            var thirteenPeriodForceIndexTask = thirteenPeriodForceIndexCalc.CalculateAsync(dateToProcessFrom);
+            var upperBollingerBandTask = upperBollingerBandCalc.CalculateAsync(dateToProcessFrom);
+            var lowerBollingerBandTask = lowerBollingerBandCalc.CalculateAsync(dateToProcessFrom);
+
+            dataPoints = dataPoints.MapNewDataPoint(lowerBollingerBandTask.Result, (p, d) => p.LowerBollingerBand = d);
+            dataPoints = dataPoints.MapNewDataPoint(upperBollingerBandTask.Result, (p, d) => p.UpperBollingerBand = d);        
             dataPoints = dataPoints.MapNewDataPoint(thirteenPeriodForceIndexTask.Result, (p, d) => p.ForceIndexThirteenPeriod = d);
-            dataPoints = dataPoints.UpdateAll(x => x.IsProcessed = true);
+            dataPoints = dataPoints.UpdateAll(x => x.IsProcessed = 1);
             return dataPoints;
         }
     }

@@ -30,5 +30,32 @@ namespace StockGraphAnalyser.Domain.Web
 
             return symbolList;
         }
+
+        /// <summary>
+        /// Gets all symbols.
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, string> GetFtse100()
+        {
+            var symbolList = new Dictionary<string, string>();
+            var document = new HtmlDocument();
+
+            var responseStream = WebRequest.Create("http://en.wikipedia.org/wiki/FTSE_100_Index").GetResponse().GetResponseStream();
+            document.LoadHtml(new StreamReader(responseStream).ReadToEnd());
+            var tableRows = document.DocumentNode.SelectNodes("//table[@id='constituents']/tr");
+            var tickerRows = tableRows.Skip(1).Take(tableRows.Count() - 1);
+            foreach (var r in tickerRows)
+            {
+                var symbol = r.ChildNodes.Where(t => t.Name == "td").ElementAt(1).InnerText;
+                var companyName = r.ChildNodes.Where(t => t.Name == "td").ElementAt(0).InnerText;
+
+                if (!symbolList.ContainsKey(symbol))
+                {
+                    symbolList.Add(symbol, companyName);
+                }
+            }
+          
+            return symbolList;
+        }
     }
 }

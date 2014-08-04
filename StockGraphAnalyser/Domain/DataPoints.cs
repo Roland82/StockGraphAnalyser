@@ -16,11 +16,12 @@ namespace StockGraphAnalyser.Domain
         public string Symbol { get; set; }
         public decimal? MovingAverageTwoHundredDay { get; set; }
         public decimal? MovingAverageFiftyDay { get; set; }
+        public decimal? MovingAverageTwentyDay { get; set; }
         public decimal? UpperBollingerBand { get; set; }
         public decimal? LowerBollingerBand { get; set; }
         public decimal? ForceIndexOnePeriod { get; set; }
         public decimal? ForceIndexThirteenPeriod { get; set; }
-        public bool IsProcessed { get; set; }
+        public short IsProcessed { get; set; }
 
         public static DataPoints CreateFromQuote(Quote quote)
         {
@@ -34,7 +35,7 @@ namespace StockGraphAnalyser.Domain
                     Open = quote.Open, 
                     Symbol = quote.Symbol, 
                     Volume = quote.Volume,
-                    IsProcessed = false
+                    IsProcessed = 0
                 };
         }
     }

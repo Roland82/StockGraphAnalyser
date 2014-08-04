@@ -1,4 +1,105 @@
-﻿SELECT SUM((1 - (n.[Close] / t.[Close])) * 100)
+﻿================================================== CREATE TABLES START ========================================================
+
+USE [StockGraphAnalyser]
+GO
+
+/****** Object:  Table [dbo].[Companies]    Script Date: 03/08/2014 23:53:20 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Companies](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Symbol] [varchar](7) NOT NULL,
+	[Name] [varchar](200) NULL,
+	[Index] [int] NULL,
+ CONSTRAINT [PK_Stock] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+USE [StockGraphAnalyser]
+GO
+
+/****** Object:  Table [dbo].[DataPoints]    Script Date: 03/08/2014 23:53:51 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[DataPoints](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Symbol] [varchar](10) NOT NULL,
+	[Date] [date] NOT NULL,
+	[Open] [decimal](8, 2) NOT NULL,
+	[Close] [decimal](8, 2) NOT NULL,
+	[High] [decimal](8, 2) NOT NULL,
+	[Low] [decimal](8, 2) NOT NULL,
+	[Volume] [bigint] NULL,
+	[MovingAverageTwoHundredDay] [decimal](8, 2) NULL,
+	[MovingAverageFiftyDay] [decimal](8, 2) NULL,
+	[MovingAverageTwentyDay] [decimal](8, 2) NULL,
+	[UpperBollingerBand] [decimal](8, 2) NULL,
+	[LowerBollingerBand] [decimal](8, 2) NULL,
+	[ForceIndexOnePeriod] [decimal](22, 2) NULL,
+	[ForceIndexThirteenPeriod] [decimal](22, 2) NULL,
+	[IsProcessed] [tinyint] NULL,
+ CONSTRAINT [PK_DataPoints] PRIMARY KEY CLUSTERED 
+(
+	[Symbol] ASC,
+	[Date] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+================================================== CREATE TABLES END ========================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT SUM((1 - (n.[Close] / t.[Close])) * 100)
 
   FROM [StockGraphAnalyser].[dbo].[DataPoints] t
   INNER JOIN [StockGraphAnalyser].[dbo].[DataPoints] n ON t.Symbol = n.Symbol AND n.Date = '2014-02-28' 

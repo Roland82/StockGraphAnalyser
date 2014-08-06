@@ -12,11 +12,15 @@ namespace StockGraphAnalyser.Domain.Repository
 
     public class DataPointRepository : IDataPointRepository
     {
-        private const string ConnectionString = @"Server=ROLAND-PC\SQLEXPRESS;Database=StockGraphAnalyser;Trusted_Connection=True;";
+        private readonly string connectionString;
+
+        public DataPointRepository() {
+            this.connectionString = string.Format(@"Server={0}\SQLEXPRESS;Database=StockGraphAnalyser;Trusted_Connection=True;", Environment.MachineName);
+        }
 
         public void InsertAll(IEnumerable<DataPoints> dataPoints)
         {
-            using (IDbConnection connection = new SqlConnection(ConnectionString))
+            using (IDbConnection connection = new SqlConnection(this.connectionString))
             {
                 connection.Open();
                 connection.Execute(@"INSERT INTO DataPoints 
@@ -28,7 +32,7 @@ namespace StockGraphAnalyser.Domain.Repository
 
         public IEnumerable<DataPoints> FindAll(string symbol)
         {
-            using (IDbConnection connection = new SqlConnection(ConnectionString))
+            using (IDbConnection connection = new SqlConnection(this.connectionString))
             {
                connection.Open();
                 return connection.Query<DataPoints>(string.Format("SELECT * FROM DataPoints WHERE Symbol = '{0}'", symbol));
@@ -36,7 +40,7 @@ namespace StockGraphAnalyser.Domain.Repository
         }
 
         public DateTime? FindLatestDataPointDateForSymbol(string symbol) {
-            using (IDbConnection connection = new SqlConnection(ConnectionString))
+            using (IDbConnection connection = new SqlConnection(this.connectionString))
             {
                 connection.Open();
                 return connection.Query<DateTime>(string.Format("SELECT Max(Date) FROM DataPoints WHERE Symbol = '{0}' GROUP BY Symbol", symbol)).FirstOrDefault();
@@ -45,7 +49,7 @@ namespace StockGraphAnalyser.Domain.Repository
 
         public void UpdateAll(IEnumerable<DataPoints> dataPoints)
         {
-            using (IDbConnection connection = new SqlConnection(ConnectionString))
+            using (IDbConnection connection = new SqlConnection(this.connectionString))
             {
                 
                 connection.Open();

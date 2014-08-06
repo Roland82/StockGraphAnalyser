@@ -1,27 +1,35 @@
 ﻿namespace StockGraphAnalyser.Domain.Repository
 {
+    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
     using Dapper;
-    using StockGraphAnalyser.Processing.Types;
+    using Interfaces;
+    using Processing.Types;
 
-    public class CompanyRepository
+    public class CompanyRepository : ICompanyRepository
     {
-        private const string ConnectionString = @"Server=ROLAND-PC\SQLEXPRESS;Database=StockGraphAnalyser;Trusted_Connection=True;";
+        private readonly string connectionString;
+
+        public CompanyRepository() {
+            this.connectionString =
+                string.Format(@"Server={0}\SQLEXPRESS;Database=StockGraphAnalyser;Trusted_Connection=True;",
+                              Environment.MachineName);
+        }
 
         public void InsertAll(IEnumerable<Company> companies)
         {
-            using (IDbConnection connection = new SqlConnection(ConnectionString))
+            using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                connection.Execute(@"INSERT INTO Companies VALUES (@Id,@Symbol,@Name)", companies);
+                connection.Execute(@"INSERT INTO Companies VALUES (@Id,@Symbol,@Name, @Index)", companies);
             }
         }
 
         public void UpdateAll(IEnumerable<Company> companies)
         {
-            using (IDbConnection connection = new SqlConnection(ConnectionString))
+            using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 using (var transaction = connection.BeginTransaction())
@@ -41,7 +49,7 @@
 
         public IEnumerable<Company> FindAll(char letter)
         {
-            using (IDbConnection connection = new SqlConnection(ConnectionString))
+            using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 return connection.Query<Company>(string.Format("SELECT * FROM Companies WHERE Symbol LIKE '{0}%'", letter));
@@ -50,7 +58,7 @@
 
         public IEnumerable<Company> FindByIndex(Company.ConstituentOfIndex index)
         {
-            using (IDbConnection connection = new SqlConnection(ConnectionString))
+            using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 return connection.Query<Company>(string.Format("SELECT * FROM Companies WHERE [Index] = {0}", index.GetHashCode()));
@@ -59,7 +67,7 @@
 
         public IEnumerable<Company> FindAll()
         {
-            using (IDbConnection connection = new SqlConnection(ConnectionString))
+            using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 return connection.Query<Company>(string.Format("SELECT * FROM Companies"));

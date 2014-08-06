@@ -221,6 +221,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\DateTimeExtensions.cs" />
+    <Compile Include="Infrastructure\HtmlHelperExtensions.cs" />
     <Compile Include="Infrastructure\JsonNetResult.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Views\TechnicalsViewModel.cs" />
@@ -345,6 +346,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Technicals\Index.cshtml" />
     <Content Include="Views\DataUpdate\Update.cshtml" />
+    <Content Include="Views\DataUpdate\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -6,7 +6,7 @@ namespace GraphAnalyser.Tests.Web
 
     public class SymbolFinderServiceTests
     {
-        SymbolFinderService service = new SymbolFinderService();
+        CompanyFinderService service = new CompanyFinderService();
 
         [Test]
         public void GetAllSymbols()

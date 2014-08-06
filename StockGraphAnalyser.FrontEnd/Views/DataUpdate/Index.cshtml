@@ -1,0 +1,32 @@
+﻿@using StockGraphAnalyser.FrontEnd.Infrastructure
+@using StockGraphAnalyser.Processing.Types
+@using System.Linq;
+@model dynamic
+
+@{
+    ViewBag.Title = "Data Update Tools";
+}
+
+<h2>Data Update Tools</h2>
+
+<table>
+    <tr>
+        <td><b>Update Company Data</b></td>
+        <td>
+            @using (Html.BeginForm("UpdateCompanies", "DataUpdate", FormMethod.Post))
+            {
+                <input style="float: right" type="submit" value="Update" name="UpdateCompanies" id="UpdateCompanies"/>
+            }
+        </td>
+        
+        <td><b>Update All Quotes and Process</b></td>
+        <td>
+            @using (Html.BeginForm("UpdateDatapoints", "DataUpdate", FormMethod.Post))
+            {
+                @Html.DropdownListFromEnum(
+                    "index", typeof(Company.ConstituentOfIndex));
+                <input style="float: right" type="submit" value="Update" name="UpdateDatapoints" id="UpdateDatapoints"/>
+            }
+        </td>
+    </tr>
+</table>

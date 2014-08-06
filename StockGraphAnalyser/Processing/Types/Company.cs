@@ -7,6 +7,7 @@ namespace StockGraphAnalyser.Processing.Types
     {
         public enum ConstituentOfIndex
         {
+            Unknown = 0,
             Ftse100 = 1
         }
 
@@ -29,7 +30,7 @@ namespace StockGraphAnalyser.Processing.Types
 
         public Company() {}
 
-        internal static Company Create(String name, String symbol, ConstituentOfIndex constituentOfIndex)
+        public static Company Create(String name, String symbol, ConstituentOfIndex constituentOfIndex)
         {
             return new Company(name, symbol, constituentOfIndex);
         }

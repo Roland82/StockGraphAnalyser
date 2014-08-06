@@ -4,13 +4,11 @@ namespace StockGraphAnalyser.Domain.Web
     using System.IO;
     using System.Linq;
     using System.Net;
-    using System.Net.Http;
     using HtmlAgilityPack;
+    using Interfaces;
 
-    public class SymbolFinderService 
+    public class CompanyFinderService : ICompanyFinderService
     {
-        private readonly HttpClient client = new HttpClient();
-
         /// <summary>
         /// Gets all symbols.
         /// </summary>

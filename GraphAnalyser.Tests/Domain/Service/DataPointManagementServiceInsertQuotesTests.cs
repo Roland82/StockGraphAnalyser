@@ -11,14 +11,15 @@
     using StockGraphAnalyser.Domain.Service;
     using StockGraphAnalyser.Domain.Web.Interfaces;
     using StockGraphAnalyser.Processing.Calculators;
+    using StockGraphAnalyser.Processing.Types;
     using TestUtilities;
 
     public partial class DataPointManagementServiceTests
     {
         private readonly DateTime monday = new DateTime(2014, 8, 4);
-        private Mock<IDataPointRepository> mockRepository;
-        private Mock<IYahooStockQuoteServiceClient> mockYahooServiceClient;
-        private Mock<ICalculatorFactory> mockCalculatorFactory;
+        private Mock<IDataPointRepository> dataPointRepo;
+        private Mock<IYahooStockQuoteServiceClient> yahooServiceClient;
+        private Mock<ICalculatorFactory> calculatorFactory;
 
 
         private IEnumerable<DataPoints> TestDataPoints {
@@ -36,52 +37,56 @@
             }
         }
 
+        private IEnumerable<Quote> TestQuotes {
+            get {
+                for (var i = 0; i <= 6; i++)
+                {
+                    yield return this.CreateQuote(i);
+                }
+            }
+        }
+            
         [SetUp]
         public void Setup() {
-            this.mockRepository = new Mock<IDataPointRepository>();
-            this.mockYahooServiceClient = new Mock<IYahooStockQuoteServiceClient>();
-            this.mockCalculatorFactory = new Mock<ICalculatorFactory>();
+            this.dataPointRepo = new Mock<IDataPointRepository>();
+            this.yahooServiceClient = new Mock<IYahooStockQuoteServiceClient>();
+            this.calculatorFactory = new Mock<ICalculatorFactory>();
         }
 
-        //[Test]
-        //public void InsertNewQuotesToDbTest() {
-        //    this.mockRepository.Setup(m => m.FindLatestDataPointDateForSymbol("SGP.L")).Returns(monday.AddDays(1));
+        [Test]
+        public void InsertNewQuotesToDbTest() {
+            var latestDataPointDate = monday.AddDays(1);
+            this.dataPointRepo.Setup(m => m.FindLatestDataPointDateForSymbol("SGP.L")).Returns(latestDataPointDate);
 
-        //    this.mockYahooServiceClient.Setup(m => m.GetQuotes("SGP.L")).Returns(TestQuotes);
-        //    var service = new DataPointManagementService(this.mockRepository.Object, this.mockYahooServiceClient.Object,
-        //                                                 this.mockCalculatorFactory.Object);
-        //    service.InsertNewQuotesToDb("SGP.L");
+            this.yahooServiceClient.Setup(m => m.GetQuotes("SGP.L")).Returns(TestQuotes);
+            var service = new DataPointManagementService(this.dataPointRepo.Object, this.yahooServiceClient.Object, this.calculatorFactory.Object);
+            service.InsertNewQuotesToDb("SGP.L");
 
-        //    this.mockRepository.Verify(m => m.InsertAll(It.Is<IEnumerable<DataPoints>>(d =>
-        //                                                                               d.Min(x => x.Date) ==
-        //                                                                               expectedDataPoints.Min(
-        //                                                                                   x => x.Date) &&
-        //                                                                               d.Max(x => x.Date) ==
-        //                                                                               expectedDataPoints.Max(
-        //                                                                                   x => x.Date) &&
-        //                                                                               d.Count() ==
-        //                                                                               expectedDataPoints.Count()
-        //                                                    )), Times.Once);
-        //}
+            var expectedDataPoints = TestQuotes.Where(q => q.Date > latestDataPointDate).Select(DataPoints.CreateFromQuote).ToList();
 
-        //[Test]
-        //public void QuotesFoundButUpToDateDbTest() {
-        //    this.mockRepository.Setup(m => m.FindLatestDataPointDateForSymbol("SGP.L"))
-        //        .Returns(DateTime.Today.AddDays(-2));
+            for (var i = 0; i <= 4; i++)
+            {
+                this.dataPointRepo.Verify(m => m.InsertAll(It.Is<List<DataPoints>>(d => d[i].Equals(expectedDataPoints[i]))));
+            }
+        }
 
-        //    this.mockYahooServiceClient.Setup(m => m.GetQuotes("SGP.L")).Returns(TestQuotes);
-        //    var service = new DataPointManagementService(this.mockRepository.Object, this.mockYahooServiceClient.Object,
-        //                                                 this.mockCalculatorFactory.Object);
-        //    service.InsertNewQuotesToDb("SGP.L");
+        [Test]
+        public void QuotesFoundButUpToDateDbTest()
+        {
+            this.dataPointRepo.Setup(m => m.FindLatestDataPointDateForSymbol("SGP.L")).Returns(monday.AddDays(6));
+            this.yahooServiceClient.Setup(m => m.GetQuotes("SGP.L")).Returns(TestQuotes);
 
-        //    this.mockRepository.Verify(m => m.InsertAll(It.IsAny<IEnumerable<DataPoints>>()), Times.Never);
-        //}
+            var service = new DataPointManagementService(this.dataPointRepo.Object, this.yahooServiceClient.Object, this.calculatorFactory.Object);
+            service.InsertNewQuotesToDb("SGP.L");
+
+            this.dataPointRepo.Verify(m => m.InsertAll(It.IsAny<IEnumerable<DataPoints>>()), Times.Never);
+        }
 
         [Test]
         public void TestUpdate() {
             this.BuildCalcuatorFactory();
-            this.mockRepository.Setup(f => f.FindAll("SGP.L")).Returns(TestDataPoints);
-            var service = new DataPointManagementService(this.mockRepository.Object, this.mockYahooServiceClient.Object, this.mockCalculatorFactory.Object);
+            this.dataPointRepo.Setup(f => f.FindAll("SGP.L")).Returns(TestDataPoints);
+            var service = new DataPointManagementService(this.dataPointRepo.Object, this.yahooServiceClient.Object, this.calculatorFactory.Object);
             service.FillInMissingProcessedData("SGP.L");
 
             var expectedDatapointsUpdated = new List<DataPoints>
@@ -124,7 +129,9 @@
                         },
                 };
 
-            this.mockRepository.Verify(f => f.UpdateAll(It.Is<List<DataPoints>>(c => c.Equals(expectedDatapointsUpdated.ToList()))));
+            this.dataPointRepo.Verify(f => f.UpdateAll(It.Is<List<DataPoints>>(c => c.Count == 2)));
+            this.dataPointRepo.Verify(f => f.UpdateAll(It.Is<List<DataPoints>>(c => c[0].Equals(expectedDatapointsUpdated[0]))));
+            this.dataPointRepo.Verify(f => f.UpdateAll(It.Is<List<DataPoints>>(c => c[1].Equals(expectedDatapointsUpdated[1]))));      
         }
 
         private void BuildCalcuatorFactory() {
@@ -174,7 +181,7 @@
             var returnValues = GraphPlottingUtilities.CreateGraph(monday, calculationSetup);
             var calculator = new Mock<ICalculationTool>();
             calculator.Setup(c => c.CalculateAsync(It.IsAny<DateTime>())).ReturnsAsync(returnValues);
-            this.mockCalculatorFactory
+            this.calculatorFactory
                 .Setup(calculatorFactorySetup)
                 .Returns(calculator.Object);
         }
@@ -194,5 +201,8 @@
             };
         }
 
+        private Quote CreateQuote(int addDays) {
+            return Quote.Create("SGP.L", monday.AddDays(addDays), 1m, 2m, 3m, 1m, 100);
+        }
     }
 }

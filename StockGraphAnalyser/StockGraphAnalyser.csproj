@@ -75,10 +75,12 @@
     <Compile Include="Domain\DataPoints.cs" />
     <Compile Include="Domain\Repository\CompanyRepository.cs" />
     <Compile Include="Domain\Repository\DataPointRepository.cs" />
+    <Compile Include="Domain\Repository\Interfaces\ICompanyRepository.cs" />
     <Compile Include="Domain\Repository\Interfaces\IDataPointRepository.cs" />
     <Compile Include="Domain\Service\CompanyDataManagementService.cs" />
     <Compile Include="Domain\Service\DataPointManagementService.cs" />
     <Compile Include="Domain\Web\CompanyFinderService.cs" />
+    <Compile Include="Domain\Web\Interfaces\ICompanyFinderService.cs" />
     <Compile Include="Domain\Web\Interfaces\IYahooStockQuoteServiceClient.cs" />
     <Compile Include="Domain\Web\YahooStockQuoteServiceClient.cs" />
     <Compile Include="Processing\Calculators\AverageTrueRangeCalculator.cs" />

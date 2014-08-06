@@ -3,25 +3,35 @@
 namespace StockGraphAnalyser.Domain.Service
 {
     using System.Linq;
-    using StockGraphAnalyser.Domain.Repository;
-    using StockGraphAnalyser.Domain.Web;
+    using Processing.Types;
+    using Repository.Interfaces;
+    using Web.Interfaces;
 
     public class CompanyDataManagementService
     {
-        private SymbolFinderService symbolFinderService = new SymbolFinderService();
-        private CompanyRepository companyRepository = new CompanyRepository();
+        private readonly ICompanyFinderService companyFinderService;
+        private readonly ICompanyRepository companyRepository;
 
-        public void UpdateCompanies()
-        {
-            var companies = symbolFinderService.GetFtse100();
-            var companiesInDb = companyRepository.FindAll();
+        public CompanyDataManagementService(ICompanyFinderService companyFinderService, ICompanyRepository companyRepository) {
+            this.companyFinderService = companyFinderService;
+            this.companyRepository = companyRepository;
+        }
 
-            var updatedCompanies = companiesInDb
-                .Where(c => companies.ContainsKey(c.Symbol.Replace(".L", "")))
-                .Select(c => { c.Index = 1; return c; });
-
-            companyRepository.UpdateAll(updatedCompanies);
-
+        /// <summary>
+        /// Gets the new companies that are not in the database currently.
+        /// </summary>
+        public void GetNewCompanies() {
+            var currentCompanySymbols = this.companyRepository.FindAll().Select(c => c.Symbol);
+            var allCompanies = this.companyFinderService.GetAllSymbols();
+            
+            var companiesToInsert = allCompanies
+                .Where(c => !currentCompanySymbols.Contains(c.Key))
+                .Select(c => Company.Create(c.Value, c.Key + ".L", Company.ConstituentOfIndex.Unknown));
+            
+            if (companiesToInsert.Any())
+            {
+                this.companyRepository.InsertAll(companiesToInsert);
+            }
         }
     }
 }

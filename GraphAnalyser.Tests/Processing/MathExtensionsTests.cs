@@ -20,5 +20,10 @@
         {
             Assert.AreEqual(expectedResult, number1.Difference(number2));
         }
+
+        public void PercentageDifferenceBetweenTest()
+        {
+            Assert.AreEqual(33.33, MathExtras.PercentageDifferenceBetween(5, 7));
+        }
     }
 }

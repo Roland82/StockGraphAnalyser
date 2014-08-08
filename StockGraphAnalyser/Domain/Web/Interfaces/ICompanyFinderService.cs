@@ -1,6 +1,7 @@
 namespace StockGraphAnalyser.Domain.Web.Interfaces
 {
     using System.Collections.Generic;
+    using StockGraphAnalyser.Processing.Types;
 
     public interface ICompanyFinderService
     {
@@ -14,6 +15,6 @@ namespace StockGraphAnalyser.Domain.Web.Interfaces
         /// Gets all symbols.
         /// </summary>
         /// <returns></returns>
-        Dictionary<string, string> GetFtse100();
+        Dictionary<string, string> GetFtseIndex(Company.ConstituentOfIndex indexType);
     }
 }

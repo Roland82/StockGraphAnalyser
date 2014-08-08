@@ -10,14 +10,8 @@ namespace StockGraphAnalyser.Domain.Repository
     using Dapper;
     using Interfaces;
 
-    public class DataPointRepository : IDataPointRepository
+    public class DataPointRepository  : AbstractRepository, IDataPointRepository
     {
-        private readonly string connectionString;
-
-        public DataPointRepository() {
-            this.connectionString = string.Format(@"Server={0}\SQLEXPRESS;Database=StockGraphAnalyser;Trusted_Connection=True;", Environment.MachineName);
-        }
-
         public void InsertAll(IEnumerable<DataPoints> dataPoints)
         {
             using (IDbConnection connection = new SqlConnection(this.connectionString))

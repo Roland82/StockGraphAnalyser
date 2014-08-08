@@ -3,6 +3,7 @@ namespace GraphAnalyser.Tests.Web
 {
     using NUnit.Framework;
     using StockGraphAnalyser.Domain.Web;
+    using StockGraphAnalyser.Processing.Types;
 
     public class SymbolFinderServiceTests
     {
@@ -15,11 +16,12 @@ namespace GraphAnalyser.Tests.Web
             Assert.True(companies.Count > 1000);
         }
 
-        [Test]
-        public void GetFtse100Test()
+        [TestCase(Company.ConstituentOfIndex.Ftse100)]
+        [TestCase(Company.ConstituentOfIndex.Ftse250)]
+        public void GetFtse100Test(Company.ConstituentOfIndex index)
         {
-            var companies = service.GetFtse100();
-            Assert.True(companies.Count > 90);
+            var companies = service.GetFtseIndex(index);
+            Assert.True(companies.Count > 50);
         }
     }
 }

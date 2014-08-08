@@ -8,16 +8,8 @@
     using Interfaces;
     using Processing.Types;
 
-    public class CompanyRepository : ICompanyRepository
+    public class CompanyRepository  : AbstractRepository, ICompanyRepository
     {
-        private readonly string connectionString;
-
-        public CompanyRepository() {
-            this.connectionString =
-                string.Format(@"Server={0}\SQLEXPRESS;Database=StockGraphAnalyser;Trusted_Connection=True;",
-                              Environment.MachineName);
-        }
-
         public void InsertAll(IEnumerable<Company> companies)
         {
             using (IDbConnection connection = new SqlConnection(connectionString))

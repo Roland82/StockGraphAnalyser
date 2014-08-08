@@ -17,5 +17,10 @@ namespace StockGraphAnalyser.Processing
             var mean = dataPoints.Average();
             return (decimal)Math.Sqrt(dataPoints.Select(d => Math.Pow((double)d - (double)mean, 2)).Sum() / dataPoints.Count());
         }
+
+        public static decimal PercentageDifferenceBetween(decimal number, decimal anotherNumber)
+        {
+            return ((number - anotherNumber)/((number + anotherNumber)/2))*100;
+        }
     }
 }

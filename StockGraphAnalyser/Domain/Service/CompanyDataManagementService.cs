@@ -2,6 +2,7 @@
 
 namespace StockGraphAnalyser.Domain.Service
 {
+    using System;
     using System.Linq;
     using Processing.Types;
     using Repository.Interfaces;
@@ -33,5 +34,19 @@ namespace StockGraphAnalyser.Domain.Service
                 this.companyRepository.InsertAll(companiesToInsert);
             }
         }
+
+        public void UpdateCompanyMetaData()
+        {
+            foreach (var i in Enum.GetValues(typeof(Company.ConstituentOfIndex)))
+            {
+                var indexType = (Company.ConstituentOfIndex) i;
+                if (indexType == Company.ConstituentOfIndex.Unknown) continue;
+                var companiesInIndex = this.companyFinderService.GetFtseIndex(indexType);
+                var companies = this.companyRepository.FindAll();
+                var updatedCompanies = companies.Where(c => companiesInIndex.ContainsKey(c.Symbol.Replace(".L", ""))).Select(c => { c.Index = indexType.GetHashCode(); return c; });
+                this.companyRepository.UpdateAll(updatedCompanies);
+            }
+        }
     }
 }
+

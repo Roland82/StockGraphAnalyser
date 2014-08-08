@@ -27,13 +27,15 @@ namespace StockGraphAnalyser.Domain.Service
         /// <param name="symbol">The symbol.</param>
         public void InsertNewQuotesToDb(string symbol)
         {
-            var quotes = this.stockQuoteClient.GetQuotes(symbol).Where(q => q.Date > DateTime.Today.AddYears(-2));
-            var maxDataInDb = this.repository.FindLatestDataPointDateForSymbol(symbol);
-            var dataPointsToInsert = quotes.Where(q => q.Date > maxDataInDb).Select(DataPoints.CreateFromQuote);
-            if (dataPointsToInsert.Any())
-            {
-                this.repository.InsertAll(dataPointsToInsert);
-            }
+            var storedDatapoints = this.repository.FindAll(symbol).OrderBy(d => d.Date);
+            var dateToInsertFrom = storedDatapoints.Any() ? storedDatapoints.Max(d => d.Date).AddDays(1) : DateTime.Today.AddYears(-2);
+            var newDataPoints = this.stockQuoteClient.GetQuotes(symbol).Where(q => q.Date >= dateToInsertFrom).Select(DataPoints.CreateFromQuote);
+
+            var fullDataPointsSet = storedDatapoints.ToList();
+            fullDataPointsSet.AddRange(newDataPoints);
+            var fullyProcessedData = this.AddProcessedData(fullDataPointsSet.OrderBy(d => d.Date), dateToInsertFrom);
+           
+            this.repository.InsertAll(fullyProcessedData.Where(d => d.Date >= dateToInsertFrom));    
         }
 
 

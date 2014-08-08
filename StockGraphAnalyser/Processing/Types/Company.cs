@@ -8,7 +8,9 @@ namespace StockGraphAnalyser.Processing.Types
         public enum ConstituentOfIndex
         {
             Unknown = 0,
-            Ftse100 = 1
+            Ftse100 = 1,
+            Ftse250 = 2,
+            SmallCap = 3
         }
 
         public Guid Id { get; set; }

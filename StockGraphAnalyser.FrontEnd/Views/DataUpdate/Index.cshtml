@@ -11,14 +11,24 @@
 
 <table>
     <tr>
-        <td><b>Update Company Data</b></td>
+        <td><b>Add new companies</b></td>
         <td>
             @using (Html.BeginForm("UpdateCompanies", "DataUpdate", FormMethod.Post))
             {
                 <input style="float: right" type="submit" value="Update" name="UpdateCompanies" id="UpdateCompanies"/>
             }
         </td>
-        
+    </tr>
+    <tr>
+        <td><b>Update Company Meta Data</b></td>
+        <td>
+            @using (Html.BeginForm("UpdateCompanyMetaData", "DataUpdate", FormMethod.Post))
+            {
+                <input style="float: right" type="submit" value="Update" name="UpdateCompanyMetadata" id="UpdateCompanyMetadata"/>
+            }
+        </td>
+    </tr>
+    <tr>
         <td><b>Update All Quotes and Process</b></td>
         <td>
             @using (Html.BeginForm("UpdateDatapoints", "DataUpdate", FormMethod.Post))

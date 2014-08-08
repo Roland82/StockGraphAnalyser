@@ -1,0 +1,46 @@
+﻿@using StockGraphAnalyser.Processing
+@model Dictionary<string, IEnumerable<StockGraphAnalyser.Domain.DataPoints>>
+
+@{
+    ViewBag.Title = "Find New Trades";
+}
+
+<h2>Potential Trades</h2>
+
+
+<h3>Above bollinger band</h3>
+<table>
+    <tr><th>Symbol</th><th>Percentage Above Band</th><th>Close</th></tr>
+    @foreach (var datapoints in Model["Above Upper Bollinger Band"])
+    {
+        <tr><td>@Html.ActionLink(datapoints.Symbol, "Index", "Technicals", new{symbol = datapoints.Symbol}, null)</td><td>@Math.Round(MathExtras.PercentageDifferenceBetween(datapoints.Close, datapoints.UpperBollingerBand.Value), 2)%</td><td>@datapoints.Close</td></tr>
+
+    }
+    
+
+</table>
+
+
+<h3>Below bollinger band</h3>
+<table>
+    <tr><td>Symbol</td><td>Percentage Below Band</td><td>Close</td></tr>
+    @foreach (var datapoints in Model["Below Lower Bollinger Band"])
+    {
+        <tr><td>@Html.ActionLink(datapoints.Symbol, "Index", "Technicals", new{symbol = datapoints.Symbol}, null)</td><td>@Math.Round(MathExtras.PercentageDifferenceBetween(datapoints.Close, datapoints.LowerBollingerBand.Value), 2)%</td><td>@datapoints.Close</td></tr>
+
+    }
+    
+
+</table>
+
+<h3>Below bollinger band</h3>
+<table>
+    <tr><td>Symbol</td><td>Diff at </td><td>Close</td></tr>
+    @foreach (var datapoints in Model["Below Lower Bollinger Band"])
+    {
+        <tr><td>@Html.ActionLink(datapoints.Symbol, "Index", "Technicals", new{symbol = datapoints.Symbol}, null)</td><td>@Math.Round(MathExtras.PercentageDifferenceBetween(datapoints.Close, datapoints.LowerBollingerBand.Value), 2)%</td><td>@datapoints.Close</td></tr>
+
+    }
+    
+
+</table>

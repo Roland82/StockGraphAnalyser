@@ -216,6 +216,7 @@
     <Compile Include="Controllers\DataUpdateController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TechnicalsController.cs" />
+    <Compile Include="Controllers\TradeScannerController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -347,6 +348,7 @@
     <Content Include="Views\Technicals\Index.cshtml" />
     <Content Include="Views\DataUpdate\Update.cshtml" />
     <Content Include="Views\DataUpdate\Index.cshtml" />
+    <Content Include="Views\TradeScanner\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

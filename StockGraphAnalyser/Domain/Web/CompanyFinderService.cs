@@ -7,7 +7,6 @@ namespace StockGraphAnalyser.Domain.Web
     using System.Text.RegularExpressions;
     using HtmlAgilityPack;
     using Interfaces;
-    using StockGraphAnalyser.Processing.Types;
 
     public class CompanyFinderService : ICompanyFinderService
     {

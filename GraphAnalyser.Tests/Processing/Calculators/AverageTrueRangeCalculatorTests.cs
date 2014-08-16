@@ -4,8 +4,8 @@ namespace GraphAnalyser.Tests.Processing.Calculators
     using System;
     using System.Linq;
     using NUnit.Framework;
+    using StockGraphAnalyser.Domain;
     using StockGraphAnalyser.Processing.Calculators;
-    using StockGraphAnalyser.Processing.Types;
 
     /// <summary>
     /// Wilder started with a concept called True Range (TR), which is defined as the greatest of the following:

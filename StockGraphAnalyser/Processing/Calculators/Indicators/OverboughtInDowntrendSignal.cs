@@ -29,7 +29,7 @@ namespace StockGraphAnalyser.Processing.Calculators.TradingSignalDetectors
         }
 
         private bool IsClosingPriceOverbought(DataPoints datapoints) {
-            return datapoints.Close > datapoints.UpperBollingerBand &&
+            return datapoints.Close > datapoints.UpperBollingerBandTwoDeviation &&
                    datapoints.Close > datapoints.MovingAverageFiftyDay;
         }
 

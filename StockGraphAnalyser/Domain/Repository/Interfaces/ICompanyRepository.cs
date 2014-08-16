@@ -1,7 +1,6 @@
 ﻿namespace StockGraphAnalyser.Domain.Repository.Interfaces
 {
     using System.Collections.Generic;
-    using Processing.Types;
 
     public interface ICompanyRepository
     {

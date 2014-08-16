@@ -221,13 +221,6 @@ Highcharts.setOptions(Highcharts.theme);
 //                { name: 'LowerBollingerBand', color: '#FFAE42', lineStyle: 'longdash' }
 //            ];
         
-//        $.getJSON('http://localhost:53110/api/ChartResource/GetInidcator/?symbol=' + $('#symbol').attr('value') + "&indicatorName=Volume", function(data) {
-//            volume = {
-//                name: "Volume",
-//                data: data.Data
-//            };
-//        });
-
 //        alert(volume);
 //        $.each(dataPoints, function(i, datapoint) {
 
@@ -298,69 +291,20 @@ Highcharts.setOptions(Highcharts.theme);
 //                series: seriesOptions,
 //            });
 //        }
+var symbol = $('#symbol').attr('value');
 
-
-
-
-
-//        function createChart() {
-//            $('#container').highcharts('StockChart', {
-//                rangeSelector: {
-//                    inputEnabled: $('#container').width() > 480,
-//                    selected: 4
-//                },
-
-//                yAxis: [{
-//                    labels: {
-//                        formatter: function() {
-//                            return this.value + 'p';
-//                        }
-//                    },
-//                    plotLines: [{
-//                        value: 0,
-//                        width: 2,
-//                        color: 'silver'
-//                    }]
-//                }, {
-//                    labels: {
-//                        align: 'right',
-//                        x: -3
-//                    },
-//                    title: {
-//                        text: 'Volume'
-//                    },
-//                    top: '65%',
-//                    height: '35%',
-//                    offset: 0,
-//                    lineWidth: 2
-//                }],
-
-//                tooltip: {
-//                    pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
-//                    valueDecimals: 2
-//                },
-
-//                series: seriesOptions,
-                
-//                plotOptions: {
-//                    candlestick: {
-//                        color: 'red',
-//                        upColor: 'green'
-//                    }
-//                }
-//            });
-//        }
-//    });
-//});
-
-$(function() {
-    $.getJSON('http://localhost:53110/api/ChartResource/Get/?symbol=' + $('#symbol').attr('value'), function(data) {
+$(function () {
+    $.getJSON('http://localhost:53110/api/ChartResource/Get/?symbol=' + symbol, function(data) {
 
         // split the data set into ohlc and volume
         var ohlc = [],
             volume = [],
             forceIndexOneDay = [],
             forceIndexThirteenDay = [],
+            upperBollingerBandTwoDeviation = [],
+            upperBollingerBandOneDeviation = [],
+            lowerBollingerBandTwoDeviation = [],
+            lowerBollingerBandOneDeviation = [],
             dataLength = data.Data.length;
 
         for (i = 0; i < dataLength; i++) {
@@ -371,7 +315,7 @@ $(function() {
                 data.Data[i][3], // low
                 data.Data[i][4] // close
             ]);
-
+            
             volume.push([
                 data.Data[i][0], // the date
                 data.Data[i][5] // the volume
@@ -386,6 +330,26 @@ $(function() {
                 data.Data[i][0],
                 data.Data[i][7]
             ]);
+             
+            upperBollingerBandTwoDeviation.push([
+                data.Data[i][0],
+                data.Data[i][8]
+            ]);
+           
+            lowerBollingerBandTwoDeviation.push([
+                data.Data[i][0],
+                data.Data[i][9]
+            ]);
+
+            upperBollingerBandOneDeviation.push([
+                data.Data[i][0],
+                data.Data[i][10]
+            ]);
+
+            lowerBollingerBandOneDeviation.push([
+                data.Data[i][0],
+                data.Data[i][11]
+            ]);
         }
 
         // set the allowed units for data grouping
@@ -399,13 +363,26 @@ $(function() {
 
         // create the chart
         $('#container').highcharts('StockChart', {
-            rangeSelector: {
-                inputEnabled: $('#container').width() > 480,
-                selected: 1
-            },
+            rangeSelector: { inputEnabled: $('#container').width() > 480, selected: 1 },
 
-            title: {
-                text: 'AAPL Historical'
+            title: { text: symbol },
+
+            series: [
+                { type: 'candlestick', name: symbol, data: ohlc },
+                { name: 'Upper Bollinger Band 2 Deviation', data: upperBollingerBandTwoDeviation, color: '#FF0000' },
+                { name: 'Lower Bollinger Band 2 Deviation', data: lowerBollingerBandTwoDeviation, color: '#FF0000' },
+                { name: 'Upper Bollinger Band 1 Deviation', data: upperBollingerBandOneDeviation, color: '#FF0000' },
+                { name: 'Lower Bollinger Band 1 Deviation', data: lowerBollingerBandOneDeviation, color: '#FF0000' },
+                { type: 'column', name: 'Volume', data: volume, yAxis: 1 },
+                { name: 'Force (1 Day)', data: forceIndexOneDay, yAxis: 2 },
+                { name: 'Force (13 Day)', data: forceIndexThirteenDay, yAxis: 3 }
+            ],
+
+            plotOptions: {
+                candlestick: {
+                    color: 'red',
+                    upColor: 'green'
+                }
             },
 
             yAxis: [{
@@ -445,50 +422,20 @@ $(function() {
                     offset: 0,
                     lineWidth: 2
                 },
-
-                 {
-                     labels: {
-                         align: 'right',
-                         x: -3
-                     },
-                     title: {
-                         text: 'Force 13 Day'
-                     },
-                     top: '80%',
-                     height: '20%',
-                     offset: 0,
-                     lineWidth: 2
-                 }
-            ],
-
-            series: [{
-                    type: 'candlestick',
-                    name: 'AAPL',
-                    data: ohlc
-                },
                 {
-                    type: 'column',
-                    name: 'Volume',
-                    data: volume,
-                    yAxis: 1
-                },
-                {
-                    name: 'Force (1 Day)',
-                    data: forceIndexOneDay,
-                    yAxis: 2
-                },
-                {
-                    name: 'Force (13 Day)',
-                    data: forceIndexThirteenDay,
-                    yAxis: 3
+                    labels: {
+                        align: 'right',
+                        x: -3
+                    },
+                    title: {
+                        text: 'Force 13 Day'
+                    },
+                    top: '80%',
+                    height: '20%',
+                    offset: 0,
+                    lineWidth: 2
                 }
-            ],
-                            plotOptions: {
-                                candlestick: {
-                                    color: 'red',
-                                    upColor: 'green'
-                                }
-                            }
+            ]
         });
     });
 });

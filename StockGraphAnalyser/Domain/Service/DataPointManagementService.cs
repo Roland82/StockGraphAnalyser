@@ -76,26 +76,41 @@ namespace StockGraphAnalyser.Domain.Service
             dataPoints = dataPoints.MapNewDataPoint(twentyDayMaTask.Result, (p, d) => p.MovingAverageTwentyDay = d);
             dataPoints = dataPoints.MapNewDataPoint(onePeriodForceIndexTask.Result, (p, d) => p.ForceIndexOnePeriod = d);
 
-            var upperBollingerBandCalc = this.calculatorFactory.CreateBollingerBandCalculator(
+            var upperTwoDeviationBollingerBandCalc = this.calculatorFactory.CreateBollingerBandCalculator(
                 dataPoints.Where(d => d.MovingAverageTwentyDay.HasValue).ToDictionary(d => d.Date, d => d.MovingAverageTwentyDay.Value),
                 standardDeviationTask.Result, 
-                BollingerBandCalculator.Band.Upper);
+                BollingerBandCalculator.Band.UpperTwoDeviation);
 
-            var lowerBollingerBandCalc = this.calculatorFactory.CreateBollingerBandCalculator(
+            var lowerTwoDeviationBollingerBandCalc = this.calculatorFactory.CreateBollingerBandCalculator(
                 dataPoints.Where(d => d.MovingAverageTwentyDay.HasValue).ToDictionary(d => d.Date, d => d.MovingAverageTwentyDay.Value),
                 standardDeviationTask.Result,
-                BollingerBandCalculator.Band.Lower);
+                BollingerBandCalculator.Band.LowerTwoDeviation);
+
+            var upperOneDeviationBollingerBandCalc = this.calculatorFactory.CreateBollingerBandCalculator(
+                dataPoints.Where(d => d.MovingAverageTwentyDay.HasValue).ToDictionary(d => d.Date, d => d.MovingAverageTwentyDay.Value),
+                standardDeviationTask.Result,
+                BollingerBandCalculator.Band.UpperOneDeviation);
+
+            var lowerOneDeviationBollingerBandCalc = this.calculatorFactory.CreateBollingerBandCalculator(
+                dataPoints.Where(d => d.MovingAverageTwentyDay.HasValue).ToDictionary(d => d.Date, d => d.MovingAverageTwentyDay.Value),
+                standardDeviationTask.Result,
+                BollingerBandCalculator.Band.LowerOneDeviation);
 
             var thirteenPeriodForceIndexCalc = this.calculatorFactory.CreateExponentialMovingAverageCalculator(
                 dataPoints.Where(d => d.ForceIndexOnePeriod.HasValue).ToDictionary(f => f.Date, f => f.ForceIndexOnePeriod.Value), 
                 13);
             
             var thirteenPeriodForceIndexTask = thirteenPeriodForceIndexCalc.CalculateAsync(dateToProcessFrom);
-            var upperBollingerBandTask = upperBollingerBandCalc.CalculateAsync(dateToProcessFrom);
-            var lowerBollingerBandTask = lowerBollingerBandCalc.CalculateAsync(dateToProcessFrom);
+            var upperTwoDeviationBollingerBandTask = upperTwoDeviationBollingerBandCalc.CalculateAsync(dateToProcessFrom);
+            var lowerTwoDeviationBollingerBandTask = lowerTwoDeviationBollingerBandCalc.CalculateAsync(dateToProcessFrom);
+            var upperOneDeviationBollingerBandTask = upperOneDeviationBollingerBandCalc.CalculateAsync(dateToProcessFrom);
+            var lowerOneDeviationBollingerBandTask = lowerOneDeviationBollingerBandCalc.CalculateAsync(dateToProcessFrom);
 
-            dataPoints = dataPoints.MapNewDataPoint(lowerBollingerBandTask.Result, (p, d) => p.LowerBollingerBand = d);
-            dataPoints = dataPoints.MapNewDataPoint(upperBollingerBandTask.Result, (p, d) => p.UpperBollingerBand = d);        
+            dataPoints = dataPoints.MapNewDataPoint(lowerTwoDeviationBollingerBandTask.Result, (p, d) => p.LowerBollingerBandTwoDeviation = d);
+            dataPoints = dataPoints.MapNewDataPoint(upperTwoDeviationBollingerBandTask.Result, (p, d) => p.UpperBollingerBandTwoDeviation = d);
+            dataPoints = dataPoints.MapNewDataPoint(lowerOneDeviationBollingerBandTask.Result, (p, d) => p.LowerBollingerBandOneDeviation = d);
+            dataPoints = dataPoints.MapNewDataPoint(upperOneDeviationBollingerBandTask.Result, (p, d) => p.UpperBollingerBandOneDeviation = d); 
+
             dataPoints = dataPoints.MapNewDataPoint(thirteenPeriodForceIndexTask.Result, (p, d) => p.ForceIndexThirteenPeriod = d);
             dataPoints = dataPoints.UpdateAll(x => x.IsProcessed = 1);
             return dataPoints;

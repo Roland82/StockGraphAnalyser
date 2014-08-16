@@ -17,8 +17,8 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
             var indicatorMap = new Dictionary<string, Func<DataPoints, decimal?>>{
                                                                                     { "MovingAverageTwoHundredDay", points => points.MovingAverageTwoHundredDay},
                                                                                     { "MovingAverageFiftyDay", points => points.MovingAverageFiftyDay},
-                                                                                    { "UpperBollingerBand", points => points.UpperBollingerBand},
-                                                                                    { "LowerBollingerBand", points => points.LowerBollingerBand},
+                                                                                    { "UpperBollingerBandTwoDeviation", points => points.UpperBollingerBandTwoDeviation},
+                                                                                    { "LowerBollingerBandTwoDeviation", points => points.LowerBollingerBandTwoDeviation},
                                                                                     { "Volume", points => points.Volume}
                                                                                 };
 
@@ -33,7 +33,13 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
         {
             var repository = new DataPointRepository();
             var datapoints = repository.FindAll(symbol);
-            var list = datapoints.Select(d => new []{ d.Date.ToEpoch(), d.Open, d.High, d.Low, d.Close, d.Volume, d.ForceIndexOnePeriod, d.ForceIndexThirteenPeriod }).ToList();
+            var list = datapoints.Select(d => new []
+                {
+                    d.Date.ToEpoch(), d.Open, d.High, d.Low, d.Close, d.Volume, 
+                    d.ForceIndexOnePeriod, d.ForceIndexThirteenPeriod, 
+                    d.UpperBollingerBandTwoDeviation, d.LowerBollingerBandTwoDeviation,
+                    d.UpperBollingerBandOneDeviation, d.LowerBollingerBandOneDeviation
+                }).ToList();
             return JsonNetResult.Create(list);
         }
 

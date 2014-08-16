@@ -22,5 +22,11 @@ namespace StockGraphAnalyser.Processing
         {
             return ((number - anotherNumber)/((number + anotherNumber)/2))*100;
         }
+
+        public static bool IsBetween(this decimal number, decimal thisNumber, decimal thatNumber) {
+            var maxNumber = thisNumber > thatNumber ? thisNumber : thatNumber;
+            var minNumber = thisNumber > thatNumber ? thatNumber : thisNumber;
+            return number >= minNumber && number <= maxNumber;
+        }
     }
 }

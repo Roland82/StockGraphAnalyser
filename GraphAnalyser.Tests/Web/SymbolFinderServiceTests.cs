@@ -2,8 +2,8 @@
 namespace GraphAnalyser.Tests.Web
 {
     using NUnit.Framework;
+    using StockGraphAnalyser.Domain;
     using StockGraphAnalyser.Domain.Web;
-    using StockGraphAnalyser.Processing.Types;
 
     public class SymbolFinderServiceTests
     {

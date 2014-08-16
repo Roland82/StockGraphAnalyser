@@ -9,8 +9,9 @@ namespace StockGraphAnalyser.Domain.Repository
     using Dapper;
     using System;
     using System.Collections.Generic;
+    using Interfaces;
 
-    public class TradeSignalsRepository : AbstractRepository
+    public class TradeSignalsRepository : AbstractRepository, ITradeSignalsRepository
     {
         public IEnumerable<DataPoints> FindSharesAtValue()
         {
@@ -28,7 +29,7 @@ namespace StockGraphAnalyser.Domain.Repository
             using (IDbConnection connection = new SqlConnection(this.connectionString))
             {
                 connection.Open();
-                return connection.Query<DataPoints>(string.Format(@" SELECT d.* FROM DataPoints d INNER JOIN Companies c on d.Symbol = c.Symbol WHERE c.[Index] >= 1 AND [Close] < LowerBollingerBand AND Date = '{0}'",
+                return connection.Query<DataPoints>(string.Format(@" SELECT d.* FROM DataPoints d INNER JOIN Companies c on d.Symbol = c.Symbol WHERE c.[Index] >= 1 AND [Close] < LowerBollingerBandTwoDeviation AND Date = '{0}'",
                                                               this.GetLatestDateInDataPoints().ToString("yyyy-MM-dd")));
             }
         }
@@ -38,7 +39,7 @@ namespace StockGraphAnalyser.Domain.Repository
             using (IDbConnection connection = new SqlConnection(this.connectionString))
             {
                 connection.Open();
-                return connection.Query<DataPoints>(string.Format(@" SELECT d.* FROM DataPoints d INNER JOIN Companies c on d.Symbol = c.Symbol WHERE c.[Index] >= 1 AND [Close] > UpperBollingerBand AND Date = '{0}'",
+                return connection.Query<DataPoints>(string.Format(@" SELECT d.* FROM DataPoints d INNER JOIN Companies c on d.Symbol = c.Symbol WHERE c.[Index] >= 1 AND [Close] > UpperBollingerBandTwoDeviation AND Date = '{0}'",
                                                                                      this.GetLatestDateInDataPoints().ToString("yyyy-MM-dd")));
             }
         }

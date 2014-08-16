@@ -3,7 +3,7 @@ namespace GraphAnalyser.Tests.Domain.Service
 {
     using System;
     using System.Collections.Generic;
-    using StockGraphAnalyser.Processing.Types;
+    using StockGraphAnalyser.Domain;
 
     public partial class DataPointManagementServiceTests
     {

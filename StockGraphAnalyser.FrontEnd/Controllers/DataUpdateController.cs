@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
+    using Domain;
     using Domain.Repository;
     using Domain.Service;
     using Domain.Web;
     using Processing.Calculators;
-    using Processing.Types;
 
     public class DataUpdateController : Controller
     {
@@ -25,7 +25,6 @@
         public ActionResult Update(string symbol)
         {
             dataManagementService.InsertNewQuotesToDb(symbol);
-            dataManagementService.FillInMissingProcessedData(symbol);
             return this.View("Update");
         }
 

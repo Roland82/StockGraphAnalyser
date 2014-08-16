@@ -26,7 +26,7 @@ namespace GraphAnalyser.Tests.Processing.TradingSignalDetectors
                 {
                     Date = DateTime.Today.AddDays(i),
                     Close = t,
-                    UpperBollingerBand = upperBollinger[i],
+                    UpperBollingerBandTwoDeviation = upperBollinger[i],
                     MovingAverageFiftyDay = ma50Day[i]
                 });
         }

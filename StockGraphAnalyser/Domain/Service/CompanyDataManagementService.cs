@@ -4,7 +4,6 @@ namespace StockGraphAnalyser.Domain.Service
 {
     using System;
     using System.Linq;
-    using Processing.Types;
     using Repository.Interfaces;
     using Web.Interfaces;
 

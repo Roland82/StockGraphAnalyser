@@ -5,7 +5,7 @@ namespace StockGraphAnalyser.Processing.Calculators
     using System.Linq;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Types;
+    using Domain;
 
     /// <summary>
     /// Wilder started with a concept called True Range (TR), which is defined as the greatest of the following:
@@ -20,7 +20,6 @@ namespace StockGraphAnalyser.Processing.Calculators
 
         public AverageTrueRangeCalculator(IEnumerable<Quote> quotes, int sampleSize)
         {
-            AssertArguments.GreaterThanOrEqualTo(quotes.Count(), sampleSize);
             this.quotes = quotes;
             this.sampleSize = sampleSize;
         }

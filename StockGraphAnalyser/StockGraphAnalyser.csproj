@@ -71,14 +71,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssertArguments.cs" />
+    <Compile Include="Domain\CandleStickSignal.cs" />
+    <Compile Include="Domain\Company.cs" />
     <Compile Include="Domain\DataPoints.cs" />
+    <Compile Include="Domain\Quote.cs" />
     <Compile Include="Domain\Repository\AbstractRepository.cs" />
+    <Compile Include="Domain\Repository\CandleStickSignalRepository.cs" />
     <Compile Include="Domain\Repository\CompanyRepository.cs" />
     <Compile Include="Domain\Repository\DataPointRepository.cs" />
+    <Compile Include="Domain\Repository\Interfaces\ICandleStickSignalRepository.cs" />
     <Compile Include="Domain\Repository\Interfaces\ICompanyRepository.cs" />
     <Compile Include="Domain\Repository\Interfaces\IDataPointRepository.cs" />
+    <Compile Include="Domain\Repository\Interfaces\ITradeSignalsRepository.cs" />
     <Compile Include="Domain\Repository\TradeSignalsRepository.cs" />
+    <Compile Include="Domain\Service\CandleStickSignalManagementService.cs" />
     <Compile Include="Domain\Service\CompanyDataManagementService.cs" />
     <Compile Include="Domain\Service\DataPointManagementService.cs" />
     <Compile Include="Domain\Web\CompanyFinderService.cs" />
@@ -95,15 +101,15 @@
     <Compile Include="Processing\Calculators\Indicators\GraphCrossoverDetector.cs" />
     <Compile Include="Processing\Calculators\MACDHistogramCalculator.cs" />
     <Compile Include="Processing\Calculators\MomentumCalculator.cs" />
+    <Compile Include="Processing\Calculators\RangePredictabilityCalculator.cs" />
     <Compile Include="Processing\Calculators\StandardDeviationCalculator.cs" />
-    <Compile Include="Processing\Calculators\TradingSignalDetectors\OverboughtInDowntrendSignal.cs" />
+    <Compile Include="Processing\Calculators\Indicators\OverboughtInDowntrendSignal.cs" />
+    <Compile Include="Processing\Candlestick\EngulfingPatternRecogniser.cs" />
     <Compile Include="Processing\Candlestick\IDetectPattern.cs" />
     <Compile Include="Processing\Candlestick\BullishKickerPatternRecogniser.cs" />
     <Compile Include="Processing\Calculators\ICalculationTool.cs" />
     <Compile Include="Processing\LinqExtensions.cs" />
     <Compile Include="Processing\Math.cs" />
-    <Compile Include="Processing\Types\Company.cs" />
-    <Compile Include="Processing\Types\Quote.cs" />
     <Compile Include="Processing\Utilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -133,10 +139,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Processing\SearchCriteria\Bearish\" />
-    <Folder Include="Processing\SearchCriteria\Bullish\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

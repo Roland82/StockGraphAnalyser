@@ -1,4 +1,5 @@
-﻿@using StockGraphAnalyser.FrontEnd.Infrastructure
+﻿@using StockGraphAnalyser.Domain
+@using StockGraphAnalyser.FrontEnd.Infrastructure
 @using StockGraphAnalyser.Processing.Types
 @using System.Linq;
 @model dynamic
@@ -28,6 +29,17 @@
             }
         </td>
     </tr>
+    <tr>
+        <td><b>Get All Quotes and Process for company</b></td>
+        <td>
+            @using (Html.BeginForm("Update", "DataUpdate", FormMethod.Post))
+            {
+                @Html.TextBox("symbol");
+                <input style="float: right" type="submit" value="Update" name="UpdateCompanyDatapoints" id="UpdateCompanyDatapoints"/>
+            }
+        </td>
+    </tr>
+
     <tr>
         <td><b>Update All Quotes and Process</b></td>
         <td>

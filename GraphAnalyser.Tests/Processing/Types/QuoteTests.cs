@@ -4,7 +4,7 @@ namespace GraphAnalyser.Tests.Processing.Types
 {
     using System;
     using NUnit.Framework;
-    using StockGraphAnalyser.Processing.Types;
+    using StockGraphAnalyser.Domain;
 
     [TestFixture]
     public class QuoteTests

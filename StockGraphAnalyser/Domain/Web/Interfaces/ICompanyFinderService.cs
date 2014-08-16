@@ -1,7 +1,6 @@
 namespace StockGraphAnalyser.Domain.Web.Interfaces
 {
     using System.Collections.Generic;
-    using StockGraphAnalyser.Processing.Types;
 
     public interface ICompanyFinderService
     {

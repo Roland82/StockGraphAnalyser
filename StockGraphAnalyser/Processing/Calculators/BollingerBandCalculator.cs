@@ -9,8 +9,10 @@
     {
         public enum Band
         {
-            Upper = 2,
-            Lower = -2
+            UpperTwoDeviation = 2,
+            LowerTwoDeviation = -2,
+            UpperOneDeviation = 1,
+            LowerOneDeviation = -1
         }
 
         private readonly Band band;

@@ -1,5 +1,5 @@
-﻿
-namespace StockGraphAnalyser.Processing.Types
+
+namespace StockGraphAnalyser.Domain
 {
     using System;
 
@@ -24,10 +24,10 @@ namespace StockGraphAnalyser.Processing.Types
 
         private Company(String name, String symbol, ConstituentOfIndex constituentOfIndex)
         {
-            Id = Guid.NewGuid();
-            Name = name;
-            Symbol = symbol;
-            Index = constituentOfIndex.GetHashCode();
+            this.Id = Guid.NewGuid();
+            this.Name = name;
+            this.Symbol = symbol;
+            this.Index = constituentOfIndex.GetHashCode();
         }
 
         public Company() {}

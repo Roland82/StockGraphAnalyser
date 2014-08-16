@@ -11,7 +11,6 @@
     using StockGraphAnalyser.Domain.Service;
     using StockGraphAnalyser.Domain.Web.Interfaces;
     using StockGraphAnalyser.Processing.Calculators;
-    using StockGraphAnalyser.Processing.Types;
     using TestUtilities;
 
     public partial class DataPointManagementServiceTests
@@ -103,8 +102,8 @@
                             MovingAverageTwoHundredDay = 6m,
                             MovingAverageFiftyDay = 7,
                             MovingAverageTwentyDay = 8,
-                            LowerBollingerBand = 9,
-                            UpperBollingerBand = 10,
+                            LowerBollingerBandTwoDeviation = 9,
+                            UpperBollingerBandTwoDeviation = 10,
                             ForceIndexOnePeriod = 11m,
                             ForceIndexThirteenPeriod = 12m,
                             IsProcessed = 1
@@ -121,8 +120,8 @@
                             MovingAverageTwoHundredDay = 7m,
                             MovingAverageFiftyDay = 8m,
                             MovingAverageTwentyDay = 9,
-                            LowerBollingerBand = 10,
-                            UpperBollingerBand = 11,
+                            LowerBollingerBandTwoDeviation = 10,
+                            UpperBollingerBandTwoDeviation = 11,
                             ForceIndexOnePeriod = 12m,
                             ForceIndexThirteenPeriod = 13m,
                             IsProcessed = 1
@@ -151,14 +150,14 @@
                 factory =>
                 factory.CreateBollingerBandCalculator(It.IsAny<Dictionary<DateTime, decimal>>(),
                                                       It.IsAny<Dictionary<DateTime, decimal>>(),
-                                                      BollingerBandCalculator.Band.Lower),
+                                                      BollingerBandCalculator.Band.LowerTwoDeviation),
                 new[] {4m, 5m, 6m, 7m, 8m, 9m, 10m });
 
             this.SetupCalculator(
                 factory =>
                 factory.CreateBollingerBandCalculator(It.IsAny<Dictionary<DateTime, decimal>>(),
                                                       It.IsAny<Dictionary<DateTime, decimal>>(),
-                                                      BollingerBandCalculator.Band.Upper),
+                                                      BollingerBandCalculator.Band.UpperTwoDeviation),
                 new[] {5m, 6m, 7m, 8m, 9m, 10m, 11m });
 
             this.SetupCalculator(

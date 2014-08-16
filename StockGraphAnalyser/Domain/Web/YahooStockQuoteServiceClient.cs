@@ -9,7 +9,6 @@ namespace StockGraphAnalyser.Domain.Web
     using System.Net;
     using CsvHelper;
     using Interfaces;
-    using Processing.Types;
 
     public class YahooStockQuoteServiceClient : IYahooStockQuoteServiceClient
     {

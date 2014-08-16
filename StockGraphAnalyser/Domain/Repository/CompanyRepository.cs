@@ -6,7 +6,6 @@
     using System.Data.SqlClient;
     using Dapper;
     using Interfaces;
-    using Processing.Types;
 
     public class CompanyRepository  : AbstractRepository, ICompanyRepository
     {

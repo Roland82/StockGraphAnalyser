@@ -7,10 +7,10 @@ namespace GraphAnalyser.Tests.Domain.Service
     using System.Linq;
     using Moq;
     using NUnit.Framework;
+    using StockGraphAnalyser.Domain;
     using StockGraphAnalyser.Domain.Repository.Interfaces;
     using StockGraphAnalyser.Domain.Service;
     using StockGraphAnalyser.Domain.Web.Interfaces;
-    using StockGraphAnalyser.Processing.Types;
 
     public class CompanyDataManagementServiceTests
     {

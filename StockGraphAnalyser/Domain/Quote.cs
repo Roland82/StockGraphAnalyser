@@ -1,6 +1,6 @@
 
 
-namespace StockGraphAnalyser.Processing.Types
+namespace StockGraphAnalyser.Domain
 {
     using System;
 
@@ -57,7 +57,7 @@ namespace StockGraphAnalyser.Processing.Types
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Quote) obj);
+            return this.Equals((Quote) obj);
         }
 
         public override int GetHashCode() {

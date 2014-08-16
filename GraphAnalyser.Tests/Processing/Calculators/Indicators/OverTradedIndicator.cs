@@ -3,9 +3,9 @@
 namespace GraphAnalyser.Tests.Processing.Calculators.Indicators
 {
     using NUnit.Framework;
-    using StockGraphAnalyser.Processing.Types;
     using System;
     using System.Collections.Generic;
+    using StockGraphAnalyser.Domain;
 
     [TestFixture]
     public class OverTradedIndicator

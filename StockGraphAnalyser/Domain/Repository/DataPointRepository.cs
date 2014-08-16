@@ -17,9 +17,13 @@ namespace StockGraphAnalyser.Domain.Repository
             using (IDbConnection connection = new SqlConnection(this.connectionString))
             {
                 connection.Open();
-                connection.Execute(@"INSERT INTO DataPoints 
+                connection.Execute(@"INSERT INTO DataPoints (Id,Symbol,Date,[Open],[Close],High,Low,Volume,MovingAverageTwoHundredDay,
+                                            MovingAverageFiftyDay,MovingAverageTwentyDay,UpperBollingerBandTwoDeviation,UpperBollingerBandOneDeviation,
+                                            LowerBollingerBandTwoDeviation,LowerBollingerBandOneDeviation,
+                                            ForceIndexOnePeriod, ForceIndexThirteenPeriod, IsProcessed) 
                                     VALUES (@Id,@Symbol,@Date,@Open,@Close,@High,@Low,@Volume,@MovingAverageTwoHundredDay,
-                                            @MovingAverageFiftyDay,@MovingAverageTwentyDay,@UpperBollingerBand,@LowerBollingerBand,
+                                            @MovingAverageFiftyDay,@MovingAverageTwentyDay,@UpperBollingerBandTwoDeviation,@UpperBollingerBandOneDeviation,
+                                            @LowerBollingerBandTwoDeviation,@LowerBollingerBandOneDeviation,
                                             @ForceIndexOnePeriod, @ForceIndexThirteenPeriod, @IsProcessed)", dataPoints); 
             }
         }
@@ -55,8 +59,10 @@ namespace StockGraphAnalyser.Domain.Repository
                                             SET MovingAverageTwoHundredDay = @MovingAverageTwoHundredDay, 
                                             MovingAverageTwentyDay = @MovingAverageTwentyDay,
                                             MovingAverageFiftyDay = @MovingAverageFiftyDay,
-                                            UpperBollingerBand = @UpperBollingerBand,
-                                            LowerBollingerBand = @LowerBollingerBand,
+                                            UpperBollingerBandTwoDeviation = @UpperBollingerBandTwoDeviation,
+                                            LowerBollingerBandTwoDeviation = @LowerBollingerBandTwoDeviation,
+                                            UpperBollingerBandOneDeviation = @UpperBollingerBandOneDeviation,
+                                            LowerBollingerBandOneDeviation = @LowerBollingerBandOneDeviation,
                                             ForceIndexOnePeriod = @ForceIndexOnePeriod, 
                                             ForceIndexThirteenPeriod = @ForceIndexThirteenPeriod,
                                             IsProcessed = @IsProcessed
@@ -67,8 +73,10 @@ namespace StockGraphAnalyser.Domain.Repository
                                                   MovingAverageTwoHundredDay = dataPoint.MovingAverageTwoHundredDay,
                                                   MovingAverageFiftyDay = dataPoint.MovingAverageFiftyDay,
                                                   MovingAverageTwentyDay = dataPoint.MovingAverageTwentyDay,
-                                                  LowerBollingerBand = dataPoint.LowerBollingerBand,
-                                                  UpperBollingerBand = dataPoint.UpperBollingerBand,
+                                                  LowerBollingerBandTwoDeviation = dataPoint.LowerBollingerBandTwoDeviation,
+                                                  UpperBollingerBandTwoDeviation = dataPoint.UpperBollingerBandTwoDeviation,
+                                                  LowerBollingerBandOneDeviation = dataPoint.LowerBollingerBandOneDeviation,
+                                                  UpperBollingerBandOneDeviation = dataPoint.UpperBollingerBandOneDeviation,
                                                   IsProcessed = dataPoint.IsProcessed,
                                                   Id = dataPoint.Id
                                               }, transaction: transaction);

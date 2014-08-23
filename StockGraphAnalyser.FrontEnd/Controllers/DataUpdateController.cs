@@ -6,7 +6,7 @@
     using Domain;
     using Domain.Repository;
     using Domain.Service;
-    using Domain.Web;
+    using Domain.StockDataProviders;
     using Processing.Calculators;
 
     public class DataUpdateController : Controller

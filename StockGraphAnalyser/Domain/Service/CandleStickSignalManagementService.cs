@@ -4,10 +4,11 @@ namespace StockGraphAnalyser.Domain.Service
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Interfaces;
     using Processing.Candlestick;
     using Repository.Interfaces;
 
-    public class CandleStickSignalManagementService
+    public class CandleStickSignalManagementService : ICandleStickSignalManagementService
     {
         private readonly IDataPointRepository datapointsRepository;
         private readonly ICandleStickSignalRepository candleStickSignalRepository;

@@ -4,13 +4,14 @@ namespace StockGraphAnalyser.Domain.Service
 {
     using System;
     using System.Collections.Generic;
+    using Interfaces;
     using Processing;
     using Processing.Calculators;
     using Repository.Interfaces;
-    using Web.Interfaces;
     using System.Linq;
+    using StockDataProviders.Interfaces;
 
-    public class DataPointManagementService
+    public class DataPointManagementService : IDataPointManagementService
     {
         private readonly IDataPointRepository repository;
         private readonly IYahooStockQuoteServiceClient stockQuoteClient;

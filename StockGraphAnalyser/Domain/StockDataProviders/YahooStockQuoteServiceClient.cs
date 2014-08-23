@@ -1,6 +1,6 @@
 
 
-namespace StockGraphAnalyser.Domain.Web
+namespace StockGraphAnalyser.Domain.StockDataProviders
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace StockGraphAnalyser.Domain.Web
     using System.Linq;
     using System.Net;
     using CsvHelper;
-    using Interfaces;
+    using StockDataProviders.Interfaces;
 
     public class YahooStockQuoteServiceClient : IYahooStockQuoteServiceClient
     {

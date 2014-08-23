@@ -2,7 +2,7 @@
 namespace StockGraphAnalyser.FrontEnd.Controllers
 {
     using System.Web.Mvc;
-    using StockGraphAnalyser.FrontEnd.Models.Views;
+    using Models.Views;
 
     public class TechnicalsController : Controller
     {

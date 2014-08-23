@@ -40,6 +40,7 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
                     d.UpperBollingerBandTwoDeviation, d.LowerBollingerBandTwoDeviation,
                     d.UpperBollingerBandOneDeviation, d.LowerBollingerBandOneDeviation
                 }).ToList();
+
             return JsonNetResult.Create(list);
         }
 

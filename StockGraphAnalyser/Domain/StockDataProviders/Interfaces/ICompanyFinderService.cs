@@ -1,4 +1,4 @@
-namespace StockGraphAnalyser.Domain.Web.Interfaces
+namespace StockGraphAnalyser.Domain.StockDataProviders.Interfaces
 {
     using System.Collections.Generic;
 

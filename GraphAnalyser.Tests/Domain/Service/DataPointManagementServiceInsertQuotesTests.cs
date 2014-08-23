@@ -9,7 +9,7 @@
     using StockGraphAnalyser.Domain;
     using StockGraphAnalyser.Domain.Repository.Interfaces;
     using StockGraphAnalyser.Domain.Service;
-    using StockGraphAnalyser.Domain.Web.Interfaces;
+    using StockGraphAnalyser.Domain.StockDataProviders.Interfaces;
     using StockGraphAnalyser.Processing.Calculators;
     using TestUtilities;
 

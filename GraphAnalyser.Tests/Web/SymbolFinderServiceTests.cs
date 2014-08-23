@@ -3,7 +3,7 @@ namespace GraphAnalyser.Tests.Web
 {
     using NUnit.Framework;
     using StockGraphAnalyser.Domain;
-    using StockGraphAnalyser.Domain.Web;
+    using StockGraphAnalyser.Domain.StockDataProviders;
 
     public class SymbolFinderServiceTests
     {

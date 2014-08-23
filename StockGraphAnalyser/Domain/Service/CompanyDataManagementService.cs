@@ -4,10 +4,11 @@ namespace StockGraphAnalyser.Domain.Service
 {
     using System;
     using System.Linq;
+    using Interfaces;
     using Repository.Interfaces;
-    using Web.Interfaces;
+    using StockDataProviders.Interfaces;
 
-    public class CompanyDataManagementService
+    public class CompanyDataManagementService : ICompanyDataManagementService
     {
         private readonly ICompanyFinderService companyFinderService;
         private readonly ICompanyRepository companyRepository;

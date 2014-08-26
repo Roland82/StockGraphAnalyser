@@ -2,9 +2,10 @@
 namespace StockGraphAnalyser.Processing.Candlestick
 {
     using System;
+    using System.Collections.Generic;
 
     interface IDetectPattern
     {
-        DateTime? LatestOccurence();
+        IEnumerable<DateTime> FindOccurences();
     }
 }

@@ -22,7 +22,7 @@ namespace StockGraphAnalyser.Processing.Candlestick
             this.engulfingType = engulfingType;
         }
 
-        public DateTime? LatestOccurence() {
+        public IEnumerable<DateTime> FindOccurences() {
             var count = this.quotes.Count();
 
             for (var i = count - 1; i >= 1; i--)
@@ -39,11 +39,9 @@ namespace StockGraphAnalyser.Processing.Candlestick
 
                 if (this.IsEngulfingOfCorrectType(previousDaysQuote, currentDaysQuote))
                 {
-                    return currentDaysQuote.Date;
+                    yield return currentDaysQuote.Date;
                 }
             }
-
-            return null;
         }
 
         private bool IsEngulfingOfCorrectType(DataPoints previousDayQuote, DataPoints currentDayQuote) {

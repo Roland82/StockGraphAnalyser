@@ -6,9 +6,10 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
     using System.Linq;
     using System.Web.Http;
     using System.Web.Mvc;
-    using StockGraphAnalyser.Domain;
-    using StockGraphAnalyser.Domain.Repository;
-    using StockGraphAnalyser.FrontEnd.Infrastructure;
+    using Domain;
+    using Domain.Repository;
+    using Domain.Service.Interfaces;
+    using Infrastructure;
 
     public class ChartResourceController : ApiController
     {

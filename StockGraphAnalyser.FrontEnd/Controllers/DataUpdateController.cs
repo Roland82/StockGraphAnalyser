@@ -6,14 +6,16 @@
     using Domain;
     using Domain.Repository;
     using Domain.Service;
-    using Domain.StockDataProviders;
-    using Processing.Calculators;
 
     public class DataUpdateController : Controller
     {
-        private readonly DataPointManagementService dataManagementService = new DataPointManagementService(new DataPointRepository(), new YahooStockQuoteServiceClient(), new CalculatorFactory());
-        private readonly CompanyDataManagementService companyDataManagementService = new CompanyDataManagementService(new CompanyFinderService(), new CompanyRepository());
-       
+        private readonly DataPointManagementService dataManagementService;
+        private readonly CompanyDataManagementService companyDataManagementService;
+
+        public DataUpdateController(DataPointManagementService dataManagementService, CompanyDataManagementService companyDataManagementService) {
+            this.dataManagementService = dataManagementService;
+            this.companyDataManagementService = companyDataManagementService;
+        }
 
         [HttpGet]
         public ActionResult Index() {

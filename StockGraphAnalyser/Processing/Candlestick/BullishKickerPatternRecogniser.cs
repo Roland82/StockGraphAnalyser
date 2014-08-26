@@ -14,7 +14,7 @@ namespace StockGraphAnalyser.Processing.Candlestick
             this.quotes = quotes;
         }
 
-        public DateTime? LatestOccurence() {
+        public IEnumerable<DateTime> FindOccurences() {
             var count = quotes.Count() - 4;
             
             for (var i = 0; i <= count; i++)
@@ -24,12 +24,9 @@ namespace StockGraphAnalyser.Processing.Candlestick
                     && sample.ElementAt(3).Open < sample.ElementAt(2).High
                     && sample.ElementAt(3).OpenToClosePercentageMovement > 0)
                 {
-                    return sample.ElementAt(4).Date;
-                }
-                
+                    yield return sample.ElementAt(4).Date;
+                }            
             }
-
-            return null;
         }
     }
 }

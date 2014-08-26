@@ -20,19 +20,12 @@ namespace StockGraphAnalyser.Domain.Service
 
         public void GenerateLatestSignals(string symbol, DateTime fromDate) {
             var datapointsToCheck = this.datapointsRepository.FindAll(symbol).Where(d => d.Date >= fromDate).ToList();
-            var bullishEngulfingLatestOccurence = new EngulfingPatterRecogniser(datapointsToCheck, EngulfingPatterRecogniser.Type.Bullish).LatestOccurence();
-            var bearishEngulfingLatestOccurence = new EngulfingPatterRecogniser(datapointsToCheck, EngulfingPatterRecogniser.Type.Bearish).LatestOccurence();
+            var bullishEngulfingOccurences = new EngulfingPatterRecogniser(datapointsToCheck, EngulfingPatterRecogniser.Type.Bullish).FindOccurences();
+            var bearishEngulfingOccurences = new EngulfingPatterRecogniser(datapointsToCheck, EngulfingPatterRecogniser.Type.Bearish).FindOccurences();
             var signalList = new List<CandleStickSignal>();
-            
-            if (bullishEngulfingLatestOccurence.HasValue)
-            {
-                signalList.Add(CandleStickSignal.Create(symbol, bullishEngulfingLatestOccurence.Value, 1));
-            }
 
-            if (bearishEngulfingLatestOccurence.HasValue)
-            {
-                signalList.Add(CandleStickSignal.Create(symbol, bearishEngulfingLatestOccurence.Value, 2));
-            }
+            signalList.AddRange(bullishEngulfingOccurences.Select(o => CandleStickSignal.Create(symbol, o, 1)));
+            signalList.AddRange(bearishEngulfingOccurences.Select(o => CandleStickSignal.Create(symbol, o, 2)));
 
             this.candleStickSignalRepository.InsertAll(signalList);
         }

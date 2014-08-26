@@ -26,10 +26,10 @@ namespace GraphAnalyser.Tests.Processing.Candlestick
                     Quote.Create("TST.L", monday.AddDays(5), 12, 11, 60, 1, 0),
                 };
 
-            DateTime? latestOccurenceExpected = null;
-            if (latestOccurenceHasValue) latestOccurenceExpected = monday.AddDays(1);
+            var latestOccurencesExpected = new DateTime[] { };
+            if (latestOccurenceHasValue) latestOccurencesExpected = new[] { monday.AddDays(1) };
 
-            this.Test(quotes, type, latestOccurenceExpected);
+            this.Test(quotes, type, latestOccurencesExpected);
         }
 
         [TestCase(EngulfingPatterRecogniser.Type.Bearish, false)]
@@ -46,21 +46,16 @@ namespace GraphAnalyser.Tests.Processing.Candlestick
                     Quote.Create("TST.L", monday.AddDays(5), 11, 17, 60, 1, 0),
                 };
 
-            DateTime? latestOccurenceExpected = null;
-            if (latestOccurenceHasValue) latestOccurenceExpected = monday.AddDays(5);
+            var latestOccurencesExpected = new DateTime[] {};
+            if (latestOccurenceHasValue) latestOccurencesExpected = new[] {monday.AddDays(5)};
 
-            this.Test(quotes, type, latestOccurenceExpected);
+            this.Test(quotes, type, latestOccurencesExpected);
         }
 
-        private void Test(IEnumerable<Quote> quotes, EngulfingPatterRecogniser.Type type, DateTime? expectedDayPatternRecognised) {
+        private void Test(IEnumerable<Quote> quotes, EngulfingPatterRecogniser.Type type, IEnumerable<DateTime> expectedOccurences) {
             var patternRecogniser = new EngulfingPatterRecogniser(quotes.Select(DataPoints.CreateFromQuote), type);
-            var latestOccurence = patternRecogniser.LatestOccurence();
-            Assert.AreEqual(expectedDayPatternRecognised.HasValue, latestOccurence.HasValue);
-
-            if (latestOccurence.HasValue)
-            {
-                Assert.AreEqual(expectedDayPatternRecognised.Value, latestOccurence.Value);
-            }
+            var latestOccurences = patternRecogniser.FindOccurences();
+            Assert.AreEqual(expectedOccurences, latestOccurences);
         }
     }
 }

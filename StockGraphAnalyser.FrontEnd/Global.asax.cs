@@ -6,10 +6,7 @@ namespace StockGraphAnalyser.FrontEnd
     using System.Web.Mvc;
     using System.Web.Optimization;
     using System.Web.Routing;
-    using Infrastructure;
-    using Ninject;
-    using Ninject.Modules;
-    using Ninject.Web.Mvc;
+
 
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
@@ -24,7 +21,6 @@ namespace StockGraphAnalyser.FrontEnd
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
-            //ControllerBuilder.Current.SetControllerFactory(ApplicationControllerFactory.Create(kernel));
         }
     }
 }

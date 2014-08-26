@@ -5,7 +5,7 @@ namespace StockGraphAnalyser.FrontEnd.App_Start
 {
     using System;
     using System.Web;
-
+    using Domain.Service.Interfaces;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
     using Ninject;
@@ -46,6 +46,7 @@ namespace StockGraphAnalyser.FrontEnd.App_Start
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
                 RegisterServices(kernel);
+                
                 return kernel;
             }
             catch

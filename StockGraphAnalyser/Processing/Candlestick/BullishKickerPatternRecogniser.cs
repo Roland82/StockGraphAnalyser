@@ -8,21 +8,23 @@ namespace StockGraphAnalyser.Processing.Candlestick
 
     public class BullishKickerPatternRecogniser : IDetectPattern
     {
-        private readonly IEnumerable<Quote> quotes;
+        private readonly IEnumerable<DataPoints> datapoints;
 
-        public BullishKickerPatternRecogniser(IEnumerable<Quote> quotes) {
-            this.quotes = quotes;
+        public BullishKickerPatternRecogniser(IEnumerable<DataPoints> datapoints) {
+            this.datapoints = datapoints;
         }
 
+        public int PatternType { get { return 3; } }
+
         public IEnumerable<DateTime> FindOccurences() {
-            var count = quotes.Count() - 4;
+            var count = this.datapoints.Count() - 4;
             
             for (var i = 0; i <= count; i++)
             {
-                var sample = quotes.Skip(i).Take(4);
-                if (sample.Take(3).All(q => q.OpenToClosePercentageMovement < 0)
+                var sample = this.datapoints.Skip(i).Take(4);
+                if (sample.Take(3).All(q => q.PercentageChange < 0)
                     && sample.ElementAt(3).Open < sample.ElementAt(2).High
-                    && sample.ElementAt(3).OpenToClosePercentageMovement > 0)
+                    && sample.ElementAt(3).PercentageChange > 0)
                 {
                     yield return sample.ElementAt(4).Date;
                 }            

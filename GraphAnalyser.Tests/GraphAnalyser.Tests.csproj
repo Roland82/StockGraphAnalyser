@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\DataPointsTests.cs" />
+    <Compile Include="Domain\Service\CandleStickSignalManagementServiceTests.cs" />
     <Compile Include="Domain\Service\CompanyDataManagementServiceTests.cs" />
     <Compile Include="Domain\Service\DataPointManagementServiceInsertQuotesTests.cs" />
     <Compile Include="Domain\Service\DataPointManagementServiceUpdateProcessedDataTests.cs" />

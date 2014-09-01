@@ -16,11 +16,15 @@ namespace StockGraphAnalyser.Processing.Candlestick
 
         private readonly IEnumerable<DataPoints> quotes;
         private readonly Type engulfingType;
+        private readonly int patternType;
 
         public EngulfingPatterRecogniser(IEnumerable<DataPoints> quotes, Type engulfingType) {
             this.quotes = quotes;
             this.engulfingType = engulfingType;
+            patternType = engulfingType == Type.Bullish ? 1 : 2;
         }
+
+        public int PatternType { get { return patternType; } }
 
         public IEnumerable<DateTime> FindOccurences() {
             var count = this.quotes.Count();

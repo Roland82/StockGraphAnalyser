@@ -120,7 +120,9 @@
     <Compile Include="Processing\Calculators\RangePredictabilityCalculator.cs" />
     <Compile Include="Processing\Calculators\StandardDeviationCalculator.cs" />
     <Compile Include="Processing\Calculators\Indicators\OverboughtInDowntrendSignal.cs" />
+    <Compile Include="Processing\Candlestick\CandlestickPatternRecogniserFactory.cs" />
     <Compile Include="Processing\Candlestick\EngulfingPatternRecogniser.cs" />
+    <Compile Include="Processing\Candlestick\ICandlestickPatternRecogniserFactory.cs" />
     <Compile Include="Processing\Candlestick\IDetectPattern.cs" />
     <Compile Include="Processing\Candlestick\BullishKickerPatternRecogniser.cs" />
     <Compile Include="Processing\Calculators\ICalculationTool.cs" />

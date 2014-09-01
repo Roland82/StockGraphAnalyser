@@ -5,4 +5,24 @@
 }
 
 <div id="container" style="height:  1000px;"></div>
+
+@foreach (var signal in Model.CandleStickSignals)
+{
+    <p>@GetSignalTypeName(signal.CandleStickSignalType) on @signal.Date</p>
+}
+
 <input type="hidden" id="symbol" value="@Model.Ticker" />
+
+@functions{
+    public string GetSignalTypeName(int type){
+        switch (type)
+        {
+            case 1:
+                return "Bullish Engulfing";
+            case 2:
+                return "Bearish Engulfing";
+            default:
+                return "Unknown";
+        }
+    }
+}

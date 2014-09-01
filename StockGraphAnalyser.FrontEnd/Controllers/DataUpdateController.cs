@@ -6,15 +6,18 @@
     using Domain;
     using Domain.Repository;
     using Domain.Service;
+    using Domain.Service.Interfaces;
 
     public class DataUpdateController : Controller
     {
         private readonly DataPointManagementService dataManagementService;
         private readonly CompanyDataManagementService companyDataManagementService;
+        private readonly ICandleStickSignalManagementService candleStickSignalManagementService;
 
-        public DataUpdateController(DataPointManagementService dataManagementService, CompanyDataManagementService companyDataManagementService) {
+        public DataUpdateController(DataPointManagementService dataManagementService, CompanyDataManagementService companyDataManagementService, ICandleStickSignalManagementService candleStickSignalManagementService) {
             this.dataManagementService = dataManagementService;
             this.companyDataManagementService = companyDataManagementService;
+            this.candleStickSignalManagementService = candleStickSignalManagementService;
         }
 
         [HttpGet]
@@ -27,6 +30,12 @@
         public ActionResult Update(string symbol)
         {
             dataManagementService.InsertNewQuotesToDb(symbol);
+            return this.View("Update");
+        }
+
+        [HttpPost]
+        public ActionResult UpdateCandlestickSignals() {
+            this.candleStickSignalManagementService.GenerateLatestSignals(DateTime.MinValue);
             return this.View("Update");
         }
 

@@ -5,10 +5,12 @@ namespace StockGraphAnalyser.Domain
 
     public class CandleStickSignal
     {
-        public Guid Id;
+        public Guid Id { get; set; }
         public string Symbol { get; set; }
         public DateTime Date { get; set; }
         public int CandleStickSignalType { get; set; }
+
+        public CandleStickSignal() { /*For Dapper Only*/ }
 
         private CandleStickSignal(string symbol, DateTime date, int candleStickSignalType) {
             this.Id = Guid.NewGuid();

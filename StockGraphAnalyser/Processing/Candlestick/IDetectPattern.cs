@@ -4,8 +4,9 @@ namespace StockGraphAnalyser.Processing.Candlestick
     using System;
     using System.Collections.Generic;
 
-    interface IDetectPattern
+    public interface IDetectPattern
     {
+        int PatternType { get; }
         IEnumerable<DateTime> FindOccurences();
     }
 }

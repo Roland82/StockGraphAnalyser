@@ -15,7 +15,7 @@ namespace StockGraphAnalyser.Domain.Repository
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                connection.Execute(@"INSERT INTO CandlestickSignals (@Id, @Symbol, @Date, @CandleStickSignalType)", signals);
+                connection.Execute(@"INSERT INTO CandlestickSignals VALUES (@Id, @Symbol, @Date, @CandleStickSignalType)", signals);
             }
         }
 

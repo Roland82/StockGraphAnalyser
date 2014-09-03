@@ -10,14 +10,17 @@
 
     public class DataUpdateController : Controller
     {
-        private readonly DataPointManagementService dataManagementService;
-        private readonly CompanyDataManagementService companyDataManagementService;
+        private readonly IDataPointManagementService dataManagementService;
+        private readonly ICompanyDataManagementService companyDataManagementService;
         private readonly ICandleStickSignalManagementService candleStickSignalManagementService;
+        private readonly ITradeSignalManagementService tradeSignalManagementService;
 
-        public DataUpdateController(DataPointManagementService dataManagementService, CompanyDataManagementService companyDataManagementService, ICandleStickSignalManagementService candleStickSignalManagementService) {
+        public DataUpdateController(IDataPointManagementService dataManagementService, ICompanyDataManagementService companyDataManagementService, ICandleStickSignalManagementService candleStickSignalManagementService, ITradeSignalManagementService tradeSignalManagementService)
+        {
             this.dataManagementService = dataManagementService;
             this.companyDataManagementService = companyDataManagementService;
             this.candleStickSignalManagementService = candleStickSignalManagementService;
+            this.tradeSignalManagementService = tradeSignalManagementService;
         }
 
         [HttpGet]
@@ -36,6 +39,13 @@
         [HttpPost]
         public ActionResult UpdateCandlestickSignals() {
             this.candleStickSignalManagementService.GenerateLatestSignals(DateTime.MinValue);
+            return this.View("Update");
+        }
+
+        [HttpPost]
+        public ActionResult UpdateTradeSignals()
+        {
+            this.tradeSignalManagementService.GenerateNewSignals();
             return this.View("Update");
         }
 

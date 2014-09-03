@@ -59,5 +59,15 @@ namespace StockGraphAnalyser.Processing
                 action(enumerable.Skip(i).Take(groupSize));
             }
         }
+
+        public static IEnumerable<TResult> ForEachGroup<T, TResult>(this IEnumerable<T> enumerable, int groupSize, Func<IEnumerable<T>, TResult> action)
+        {
+            var count = enumerable.Count();
+
+            for (var i = 0; i <= count - groupSize; i++)
+            {
+                yield return action(enumerable.Skip(i).Take(groupSize));
+            }
+        }
     }
 }

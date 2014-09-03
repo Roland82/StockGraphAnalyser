@@ -2,8 +2,8 @@
 
 namespace StockGraphAnalyser.Signals
 {
-    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Domain;
     using Processing;
 
@@ -15,13 +15,22 @@ namespace StockGraphAnalyser.Signals
             this.dataPoints = dataPoints;
         }
 
-        public Dictionary<DateTime, SignalType> GenerateSignals() {
-            this.dataPoints.ForEachGroup(2, group =>
+        public IEnumerable<Signal> GenerateSignals()
+        {
+            return this.dataPoints.ForEachGroup(2, group =>
                 {
-                    if (ele )
-                });
+                    if (group.ElementAt(0).Close >= group.ElementAt(0).MovingAverageFiftyDay && group.ElementAt(1).Close < group.ElementAt(1).MovingAverageFiftyDay)
+                    {
+                        return Signal.Create(group.ElementAt(1).Symbol, group.ElementAt(1).Date, SignalType.Sell, group.ElementAt(1).Close);
+                    } 
+
+                    if (group.ElementAt(0).Close <= group.ElementAt(0).MovingAverageFiftyDay && group.ElementAt(1).Close > group.ElementAt(1).MovingAverageFiftyDay)
+                    {
+                        return Signal.Create(group.ElementAt(1).Symbol, group.ElementAt(1).Date, SignalType.Buy, group.ElementAt(1).Close);
+                    }
+
+                    return null;
+                }).Where(e => e != null);
         }
-
-
     }
 }

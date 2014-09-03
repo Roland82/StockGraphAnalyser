@@ -8,18 +8,18 @@ namespace StockGraphAnalyser.Domain.Service
 
     public class TradingSignalService : ITradingSignalService
     {
-        private readonly ITradeSignalsRepository tradeSignalsRepository;
+        private readonly ITradeScannerRepository tradeScannerRepository;
 
-        public TradingSignalService(ITradeSignalsRepository tradeSignalsRepository) {
-            this.tradeSignalsRepository = tradeSignalsRepository;
+        public TradingSignalService(ITradeScannerRepository tradeScannerRepository) {
+            this.tradeScannerRepository = tradeScannerRepository;
         }
 
         public IEnumerable<DataPoints> GetDatapointsForTradeSignal(SignalType signalType) {
             var queries = new Dictionary<SignalType, Func<IEnumerable<DataPoints>>>
                 {
-                    { SignalType.InValueZone, tradeSignalsRepository.FindSharesAtValue },
-                    { SignalType.AboveUpperBollingerBand, tradeSignalsRepository.FindSharesAboveUpperBollingerBand },
-                    { SignalType.BelowLowerBollingerBand, tradeSignalsRepository.FindSharesBelowLowerBollingerBand }
+                    { SignalType.InValueZone, this.tradeScannerRepository.FindSharesAtValue },
+                    { SignalType.AboveUpperBollingerBand, this.tradeScannerRepository.FindSharesAboveUpperBollingerBand },
+                    { SignalType.BelowLowerBollingerBand, this.tradeScannerRepository.FindSharesBelowLowerBollingerBand }
                 };
 
             return queries[signalType].Invoke();

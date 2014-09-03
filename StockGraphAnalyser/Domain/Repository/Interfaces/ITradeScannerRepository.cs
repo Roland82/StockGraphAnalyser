@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public interface ITradeSignalsRepository
+    public interface ITradeScannerRepository
     {
         IEnumerable<DataPoints> FindSharesAtValue();
         IEnumerable<DataPoints> FindSharesBelowLowerBollingerBand();

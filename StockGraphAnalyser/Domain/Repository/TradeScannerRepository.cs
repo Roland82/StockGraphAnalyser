@@ -11,7 +11,7 @@ namespace StockGraphAnalyser.Domain.Repository
     using System.Collections.Generic;
     using Interfaces;
 
-    public class TradeSignalsRepository : AbstractRepository, ITradeSignalsRepository
+    public class TradeScannerRepository : AbstractRepository, ITradeScannerRepository
     {
         public IEnumerable<DataPoints> FindSharesAtValue()
         {

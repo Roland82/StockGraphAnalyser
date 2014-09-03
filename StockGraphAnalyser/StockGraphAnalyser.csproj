@@ -95,6 +95,7 @@
     <Compile Include="Domain\Repository\Interfaces\IDataPointRepository.cs" />
     <Compile Include="Domain\Repository\Interfaces\ITradeSignalsRepository.cs" />
     <Compile Include="Domain\Repository\TradeSignalsRepository.cs" />
+    <Compile Include="Domain\SentimentType.cs" />
     <Compile Include="Domain\Service\CandleStickSignalManagementService.cs" />
     <Compile Include="Domain\Service\CompanyDataManagementService.cs" />
     <Compile Include="Domain\Service\DataPointManagementService.cs" />
@@ -124,7 +125,7 @@
     <Compile Include="Processing\Candlestick\EngulfingPatternRecogniser.cs" />
     <Compile Include="Processing\Candlestick\ICandlestickPatternRecogniserFactory.cs" />
     <Compile Include="Processing\Candlestick\IDetectPattern.cs" />
-    <Compile Include="Processing\Candlestick\BullishKickerPatternRecogniser.cs" />
+    <Compile Include="Processing\Candlestick\KickerPatternRecogniser.cs" />
     <Compile Include="Processing\Calculators\ICalculationTool.cs" />
     <Compile Include="Processing\LinqExtensions.cs" />
     <Compile Include="Processing\Math.cs" />

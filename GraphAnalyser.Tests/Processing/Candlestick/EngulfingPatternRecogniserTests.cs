@@ -13,9 +13,10 @@ namespace GraphAnalyser.Tests.Processing.Candlestick
     {
         private DateTime monday = new DateTime(2014, 8, 4);
 
-        [TestCase(EngulfingPatterRecogniser.Type.Bearish, true)]
-        [TestCase(EngulfingPatterRecogniser.Type.Bullish, false)]
-        public void CurrentDayEngulfsPreviousDayBearish(EngulfingPatterRecogniser.Type type, bool latestOccurenceHasValue) {
+        [TestCase(SentimentType.Bearish, true)]
+        [TestCase(SentimentType.Bullish, false)]
+        public void CurrentDayEngulfsPreviousDayBearish(SentimentType type, bool latestOccurenceHasValue)
+        {
             var quotes = new List<Quote>
                 {
                     Quote.Create("TST.L", monday.AddDays(0), 10, 12, 15, 9, 0),
@@ -32,9 +33,9 @@ namespace GraphAnalyser.Tests.Processing.Candlestick
             this.Test(quotes, type, latestOccurencesExpected);
         }
 
-        [TestCase(EngulfingPatterRecogniser.Type.Bearish, false)]
-        [TestCase(EngulfingPatterRecogniser.Type.Bullish, true)]
-        public void CurrentDayEngulfsPreviousDayBullish(EngulfingPatterRecogniser.Type type, bool latestOccurenceHasValue)
+        [TestCase(SentimentType.Bearish, false)]
+        [TestCase(SentimentType.Bullish, true)]
+        public void CurrentDayEngulfsPreviousDayBullish(SentimentType type, bool latestOccurenceHasValue)
         {
             var quotes = new List<Quote>
                 {
@@ -52,7 +53,8 @@ namespace GraphAnalyser.Tests.Processing.Candlestick
             this.Test(quotes, type, latestOccurencesExpected);
         }
 
-        private void Test(IEnumerable<Quote> quotes, EngulfingPatterRecogniser.Type type, IEnumerable<DateTime> expectedOccurences) {
+        private void Test(IEnumerable<Quote> quotes, SentimentType type, IEnumerable<DateTime> expectedOccurences)
+        {
             var patternRecogniser = new EngulfingPatterRecogniser(quotes.Select(DataPoints.CreateFromQuote), type);
             var latestOccurences = patternRecogniser.FindOccurences();
             Assert.AreEqual(expectedOccurences, latestOccurences);

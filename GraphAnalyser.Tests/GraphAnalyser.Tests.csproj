@@ -66,6 +66,7 @@
     <Compile Include="Processing\Calculators\MacdHistogramCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\MomentumCalculatorTests.cs" />
     <Compile Include="Processing\BullishKickerPatternRecogniserTests.cs" />
+    <Compile Include="Processing\Candlestick\BullishKickerPatternRecogniserTests.cs" />
     <Compile Include="Processing\Candlestick\EngulfingPatternRecogniserTests.cs" />
     <Compile Include="Processing\LinqExtensionsTests.cs" />
     <Compile Include="Processing\MathExtensionsTests.cs" />

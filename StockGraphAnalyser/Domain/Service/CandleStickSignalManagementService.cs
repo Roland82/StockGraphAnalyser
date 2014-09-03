@@ -47,16 +47,21 @@ namespace StockGraphAnalyser.Domain.Service
             var datapointsToCheck = this.datapointsRepository.FindAll(symbol).Where(d => d.Date >= fromDate).ToList();
             var calculators = this.candlestickPatternFactory.CreateAll(datapointsToCheck);
             var detectedSignals = new List<CandleStickSignal>();
+        
             Parallel.ForEach(calculators, pattern =>
                 {
                     var occurences = pattern.FindOccurences();
                     var signals = occurences.Select(o => CandleStickSignal.Create(symbol, o, pattern.PatternType));
-                    detectedSignals.AddRange(signals);
+                    lock (detectedSignals)
+                    {
+                        detectedSignals.AddRange(signals);
+                    }
                 });
 
             if (detectedSignals.Any())
             {
                 var signalsInDb = this.candleStickSignalRepository.FindAllForCompany(symbol);
+
                 var signalsToInsert = detectedSignals.Where(e => signalsInDb.All(s => s.Date != e.Date));
                 this.candleStickSignalRepository.InsertAll(signalsToInsert);
             }

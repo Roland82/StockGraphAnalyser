@@ -8,20 +8,15 @@ namespace StockGraphAnalyser.Processing.Candlestick
 
     public class EngulfingPatterRecogniser : IDetectPattern
     {
-        public enum Type
-        {
-            Bearish,
-            Bullish
-        };
-
         private readonly IEnumerable<DataPoints> quotes;
-        private readonly Type engulfingType;
+        private readonly SentimentType engulfingType;
         private readonly int patternType;
 
-        public EngulfingPatterRecogniser(IEnumerable<DataPoints> quotes, Type engulfingType) {
+        public EngulfingPatterRecogniser(IEnumerable<DataPoints> quotes, SentimentType engulfingType)
+        {
             this.quotes = quotes;
             this.engulfingType = engulfingType;
-            patternType = engulfingType == Type.Bullish ? 1 : 2;
+            patternType = engulfingType == SentimentType.Bullish ? 1 : 2;
         }
 
         public int PatternType { get { return patternType; } }
@@ -51,10 +46,10 @@ namespace StockGraphAnalyser.Processing.Candlestick
         private bool IsEngulfingOfCorrectType(DataPoints previousDayQuote, DataPoints currentDayQuote) {
             if (previousDayQuote.PercentageChange > 0 && currentDayQuote.PercentageChange < 0)
             {
-                return this.engulfingType == Type.Bearish;
+                return this.engulfingType == SentimentType.Bearish;
             }
 
-            return this.engulfingType == Type.Bullish;
+            return this.engulfingType == SentimentType.Bullish;
         }
     }
 }

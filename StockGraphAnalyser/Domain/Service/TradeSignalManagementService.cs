@@ -1,6 +1,7 @@
 ﻿
 namespace StockGraphAnalyser.Domain.Service
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using StockGraphAnalyser.Domain.Repository.Interfaces;
@@ -20,11 +21,22 @@ namespace StockGraphAnalyser.Domain.Service
             this.tradeSignalRepository = tradeSignalRepository;
         }
 
-        public void GenerateNewSignals(){
-
+        public void GenerateNewSignals()
+        {
             var companies = new List<string>();
             companies.AddRange(this.companyRepository.FindByIndex(Company.ConstituentOfIndex.Ftse100).Select(c => c.Symbol));
             companies.AddRange(this.companyRepository.FindByIndex(Company.ConstituentOfIndex.Ftse250).Select(c => c.Symbol));
+            this.GenerateSignals(companies);       
+        }
+
+        public void GenerateNewSignals(string company)
+        {
+            var companies = new[] { company };
+            this.GenerateSignals(companies);
+        }
+
+        private void GenerateSignals(IEnumerable<String> companies)
+        {
             var signals = new List<Signal>();
 
             foreach (var company in companies.GroupBy(c => c))
@@ -34,7 +46,7 @@ namespace StockGraphAnalyser.Domain.Service
                 signals.AddRange(generator.GenerateSignals());
             }
 
-            this.tradeSignalRepository.InsertAll(signals);          
+            this.tradeSignalRepository.InsertAll(signals);
         }
     }
 }

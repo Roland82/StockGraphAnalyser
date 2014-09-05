@@ -43,7 +43,14 @@
         }
 
         [HttpPost]
-        public ActionResult UpdateTradeSignals()
+        public ActionResult UpdateTradeSignals(string symbol)
+        {
+            this.tradeSignalManagementService.GenerateNewSignals(symbol);
+            return this.View("Update");
+        }
+
+        [HttpPost]
+        public ActionResult UpdateTradeSignalsForAll()
         {
             this.tradeSignalManagementService.GenerateNewSignals();
             return this.View("Update");

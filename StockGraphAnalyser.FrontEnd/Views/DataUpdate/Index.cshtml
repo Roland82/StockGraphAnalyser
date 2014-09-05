@@ -46,11 +46,22 @@
             }
         </td>
     </tr>
-        <tr>
-        <td><b>Update trading signals</b></td>
+    <tr>
+        <td><b>Update trading signals for company</b></td>
         <td>
             @using (Html.BeginForm("UpdateTradeSignals", "DataUpdate", FormMethod.Post))
             {
+                @Html.TextBox("symbol");
+                <input style="float: right" type="submit" value="Update" name="UpdateTradeSignals" id="UpdateTradeSignals"/>
+            }
+        </td>
+    </tr>
+        <tr>
+        <td><b>Update trading signals For All Companies</b></td>
+        <td>
+            @using (Html.BeginForm("UpdateTradeSignalsForAll", "DataUpdate", FormMethod.Post))
+            {
+
                 <input style="float: right" type="submit" value="Update" name="UpdateTradeSignals" id="UpdateTradeSignals"/>
             }
         </td>

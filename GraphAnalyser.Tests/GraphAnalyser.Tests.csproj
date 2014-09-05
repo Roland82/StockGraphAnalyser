@@ -63,7 +63,7 @@
     <Compile Include="Processing\Calculators\StandardDeviationCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\DailyMovingAverageCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\Indicators\OverTradedIndicator.cs" />
-    <Compile Include="Processing\Calculators\MacdHistogramCalculatorTests.cs" />
+    <Compile Include="Processing\Calculators\DifferenceCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\MomentumCalculatorTests.cs" />
     <Compile Include="Processing\BullishKickerPatternRecogniserTests.cs" />
     <Compile Include="Processing\Calculators\TrueRangeCalculatorTests.cs" />

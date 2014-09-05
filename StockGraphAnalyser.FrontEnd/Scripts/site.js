@@ -294,7 +294,7 @@ Highcharts.setOptions(Highcharts.theme);
 var symbol = $('#symbol').attr('value');
 
 $(function () {
-    $.getJSON('http://localhost:53110/api/ChartResource/Get/?symbol=' + symbol, function(data) {
+    $.getJSON('/api/ChartResource/Get/?symbol=' + symbol, function(data) {
 
         // split the data set into ohlc and volume
         var ohlc = [],

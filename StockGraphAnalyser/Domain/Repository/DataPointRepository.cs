@@ -18,11 +18,13 @@ namespace StockGraphAnalyser.Domain.Repository
             {
                 connection.Open();
                 connection.Execute(@"INSERT INTO DataPoints (Id,Symbol,Date,[Open],[Close],High,Low,Volume,MovingAverageTwoHundredDay,
-                                            MovingAverageFiftyDay,MovingAverageTwentyDay,UpperBollingerBandTwoDeviation,UpperBollingerBandOneDeviation,
+                                            MovingAverageFiftyDay,MovingAverageTwentyDay,EmaTwentyTwoDay,EmaTwelveDay,TwelveDayVsTwentyDayEmaHistogram,
+                                            UpperBollingerBandTwoDeviation,UpperBollingerBandOneDeviation,
                                             LowerBollingerBandTwoDeviation,LowerBollingerBandOneDeviation,
                                             ForceIndexOnePeriod, ForceIndexThirteenPeriod, IsProcessed) 
                                     VALUES (@Id,@Symbol,@Date,@Open,@Close,@High,@Low,@Volume,@MovingAverageTwoHundredDay,
-                                            @MovingAverageFiftyDay,@MovingAverageTwentyDay,@UpperBollingerBandTwoDeviation,@UpperBollingerBandOneDeviation,
+                                            @MovingAverageFiftyDay,@MovingAverageTwentyDay,@EmaTwentyTwoDay,@EmaTwelveDay,@TwelveDayVsTwentyDayEmaHistogram,
+                                            @UpperBollingerBandTwoDeviation,@UpperBollingerBandOneDeviation,
                                             @LowerBollingerBandTwoDeviation,@LowerBollingerBandOneDeviation,
                                             @ForceIndexOnePeriod, @ForceIndexThirteenPeriod, @IsProcessed)", dataPoints); 
             }
@@ -59,6 +61,9 @@ namespace StockGraphAnalyser.Domain.Repository
                                             SET MovingAverageTwoHundredDay = @MovingAverageTwoHundredDay, 
                                             MovingAverageTwentyDay = @MovingAverageTwentyDay,
                                             MovingAverageFiftyDay = @MovingAverageFiftyDay,
+                                            EmaTwentyTwoDay = @EmaTwentyTwoDay,
+                                            EmaTwelveDay = @EmaTwelveDay,
+                                            TwelveDayVsTwentyDayEmaHistogram = @TwelveDayVsTwentyDayEmaHistogram,
                                             UpperBollingerBandTwoDeviation = @UpperBollingerBandTwoDeviation,
                                             LowerBollingerBandTwoDeviation = @LowerBollingerBandTwoDeviation,
                                             UpperBollingerBandOneDeviation = @UpperBollingerBandOneDeviation,
@@ -73,6 +78,9 @@ namespace StockGraphAnalyser.Domain.Repository
                                                   MovingAverageTwoHundredDay = dataPoint.MovingAverageTwoHundredDay,
                                                   MovingAverageFiftyDay = dataPoint.MovingAverageFiftyDay,
                                                   MovingAverageTwentyDay = dataPoint.MovingAverageTwentyDay,
+                                                  EmaTwentyTwoDay = dataPoint.EmaTwentyTwoDay,
+                                                  EmaTwelveDay = dataPoint.EmaTwelveDay,
+                                                  TwelveDayVsTwentyDayEmaHistogram = dataPoint.TwelveDayVsTwentyDayEmaHistogram,
                                                   LowerBollingerBandTwoDeviation = dataPoint.LowerBollingerBandTwoDeviation,
                                                   UpperBollingerBandTwoDeviation = dataPoint.UpperBollingerBandTwoDeviation,
                                                   LowerBollingerBandOneDeviation = dataPoint.LowerBollingerBandOneDeviation,

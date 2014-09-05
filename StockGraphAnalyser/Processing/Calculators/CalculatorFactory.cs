@@ -36,5 +36,10 @@ namespace StockGraphAnalyser.Processing.Calculators
         {
             return new MomentumCalculator(dailyFigures, periodGap);
         }
+
+        public ICalculationTool CreateDifferenceCalculator(Dictionary<DateTime, decimal> graph1, Dictionary<DateTime, decimal> graph2)
+        {
+            return new DifferenceCalculator(graph1, graph2);
+        }
     }
 }

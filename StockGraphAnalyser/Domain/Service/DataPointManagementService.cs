@@ -4,6 +4,7 @@ namespace StockGraphAnalyser.Domain.Service
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Interfaces;
     using Processing;
     using Processing.Calculators;
@@ -34,8 +35,9 @@ namespace StockGraphAnalyser.Domain.Service
 
             var fullDataPointsSet = storedDatapoints.ToList();
             fullDataPointsSet.AddRange(newDataPoints);
+            var startTime = DateTime.Now;
             var fullyProcessedData = this.AddProcessedData(fullDataPointsSet.OrderBy(d => d.Date), dateToInsertFrom);
-           
+            Debug.WriteLine("{0} DATAPOINTS NUMBER CRUNCHING TOOK {1}", symbol, DateTime.Now.Subtract(startTime).TotalSeconds);
             this.repository.InsertAll(fullyProcessedData.Where(d => d.Date >= dateToInsertFrom));    
         }
 
@@ -48,6 +50,7 @@ namespace StockGraphAnalyser.Domain.Service
             if (lastFullyProcessedDataPoint == null || lastFullyProcessedDataPoint.Date < datapoints.Max(q => q.Date))
             {
                 var minDateToUpdateInDb = lastFullyProcessedDataPoint == null ? DateTime.MinValue : lastFullyProcessedDataPoint.Date;
+                
                 var datapointsToUpdate = this.AddProcessedData(datapoints, minDateToUpdateInDb).Where(d => d.Date > minDateToUpdateInDb).ToList();
                 this.repository.UpdateAll(datapointsToUpdate);
             }
@@ -58,11 +61,13 @@ namespace StockGraphAnalyser.Domain.Service
         /// <param name="dataPoints">The data points.</param>
         /// <param name="dateToProcessFrom">The date to process from.</param>
         /// <returns></returns>
-        private IEnumerable<DataPoints> AddProcessedData(IEnumerable<DataPoints> dataPoints, DateTime dateToProcessFrom) {
-
+        private IEnumerable<DataPoints> AddProcessedData(IEnumerable<DataPoints> dataPoints, DateTime dateToProcessFrom)
+        {
             var twoHundredDayMaCalc = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 200);
             var fiftyDayMaCalc = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 50);
             var twentyDayMaCalc = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 20);
+            var twentyTwoDayEmaCalc = this.calculatorFactory.CreateExponentialMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 22);
+            var twelveDayEmaCalc = this.calculatorFactory.CreateExponentialMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 12);
             var standardDeviationCalc = this.calculatorFactory.CreateStandardDeviationCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 20);
             var onePeriodForceIndexCalc = this.calculatorFactory.CreateForceIndexCalculator(dataPoints.Select(d => new Tuple<DateTime, decimal, long>(d.Date, d.Close, d.Volume))); 
 
@@ -70,12 +75,16 @@ namespace StockGraphAnalyser.Domain.Service
             var fiftyDayMaTask = fiftyDayMaCalc.CalculateAsync(dateToProcessFrom);
             var twentyDayMaTask = twentyDayMaCalc.CalculateAsync(dateToProcessFrom);
             var standardDeviationTask = standardDeviationCalc.CalculateAsync(dateToProcessFrom);
-            var onePeriodForceIndexTask = onePeriodForceIndexCalc.CalculateAsync(dateToProcessFrom);           
+            var onePeriodForceIndexTask = onePeriodForceIndexCalc.CalculateAsync(dateToProcessFrom);
+            var twentyTwoDayEmaTask = twentyTwoDayEmaCalc.CalculateAsync();
+            var twelveDayEmaTask = twelveDayEmaCalc.CalculateAsync();
 
             dataPoints = dataPoints.MapNewDataPoint(twoHundredDayMaTask.Result, (p, d) => p.MovingAverageTwoHundredDay = d);
             dataPoints = dataPoints.MapNewDataPoint(fiftyDayMaTask.Result, (p, d) => p.MovingAverageFiftyDay = d);
             dataPoints = dataPoints.MapNewDataPoint(twentyDayMaTask.Result, (p, d) => p.MovingAverageTwentyDay = d);
             dataPoints = dataPoints.MapNewDataPoint(onePeriodForceIndexTask.Result, (p, d) => p.ForceIndexOnePeriod = d);
+            dataPoints = dataPoints.MapNewDataPoint(twentyTwoDayEmaTask.Result, (p, d) => p.EmaTwentyTwoDay = d);
+            dataPoints = dataPoints.MapNewDataPoint(twelveDayEmaTask.Result, (p, d) => p.EmaTwelveDay = d);
 
             var upperTwoDeviationBollingerBandCalc = this.calculatorFactory.CreateBollingerBandCalculator(
                 dataPoints.Where(d => d.MovingAverageTwentyDay.HasValue).ToDictionary(d => d.Date, d => d.MovingAverageTwentyDay.Value),
@@ -100,13 +109,17 @@ namespace StockGraphAnalyser.Domain.Service
             var thirteenPeriodForceIndexCalc = this.calculatorFactory.CreateExponentialMovingAverageCalculator(
                 dataPoints.Where(d => d.ForceIndexOnePeriod.HasValue).ToDictionary(f => f.Date, f => f.ForceIndexOnePeriod.Value), 
                 13);
-            
+
+            var macdHistogramTwelveDayVsTwentyTwoDayCalc = this.calculatorFactory.CreateDifferenceCalculator(twelveDayEmaTask.Result, twentyTwoDayEmaTask.Result);
+
+            var macdHistogramTwelveDayVsTwentyTwoDayTask = macdHistogramTwelveDayVsTwentyTwoDayCalc.CalculateAsync(dateToProcessFrom);
             var thirteenPeriodForceIndexTask = thirteenPeriodForceIndexCalc.CalculateAsync(dateToProcessFrom);
             var upperTwoDeviationBollingerBandTask = upperTwoDeviationBollingerBandCalc.CalculateAsync(dateToProcessFrom);
             var lowerTwoDeviationBollingerBandTask = lowerTwoDeviationBollingerBandCalc.CalculateAsync(dateToProcessFrom);
             var upperOneDeviationBollingerBandTask = upperOneDeviationBollingerBandCalc.CalculateAsync(dateToProcessFrom);
             var lowerOneDeviationBollingerBandTask = lowerOneDeviationBollingerBandCalc.CalculateAsync(dateToProcessFrom);
 
+            dataPoints = dataPoints.MapNewDataPoint(macdHistogramTwelveDayVsTwentyTwoDayTask.Result, (p, d) => p.TwelveDayVsTwentyDayEmaHistogram = d);
             dataPoints = dataPoints.MapNewDataPoint(lowerTwoDeviationBollingerBandTask.Result, (p, d) => p.LowerBollingerBandTwoDeviation = d);
             dataPoints = dataPoints.MapNewDataPoint(upperTwoDeviationBollingerBandTask.Result, (p, d) => p.UpperBollingerBandTwoDeviation = d);
             dataPoints = dataPoints.MapNewDataPoint(lowerOneDeviationBollingerBandTask.Result, (p, d) => p.LowerBollingerBandOneDeviation = d);
@@ -114,6 +127,7 @@ namespace StockGraphAnalyser.Domain.Service
 
             dataPoints = dataPoints.MapNewDataPoint(thirteenPeriodForceIndexTask.Result, (p, d) => p.ForceIndexThirteenPeriod = d);
             dataPoints = dataPoints.UpdateAll(x => x.IsProcessed = 1);
+            
             return dataPoints;
         }
     }

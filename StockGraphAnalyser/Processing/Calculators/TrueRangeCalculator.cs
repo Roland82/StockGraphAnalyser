@@ -9,7 +9,7 @@ namespace StockGraphAnalyser.Processing.Calculators
 
     public class TrueRangeCalculator : ICalculationTool
     {
-        private IEnumerable<DataPoints> dataPointsList;
+        private readonly IEnumerable<DataPoints> dataPointsList;
 
         public TrueRangeCalculator(IEnumerable<DataPoints> dataPointsList)
         {

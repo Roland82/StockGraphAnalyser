@@ -56,6 +56,7 @@
     <Compile Include="Domain\Service\DataPointManagementServiceUpdateProcessedDataTests.cs" />
     <Compile Include="Processing\Calculators\AverageTrueRangeCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\BollingerBandCalculatorTests.cs" />
+    <Compile Include="Processing\Calculators\DirectionalMovementCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\ExponentialMovingAverageTests.cs" />
     <Compile Include="Processing\Calculators\ForceIndexCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\RangePredictabilityCalculatorTests.cs" />

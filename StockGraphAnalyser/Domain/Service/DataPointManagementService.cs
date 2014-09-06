@@ -83,8 +83,6 @@ namespace StockGraphAnalyser.Domain.Service
             dataPoints = dataPoints.MapNewDataPoint(fiftyDayMaTask.Result, (p, d) => p.MovingAverageFiftyDay = d);
             dataPoints = dataPoints.MapNewDataPoint(twentyDayMaTask.Result, (p, d) => p.MovingAverageTwentyDay = d);
             dataPoints = dataPoints.MapNewDataPoint(onePeriodForceIndexTask.Result, (p, d) => p.ForceIndexOnePeriod = d);
-            dataPoints = dataPoints.MapNewDataPoint(twentyTwoDayEmaTask.Result, (p, d) => p.EmaTwentyTwoDay = d);
-            dataPoints = dataPoints.MapNewDataPoint(twelveDayEmaTask.Result, (p, d) => p.EmaTwelveDay = d);
 
             var upperTwoDeviationBollingerBandCalc = this.calculatorFactory.CreateBollingerBandCalculator(
                 dataPoints.Where(d => d.MovingAverageTwentyDay.HasValue).ToDictionary(d => d.Date, d => d.MovingAverageTwentyDay.Value),
@@ -110,22 +108,30 @@ namespace StockGraphAnalyser.Domain.Service
                 dataPoints.Where(d => d.ForceIndexOnePeriod.HasValue).ToDictionary(f => f.Date, f => f.ForceIndexOnePeriod.Value), 
                 13);
 
-            var macdHistogramTwelveDayVsTwentyTwoDayCalc = this.calculatorFactory.CreateDifferenceCalculator(twelveDayEmaTask.Result, twentyTwoDayEmaTask.Result);
+            var macdLineCalc = this.calculatorFactory.CreateDifferenceCalculator(twelveDayEmaTask.Result, twentyTwoDayEmaTask.Result);
 
-            var macdHistogramTwelveDayVsTwentyTwoDayTask = macdHistogramTwelveDayVsTwentyTwoDayCalc.CalculateAsync(dateToProcessFrom);
+            var macdLineTask = macdLineCalc.CalculateAsync(dateToProcessFrom);
             var thirteenPeriodForceIndexTask = thirteenPeriodForceIndexCalc.CalculateAsync(dateToProcessFrom);
             var upperTwoDeviationBollingerBandTask = upperTwoDeviationBollingerBandCalc.CalculateAsync(dateToProcessFrom);
             var lowerTwoDeviationBollingerBandTask = lowerTwoDeviationBollingerBandCalc.CalculateAsync(dateToProcessFrom);
             var upperOneDeviationBollingerBandTask = upperOneDeviationBollingerBandCalc.CalculateAsync(dateToProcessFrom);
             var lowerOneDeviationBollingerBandTask = lowerOneDeviationBollingerBandCalc.CalculateAsync(dateToProcessFrom);
 
-            dataPoints = dataPoints.MapNewDataPoint(macdHistogramTwelveDayVsTwentyTwoDayTask.Result, (p, d) => p.TwelveDayVsTwentyDayEmaHistogram = d);
+            var macdSignalLineCalc = this.calculatorFactory.CreateExponentialMovingAverageCalculator(macdLineTask.Result, 9);
+            var macdSignalLineTask = macdSignalLineCalc.CalculateAsync(dateToProcessFrom);
+            var macdHistogramCalc = this.calculatorFactory.CreateDifferenceCalculator(macdLineTask.Result, macdSignalLineTask.Result);
+            var macdHistogramTask = macdHistogramCalc.CalculateAsync(dateToProcessFrom);
+            
+            dataPoints = dataPoints.MapNewDataPoint(macdLineTask.Result, (p, d) => p.MacdTwentyTwoOverTwelveDay = d);
             dataPoints = dataPoints.MapNewDataPoint(lowerTwoDeviationBollingerBandTask.Result, (p, d) => p.LowerBollingerBandTwoDeviation = d);
             dataPoints = dataPoints.MapNewDataPoint(upperTwoDeviationBollingerBandTask.Result, (p, d) => p.UpperBollingerBandTwoDeviation = d);
             dataPoints = dataPoints.MapNewDataPoint(lowerOneDeviationBollingerBandTask.Result, (p, d) => p.LowerBollingerBandOneDeviation = d);
             dataPoints = dataPoints.MapNewDataPoint(upperOneDeviationBollingerBandTask.Result, (p, d) => p.UpperBollingerBandOneDeviation = d); 
 
             dataPoints = dataPoints.MapNewDataPoint(thirteenPeriodForceIndexTask.Result, (p, d) => p.ForceIndexThirteenPeriod = d);
+            dataPoints = dataPoints.MapNewDataPoint(macdSignalLineTask.Result, (p, d) => p.MacdTwentyTwoOverTwelveDaySignalLine = d);
+            dataPoints = dataPoints.MapNewDataPoint(macdLineTask.Result, (p, d) => p.MacdTwentyTwoOverTwelveDay = d);
+            dataPoints = dataPoints.MapNewDataPoint(macdHistogramTask.Result, (p, d) => p.MacdTwentyTwoOverTwelveDayHistogram = d);
             dataPoints = dataPoints.UpdateAll(x => x.IsProcessed = 1);
             
             return dataPoints;

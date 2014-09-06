@@ -17,13 +17,16 @@ namespace StockGraphAnalyser.Domain.Repository
             using (IDbConnection connection = new SqlConnection(this.connectionString))
             {
                 connection.Open();
-                connection.Execute(@"INSERT INTO DataPoints (Id,Symbol,Date,[Open],[Close],High,Low,Volume,MovingAverageTwoHundredDay,
-                                            MovingAverageFiftyDay,MovingAverageTwentyDay,EmaTwentyTwoDay,EmaTwelveDay,TwelveDayVsTwentyDayEmaHistogram,
+                connection.Execute(@"INSERT INTO DataPoints 
+                                            (Id,Symbol,Date,[Open],[Close],High,Low,Volume,
+                                            MovingAverageTwoHundredDay, MovingAverageFiftyDay, MovingAverageTwentyDay,
+                                            MacdTwentyTwoOverTwelveDay,MacdTwentyTwoOverTwelveDaySignalLine, MacdTwentyTwoOverTwelveDayHistogram, 
                                             UpperBollingerBandTwoDeviation,UpperBollingerBandOneDeviation,
                                             LowerBollingerBandTwoDeviation,LowerBollingerBandOneDeviation,
                                             ForceIndexOnePeriod, ForceIndexThirteenPeriod, IsProcessed) 
-                                    VALUES (@Id,@Symbol,@Date,@Open,@Close,@High,@Low,@Volume,@MovingAverageTwoHundredDay,
-                                            @MovingAverageFiftyDay,@MovingAverageTwentyDay,@EmaTwentyTwoDay,@EmaTwelveDay,@TwelveDayVsTwentyDayEmaHistogram,
+                                    VALUES (@Id,@Symbol,@Date,@Open,@Close,@High,@Low,@Volume,
+                                            @MovingAverageTwoHundredDay,@MovingAverageFiftyDay,@MovingAverageTwentyDay,
+                                            @MacdTwentyTwoOverTwelveDay,@MacdTwentyTwoOverTwelveDaySignalLine, @MacdTwentyTwoOverTwelveDayHistogram,
                                             @UpperBollingerBandTwoDeviation,@UpperBollingerBandOneDeviation,
                                             @LowerBollingerBandTwoDeviation,@LowerBollingerBandOneDeviation,
                                             @ForceIndexOnePeriod, @ForceIndexThirteenPeriod, @IsProcessed)", dataPoints); 
@@ -63,7 +66,9 @@ namespace StockGraphAnalyser.Domain.Repository
                                             MovingAverageFiftyDay = @MovingAverageFiftyDay,
                                             EmaTwentyTwoDay = @EmaTwentyTwoDay,
                                             EmaTwelveDay = @EmaTwelveDay,
-                                            TwelveDayVsTwentyDayEmaHistogram = @TwelveDayVsTwentyDayEmaHistogram,
+                                            MacdTwentyTwoOverTwelveDay = @MacdTwentyTwoOverTwelveDay,
+                                            MacdTwentyTwoOverTwelveDaySignalLine = @MacdTwentyTwoOverTwelveDaySignalLine,
+                                            MacdTwentyTwoOverTwelveDayHistogram = @MacdTwentyTwoOverTwelveDayHistogram,
                                             UpperBollingerBandTwoDeviation = @UpperBollingerBandTwoDeviation,
                                             LowerBollingerBandTwoDeviation = @LowerBollingerBandTwoDeviation,
                                             UpperBollingerBandOneDeviation = @UpperBollingerBandOneDeviation,
@@ -78,9 +83,9 @@ namespace StockGraphAnalyser.Domain.Repository
                                                   MovingAverageTwoHundredDay = dataPoint.MovingAverageTwoHundredDay,
                                                   MovingAverageFiftyDay = dataPoint.MovingAverageFiftyDay,
                                                   MovingAverageTwentyDay = dataPoint.MovingAverageTwentyDay,
-                                                  EmaTwentyTwoDay = dataPoint.EmaTwentyTwoDay,
-                                                  EmaTwelveDay = dataPoint.EmaTwelveDay,
-                                                  TwelveDayVsTwentyDayEmaHistogram = dataPoint.TwelveDayVsTwentyDayEmaHistogram,
+                                                  MacdTwentyTwoOverTwelveDay = dataPoint.MacdTwentyTwoOverTwelveDay,
+                                                  MacdTwentyTwoOverTwelveDaySignalLine = dataPoint.MacdTwentyTwoOverTwelveDaySignalLine,
+                                                  MacdTwentyTwoOverTwelveDayHistogram = dataPoint.MacdTwentyTwoOverTwelveDayHistogram,
                                                   LowerBollingerBandTwoDeviation = dataPoint.LowerBollingerBandTwoDeviation,
                                                   UpperBollingerBandTwoDeviation = dataPoint.UpperBollingerBandTwoDeviation,
                                                   LowerBollingerBandOneDeviation = dataPoint.LowerBollingerBandOneDeviation,

@@ -69,8 +69,8 @@ namespace StockGraphAnalyser.Signals
         //    Signal lastSignal = null;
         //    return this.dataPoints.ForEachGroup(7, group =>
         //                                               {
-        //            var isMacdPositive = group.ElementAt(6).TwelveDayVsTwentyDayEmaHistogram > 0;
-        //            var isTrendInMacdPositive = group.ElementAt(6).TwelveDayVsTwentyDayEmaHistogram - group.ElementAt(3).TwelveDayVsTwentyDayEmaHistogram > 0;
+        //            var isMacdPositive = group.ElementAt(6).MacdTwentyTwoOverTwelveDay > 0;
+        //            var isTrendInMacdPositive = group.ElementAt(6).MacdTwentyTwoOverTwelveDay - group.ElementAt(3).MacdTwentyTwoOverTwelveDay > 0;
 
         //            if (lastSignal != null && lastSignal.SignalType == SignalType.Sell && (group.ElementAt(6).Close > group.ElementAt(6).MovingAverageTwentyDay || isMacdPositive || isTrendInMacdPositive))
         //            {

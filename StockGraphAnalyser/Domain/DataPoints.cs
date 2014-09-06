@@ -21,7 +21,10 @@ namespace StockGraphAnalyser.Domain
         
         public decimal? EmaTwentyTwoDay { get; set; }
         public decimal? EmaTwelveDay { get; set; }
-        public decimal? TwelveDayVsTwentyDayEmaHistogram { get; set; }
+
+        public decimal? MacdTwentyTwoOverTwelveDay { get; set; }
+        public decimal? MacdTwentyTwoOverTwelveDaySignalLine { get; set; }
+        public decimal? MacdTwentyTwoOverTwelveDayHistogram { get; set; }
 
         public decimal? UpperBollingerBandTwoDeviation { get; set; }
         public decimal? LowerBollingerBandTwoDeviation { get; set; }
@@ -46,7 +49,7 @@ namespace StockGraphAnalyser.Domain
 
         protected bool Equals(DataPoints other)
         {
-            return this.Id.Equals(other.Id) && this.Date.Equals(other.Date) && this.Open == other.Open && this.High == other.High && this.Low == other.Low && this.Close == other.Close && this.Volume == other.Volume && string.Equals(this.Symbol, other.Symbol) && this.MovingAverageTwoHundredDay == other.MovingAverageTwoHundredDay && this.MovingAverageFiftyDay == other.MovingAverageFiftyDay && this.MovingAverageTwentyDay == other.MovingAverageTwentyDay && this.EmaTwentyTwoDay == other.EmaTwentyTwoDay && this.EmaTwelveDay == other.EmaTwelveDay && this.UpperBollingerBandTwoDeviation == other.UpperBollingerBandTwoDeviation && this.LowerBollingerBandTwoDeviation == other.LowerBollingerBandTwoDeviation && this.UpperBollingerBandOneDeviation == other.UpperBollingerBandOneDeviation && this.LowerBollingerBandOneDeviation == other.LowerBollingerBandOneDeviation && this.ForceIndexOnePeriod == other.ForceIndexOnePeriod && this.ForceIndexThirteenPeriod == other.ForceIndexThirteenPeriod && this.IsProcessed == other.IsProcessed;
+            return this.Id.Equals(other.Id) && this.Date.Equals(other.Date) && this.Open == other.Open && this.High == other.High && this.Low == other.Low && this.Close == other.Close && this.Volume == other.Volume && string.Equals(this.Symbol, other.Symbol) && this.MovingAverageTwoHundredDay == other.MovingAverageTwoHundredDay && this.MovingAverageFiftyDay == other.MovingAverageFiftyDay && this.MovingAverageTwentyDay == other.MovingAverageTwentyDay && this.EmaTwentyTwoDay == other.EmaTwentyTwoDay && this.EmaTwelveDay == other.EmaTwelveDay && this.MacdTwentyTwoOverTwelveDay == other.MacdTwentyTwoOverTwelveDay && this.UpperBollingerBandTwoDeviation == other.UpperBollingerBandTwoDeviation && this.LowerBollingerBandTwoDeviation == other.LowerBollingerBandTwoDeviation && this.UpperBollingerBandOneDeviation == other.UpperBollingerBandOneDeviation && this.LowerBollingerBandOneDeviation == other.LowerBollingerBandOneDeviation && this.ForceIndexOnePeriod == other.ForceIndexOnePeriod && this.ForceIndexThirteenPeriod == other.ForceIndexThirteenPeriod && this.IsProcessed == other.IsProcessed;
         }
 
         public override bool Equals(object obj)
@@ -74,6 +77,7 @@ namespace StockGraphAnalyser.Domain
                 hashCode = (hashCode*397) ^ this.MovingAverageTwentyDay.GetHashCode();
                 hashCode = (hashCode*397) ^ this.EmaTwentyTwoDay.GetHashCode();
                 hashCode = (hashCode*397) ^ this.EmaTwelveDay.GetHashCode();
+                hashCode = (hashCode*397) ^ this.MacdTwentyTwoOverTwelveDay.GetHashCode();
                 hashCode = (hashCode*397) ^ this.UpperBollingerBandTwoDeviation.GetHashCode();
                 hashCode = (hashCode*397) ^ this.LowerBollingerBandTwoDeviation.GetHashCode();
                 hashCode = (hashCode*397) ^ this.UpperBollingerBandOneDeviation.GetHashCode();
@@ -84,7 +88,6 @@ namespace StockGraphAnalyser.Domain
                 return hashCode;
             }
         }
-
 
         public static DataPoints CreateFromQuote(Quote quote)
         {

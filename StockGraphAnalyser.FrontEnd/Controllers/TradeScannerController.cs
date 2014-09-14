@@ -1,6 +1,7 @@
 ﻿
 namespace StockGraphAnalyser.FrontEnd.Controllers
 {
+    using System;
     using Domain;
     using System.Collections.Generic;
     using System.Web.Mvc;
@@ -9,19 +10,16 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
 
     public class TradeScannerController : Controller
     {
-        private readonly ITradingSignalService tradingSignalService;
+        private readonly ITradeSignalManagementService tradingSignalService;
 
-        public TradeScannerController(ITradingSignalService tradingSignalService) {
+        public TradeScannerController(ITradeSignalManagementService tradingSignalService)
+        {
             this.tradingSignalService = tradingSignalService;
         }
 
-        public ActionResult Index()
-        {
-            var tradeSignalsDictionary = new Dictionary<string, IEnumerable<DataPoints>>();
-            tradeSignalsDictionary.Add("In Value Zone", this.tradingSignalService.GetDatapointsForTradeSignal(TradingSignalService.SignalType.InValueZone));
-            tradeSignalsDictionary.Add("Below Lower Bollinger Band", this.tradingSignalService.GetDatapointsForTradeSignal(TradingSignalService.SignalType.BelowLowerBollingerBand));
-            tradeSignalsDictionary.Add("Above Upper Bollinger Band", this.tradingSignalService.GetDatapointsForTradeSignal(TradingSignalService.SignalType.AboveUpperBollingerBand));
-            return View("Index", tradeSignalsDictionary);
+        public ActionResult Index() {
+            var signals = this.tradingSignalService.GetLatestSignals(DateTime.Today.AddDays(-14));
+            return View("Index", signals);
         }
     }
 }

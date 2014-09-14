@@ -8,10 +8,11 @@ namespace StockGraphAnalyser.Processing.Calculators
 
     public class StandardDeviationCalculator : ICalculationTool
     {
-        private readonly Dictionary<DateTime, decimal> closingPrices;
+        private readonly IReadOnlyDictionary<DateTime, decimal> closingPrices;
         private readonly int sampleSize;
 
-        public StandardDeviationCalculator(Dictionary<DateTime, decimal> closingPrices, int sampleSize) {
+        public StandardDeviationCalculator(IReadOnlyDictionary<DateTime, decimal> closingPrices, int sampleSize)
+        {
             this.closingPrices = closingPrices;
             this.sampleSize = sampleSize;
         }

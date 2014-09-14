@@ -9,10 +9,10 @@ namespace StockGraphAnalyser.Processing.Calculators
 
     public class DailyMovingAverageCalculator : ICalculationTool
     {
-        private readonly Dictionary<DateTime, decimal> closingPrices;
+        private readonly IReadOnlyDictionary<DateTime, decimal> closingPrices;
         private readonly int sampleSize;
 
-        public DailyMovingAverageCalculator(Dictionary<DateTime, decimal> closingPrices, int sampleSize)
+        public DailyMovingAverageCalculator(IReadOnlyDictionary<DateTime, decimal> closingPrices, int sampleSize)
         {
             this.closingPrices = closingPrices;
             this.sampleSize = sampleSize;

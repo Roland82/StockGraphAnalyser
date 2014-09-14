@@ -107,7 +107,7 @@ namespace GraphAnalyser.Tests.Signals
         public void ForALaugh()
         {
             var repository = new TradeSignalRepository();
-            var companies = new CompanyRepository().FindByIndex(Company.ConstituentOfIndex.Ftse100);
+            var companies = new CompanyRepository().FindByIndex(Company.ConstituentOfIndex.SmallCap);
             var totalEquityUsed = 0m;
             var totalEndEquity = 0m;
             foreach (var company in companies)
@@ -118,7 +118,6 @@ namespace GraphAnalyser.Tests.Signals
                     var results = new SignalEquityPositionTotaller(repository.GetAllForCompany(company.Symbol).OrderBy(d => d.Date), 100).Calculate();
                     if (results.OrderBy(d => d.Key).Last().Value < 700 && results.OrderBy(d => d.Key).Last().Value > -700)
                     {
-
                         totalEquityUsed = totalEquityUsed + 100;
                         totalEndEquity = totalEndEquity + results.OrderBy(d => d.Key).Last().Value;
                         Console.WriteLine("For company {0}. Start Equity {1}. End Equity {2}", company.Symbol, 100, Math.Round(results.OrderBy(d => d.Key).Last().Value, 2));
@@ -133,14 +132,13 @@ namespace GraphAnalyser.Tests.Signals
         public void ForALaugh2()
         {
             var repository = new TradeSignalRepository();
-            var trades = repository.GetAllForCompany("SGE.L").OrderBy(d => d.Date);
+            var trades = repository.GetAllForCompany("BDEV.L").OrderBy(d => d.Date);
             var totals = new SignalEquityPositionTotaller(trades, 100).Calculate();
             foreach (var total in totals)
             {
                 var trade = trades.First(t => t.Date == total.Key);
                 Console.WriteLine("{0}: {1} at {2}. Current Equity {3}", total.Key, trade.SignalType, trade.Price, Math.Round(total.Value, 2));
             }
-
         }
     }
 }

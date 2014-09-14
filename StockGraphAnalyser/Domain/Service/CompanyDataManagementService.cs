@@ -3,6 +3,7 @@
 namespace StockGraphAnalyser.Domain.Service
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Interfaces;
     using Repository.Interfaces;
@@ -46,6 +47,10 @@ namespace StockGraphAnalyser.Domain.Service
                 var updatedCompanies = companies.Where(c => companiesInIndex.ContainsKey(c.Symbol.Replace(".L", ""))).Select(c => { c.Index = indexType.GetHashCode(); return c; });
                 this.companyRepository.UpdateAll(updatedCompanies);
             }
+        }
+
+        public IEnumerable<Company> FindAllMatching(string matcher) {
+            return this.companyRepository.FindAll(matcher);
         }
     }
 }

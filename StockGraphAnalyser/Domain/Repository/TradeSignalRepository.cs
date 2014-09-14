@@ -1,6 +1,7 @@
 ﻿
 namespace StockGraphAnalyser.Domain.Repository
 {
+    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
@@ -24,6 +25,17 @@ namespace StockGraphAnalyser.Domain.Repository
             {
                 connection.Open();
                 return connection.Query<Signal>(string.Format("SELECT * FROM Signals WHERE Symbol = '{0}'", symbol));
+            }
+        }
+
+        public IEnumerable<Signal> GetAll(DateTime fromDate)
+        {
+            using (IDbConnection connection = new SqlConnection(this.connectionString))
+            {
+                connection.Open();
+                return connection.Query<Signal>(string.Format(
+                    "SELECT * FROM Signals WHERE [Date] >= '{0}' ORDER BY [Date] DESC", 
+                    fromDate.ToString("yyyy-MM-dd")));
             }
         }
     }

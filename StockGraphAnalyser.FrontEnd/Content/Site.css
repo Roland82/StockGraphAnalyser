@@ -187,6 +187,20 @@ ul#menu {
     text-align: right;
 }
 
+input#symbol-search {
+    border-radius: 5px;
+    height: 15px;
+    width: 175px;
+    display: inline;
+    float: right;
+} 
+
+.ui-autocomplete-w1 { background:url(img/shadow.png) no-repeat bottom right; position:absolute; top:0px; left:0px; margin:6px 0 0 6px; /* IE6 fix: */ _background:none; _margin:1px 0 0 0; } 
+.ui-autocomplete { border:1px solid #999; background:#FFF; cursor:default; text-align:left; max-height:350px; overflow:auto; margin:-6px 6px 6px -6px; /* IE6 specific: */ _height:350px;  _margin:0; _overflow-x:hidden; } 
+.ui-autocomplete .selected { background:#F0F0F0; } 
+.ui-autocomplete div { padding:2px 5px; white-space:nowrap; overflow:hidden; } 
+.ui-autocomplete strong { font-weight:normal; color:#3399FF; } 
+
     ul#menu li {
         display: inline;
         list-style: none;
@@ -713,11 +727,6 @@ tr.pager td {
             font-weight: 600;
         }
 
-    /* forms */
-    input {
-        width: 90%;
-    }
-
     /* login page */
     #loginForm {
         border-right: none;
@@ -729,7 +738,7 @@ tr.pager td {
             display: block;
             margin-left: 15px;
         }
-
+        '
     #socialLoginForm {
         margin-left: 0;
         float: none;

@@ -11,39 +11,41 @@ namespace StockGraphAnalyser.Domain.Service
     public class TradeSignalManagementService : ITradeSignalManagementService
     {
         private readonly IDataPointRepository dataPointRepository;
-        private readonly ICompanyRepository companyRepository;
         private readonly ITradeSignalRepository tradeSignalRepository;
+        private readonly ICandleStickSignalRepository candleStickSignalRepository;
 
-        public TradeSignalManagementService(IDataPointRepository dataPointRepository, ICompanyRepository companyRepository, ITradeSignalRepository tradeSignalRepository)
-        {
+        public TradeSignalManagementService(IDataPointRepository dataPointRepository, ITradeSignalRepository tradeSignalRepository, ICandleStickSignalRepository candleStickSignalRepository) {
             this.dataPointRepository = dataPointRepository;
-            this.companyRepository = companyRepository;
             this.tradeSignalRepository = tradeSignalRepository;
+            this.candleStickSignalRepository = candleStickSignalRepository;
         }
+
+        public IEnumerable<Signal> GetLatestSignals(DateTime fromDate) {
+            return this.tradeSignalRepository.GetAll(fromDate);
+        } 
 
         public void GenerateNewSignals()
         {
-            var companies = new List<string>();
-            companies.AddRange(this.companyRepository.FindByIndex(Company.ConstituentOfIndex.Ftse100).Select(c => c.Symbol));
-            companies.AddRange(this.companyRepository.FindByIndex(Company.ConstituentOfIndex.Ftse250).Select(c => c.Symbol));
-            this.GenerateSignals(companies);       
+            this.GenerateSignals();  
         }
 
-        public void GenerateNewSignals(string company)
-        {
-            var companies = new[] { company };
-            this.GenerateSignals(companies);
+        public void GenerateNewSignals(string company) {
+            throw new NotImplementedException("Fix this method");
         }
 
-        private void GenerateSignals(IEnumerable<String> companies)
+        private void GenerateSignals()
         {
             var signals = new List<Signal>();
-
-            foreach (var company in companies.GroupBy(c => c))
+            var indexes = new[] { Company.ConstituentOfIndex.Ftse100, Company.ConstituentOfIndex.Ftse250, Company.ConstituentOfIndex.SmallCap };
+            var datapoints = this.dataPointRepository.FindAll(indexes);
+            foreach (var datapointsGroup in datapoints.GroupBy(c => c.Symbol))
             {
-                var datapoints = this.dataPointRepository.FindAll(company.Key).OrderBy(d => d.Date);
-                var generator = new MovingAveragePriceCrossSignals(datapoints);
-                signals.AddRange(generator.GenerateSignals());
+                var generator = new MovingAveragePriceCrossSignals(datapointsGroup, this.candleStickSignalRepository.FindAllForCompany(datapointsGroup.Key));
+                var generatedSignals = generator.GenerateSignals();
+                if (generatedSignals.Any())
+                {
+                    signals.AddRange(generatedSignals);
+                }
             }
 
             this.tradeSignalRepository.InsertAll(signals);

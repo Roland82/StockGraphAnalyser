@@ -5,10 +5,13 @@
 @{
     ViewBag.Title = "Data Update Tools";
 }
-
-<h2>Data Update Tools</h2>
+@if (TempData.ContainsKey("message"))
+{
+    <p style="color: green"><b>@TempData["message"]</b></p>
+}
 
 <table>
+    <tr><td colspan="2"><h3>Company Data</h3></td></tr>
     <tr>
         <td><b>Add new companies</b></td>
         <td>
@@ -27,6 +30,7 @@
             }
         </td>
     </tr>
+    <tr><td colspan="2"><h3>Data Points</h3></td></tr>
     <tr>
         <td><b>Get All Quotes and Process for company</b></td>
         <td>
@@ -34,35 +38,6 @@
             {
                 @Html.TextBox("symbol");
                 <input style="float: right" type="submit" value="Update" name="UpdateCompanyDatapoints" id="UpdateCompanyDatapoints"/>
-            }
-        </td>
-    </tr>
-    <tr>
-        <td><b>Update candlestick signals</b></td>
-        <td>
-            @using (Html.BeginForm("UpdateCandlestickSignals", "DataUpdate", FormMethod.Post))
-            {
-                <input style="float: right" type="submit" value="Update" name="UpdateCompanyCandlestickData" id="UpdateCompanyCandlestickData"/>
-            }
-        </td>
-    </tr>
-    <tr>
-        <td><b>Update trading signals for company</b></td>
-        <td>
-            @using (Html.BeginForm("UpdateTradeSignals", "DataUpdate", FormMethod.Post))
-            {
-                @Html.TextBox("symbol");
-                <input style="float: right" type="submit" value="Update" name="UpdateTradeSignals" id="UpdateTradeSignals"/>
-            }
-        </td>
-    </tr>
-        <tr>
-        <td><b>Update trading signals For All Companies</b></td>
-        <td>
-            @using (Html.BeginForm("UpdateTradeSignalsForAll", "DataUpdate", FormMethod.Post))
-            {
-
-                <input style="float: right" type="submit" value="Update" name="UpdateTradeSignals" id="UpdateTradeSignals"/>
             }
         </td>
     </tr>
@@ -77,4 +52,36 @@
             }
         </td>
     </tr>
+    <tr><td colspan="2"><h3>Candle Sticks</h3></td></tr>
+    <tr>
+        <td><b>Update candlestick signals</b></td>
+        <td>
+            @using (Html.BeginForm("UpdateCandlestickSignals", "DataUpdate", FormMethod.Post))
+            {
+                <input style="float: right" type="submit" value="Update" name="UpdateCompanyCandlestickData" id="UpdateCompanyCandlestickData"/>
+            }
+        </td>
+    </tr>
+    <tr><td colspan="2"><h3>Trading Signals</h3></td></tr>
+    <tr>
+        <td><b>Update trading signals for company</b></td>
+        <td>
+            @using (Html.BeginForm("UpdateTradeSignals", "DataUpdate", FormMethod.Post))
+            {
+                @Html.TextBox("symbol");
+                <input style="float: right" type="submit" value="Update" name="UpdateTradeSignals" id="UpdateTradeSignals"/>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td><b>Update trading signals For All Companies</b></td>
+        <td>
+            @using (Html.BeginForm("UpdateTradeSignalsForAll", "DataUpdate", FormMethod.Post))
+            {
+
+                <input style="float: right" type="submit" value="Update" name="UpdateTradeSignals" id="UpdateTradeSignals"/>
+            }
+        </td>
+    </tr>
+
 </table>

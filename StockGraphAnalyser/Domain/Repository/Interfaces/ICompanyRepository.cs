@@ -6,7 +6,7 @@
     {
         void InsertAll(IEnumerable<Company> companies);
         void UpdateAll(IEnumerable<Company> companies);
-        IEnumerable<Company> FindAll(char letter);
+        IEnumerable<Company> FindAll(string wordMatch);
         IEnumerable<Company> FindByIndex(Company.ConstituentOfIndex index);
         IEnumerable<Company> FindAll();
     }

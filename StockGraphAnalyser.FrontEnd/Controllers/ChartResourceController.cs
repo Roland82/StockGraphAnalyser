@@ -37,9 +37,10 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
             var list = datapoints.Select(d => new []
                 {
                     d.Date.ToEpoch(), d.Open, d.High, d.Low, d.Close, d.Volume, 
-                    d.ForceIndexOnePeriod, d.ForceIndexThirteenPeriod, 
+                    d.ForceIndexThirteenPeriod, 
                     d.UpperBollingerBandTwoDeviation, d.LowerBollingerBandTwoDeviation,
-                    d.UpperBollingerBandOneDeviation, d.LowerBollingerBandOneDeviation
+                    d.UpperBollingerBandOneDeviation, d.LowerBollingerBandOneDeviation,
+                    d.MacdTwentyTwoOverTwelveDay, d.MacdTwentyTwoOverTwelveDaySignalLine, d.MacdTwentyTwoOverTwelveDayHistogram
                 }).ToList();
 
             return JsonNetResult.Create(list);

@@ -38,12 +38,12 @@
             }
         }
 
-        public IEnumerable<Company> FindAll(char letter)
+        public IEnumerable<Company> FindAll(string wordMatch)
         {
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                return connection.Query<Company>(string.Format("SELECT * FROM Companies WHERE Symbol LIKE '{0}%'", letter));
+                return connection.Query<Company>(string.Format("SELECT * FROM Companies WHERE Symbol LIKE '%{0}%' OR Name LIKE '%{0}%'", wordMatch));
             }
         }
 

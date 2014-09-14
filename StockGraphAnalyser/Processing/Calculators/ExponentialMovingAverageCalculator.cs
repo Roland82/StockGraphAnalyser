@@ -10,9 +10,10 @@ namespace StockGraphAnalyser.Processing.Calculators
     public class ExponentialMovingAverageCalculator : ICalculationTool
     {
         private readonly int timePeriod;
-        private readonly Dictionary<DateTime, decimal> closingPrices;
+        private readonly IReadOnlyDictionary<DateTime, decimal> closingPrices;
 
-        public ExponentialMovingAverageCalculator(Dictionary<DateTime, decimal> closingPrices, int timePeriod) {
+        public ExponentialMovingAverageCalculator(IReadOnlyDictionary<DateTime, decimal> closingPrices, int timePeriod)
+        {
             this.timePeriod = timePeriod;
             this.closingPrices = closingPrices;
         }

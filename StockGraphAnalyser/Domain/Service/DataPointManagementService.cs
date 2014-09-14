@@ -4,6 +4,7 @@ namespace StockGraphAnalyser.Domain.Service
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using Interfaces;
     using Processing;
@@ -24,6 +25,9 @@ namespace StockGraphAnalyser.Domain.Service
             this.calculatorFactory = calculatorFactory;
         }
 
+        public IEnumerable<DataPoints> FindAll(Company.ConstituentOfIndex[] indexes) {
+            return this.repository.FindAll(indexes);
+        }
 
         /// <summary>Inserts the new quotes into database.</summary>
         /// <param name="symbol">The symbol.</param>
@@ -35,10 +39,15 @@ namespace StockGraphAnalyser.Domain.Service
 
             var fullDataPointsSet = storedDatapoints.ToList();
             fullDataPointsSet.AddRange(newDataPoints);
-            var startTime = DateTime.Now;
-            var fullyProcessedData = this.AddProcessedData(fullDataPointsSet.OrderBy(d => d.Date), dateToInsertFrom);
-            Debug.WriteLine("{0} DATAPOINTS NUMBER CRUNCHING TOOK {1}", symbol, DateTime.Now.Subtract(startTime).TotalSeconds);
-            this.repository.InsertAll(fullyProcessedData.Where(d => d.Date >= dateToInsertFrom));    
+
+            if (fullDataPointsSet.Any())
+            {
+                var startTime = DateTime.Now;
+                var fullyProcessedData = this.AddProcessedData(fullDataPointsSet.OrderBy(d => d.Date), dateToInsertFrom);
+                Debug.WriteLine("{0} DATAPOINTS NUMBER CRUNCHING TOOK {1}", symbol,
+                                DateTime.Now.Subtract(startTime).TotalSeconds);
+                this.repository.InsertAll(fullyProcessedData.Where(d => d.Date >= dateToInsertFrom));
+            }
         }
 
 
@@ -56,19 +65,19 @@ namespace StockGraphAnalyser.Domain.Service
             }
         }
 
-
         /// <summary>Takes in all datapoints and adds all processed data;</summary>
         /// <param name="dataPoints">The data points.</param>
         /// <param name="dateToProcessFrom">The date to process from.</param>
         /// <returns></returns>
-        private IEnumerable<DataPoints> AddProcessedData(IEnumerable<DataPoints> dataPoints, DateTime dateToProcessFrom)
-        {
-            var twoHundredDayMaCalc = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 200);
-            var fiftyDayMaCalc = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 50);
-            var twentyDayMaCalc = this.calculatorFactory.CreateMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 20);
-            var twentyTwoDayEmaCalc = this.calculatorFactory.CreateExponentialMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 22);
-            var twelveDayEmaCalc = this.calculatorFactory.CreateExponentialMovingAverageCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 12);
-            var standardDeviationCalc = this.calculatorFactory.CreateStandardDeviationCalculator(dataPoints.ToDictionary(q => q.Date, q => q.Close), 20);
+        private IEnumerable<DataPoints> AddProcessedData(IEnumerable<DataPoints> dataPoints, DateTime dateToProcessFrom) {
+            var closes = new ReadOnlyDictionary<DateTime, decimal>(dataPoints.ToDictionary(q => q.Date, q => q.Close));
+
+            var twoHundredDayMaCalc = this.calculatorFactory.CreateMovingAverageCalculator(closes, 200);
+            var fiftyDayMaCalc = this.calculatorFactory.CreateMovingAverageCalculator(closes, 50);
+            var twentyDayMaCalc = this.calculatorFactory.CreateMovingAverageCalculator(closes, 20);
+            var twentyTwoDayEmaCalc = this.calculatorFactory.CreateExponentialMovingAverageCalculator(closes, 22);
+            var twelveDayEmaCalc = this.calculatorFactory.CreateExponentialMovingAverageCalculator(closes, 12);
+            var standardDeviationCalc = this.calculatorFactory.CreateStandardDeviationCalculator(closes, 20);
             var onePeriodForceIndexCalc = this.calculatorFactory.CreateForceIndexCalculator(dataPoints.Select(d => new Tuple<DateTime, decimal, long>(d.Date, d.Close, d.Volume))); 
 
             var twoHundredDayMaTask = twoHundredDayMaCalc.CalculateAsync(dateToProcessFrom);

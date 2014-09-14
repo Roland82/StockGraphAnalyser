@@ -7,7 +7,7 @@ namespace StockGraphAnalyser.Processing.Calculators
 
     public class CalculatorFactory : ICalculatorFactory
     {
-        public ICalculationTool CreateMovingAverageCalculator(Dictionary<DateTime, decimal> dailyFigures, int period) 
+        public ICalculationTool CreateMovingAverageCalculator(IReadOnlyDictionary<DateTime, decimal> dailyFigures, int period) 
         {
             return new DailyMovingAverageCalculator(dailyFigures, period);
         }
@@ -17,7 +17,7 @@ namespace StockGraphAnalyser.Processing.Calculators
             return new BollingerBandCalculator(dailyFigures, dailyStandardDeviation, band);
         }
 
-        public ICalculationTool CreateStandardDeviationCalculator(Dictionary<DateTime, decimal> dailyFigures, int sampleSize) 
+        public ICalculationTool CreateStandardDeviationCalculator(IReadOnlyDictionary<DateTime, decimal> dailyFigures, int sampleSize) 
         {
             return new StandardDeviationCalculator(dailyFigures, sampleSize);
         }
@@ -27,7 +27,7 @@ namespace StockGraphAnalyser.Processing.Calculators
             return new ForceIndexCalculator(data);
         }
 
-        public ICalculationTool CreateExponentialMovingAverageCalculator(Dictionary<DateTime, decimal> dailyFigures, int sampleSize)
+        public ICalculationTool CreateExponentialMovingAverageCalculator(IReadOnlyDictionary<DateTime, decimal> dailyFigures, int sampleSize)
         {
             return new ExponentialMovingAverageCalculator(dailyFigures, sampleSize);
         }

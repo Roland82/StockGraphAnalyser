@@ -226,6 +226,7 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AjaxController.cs" />
     <Compile Include="Controllers\ChartResourceController.cs" />
     <Compile Include="Controllers\DataUpdateController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -352,7 +353,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Technicals\Index.cshtml" />
-    <Content Include="Views\DataUpdate\Update.cshtml" />
     <Content Include="Views\DataUpdate\Index.cshtml" />
     <Content Include="Views\TradeScanner\Index.cshtml" />
   </ItemGroup>

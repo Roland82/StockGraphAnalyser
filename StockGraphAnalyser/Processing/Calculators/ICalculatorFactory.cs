@@ -5,17 +5,17 @@
 
     public interface ICalculatorFactory
     {
-        ICalculationTool CreateMovingAverageCalculator(Dictionary<DateTime, decimal> dailyFigures, int period);
+        ICalculationTool CreateMovingAverageCalculator(IReadOnlyDictionary<DateTime, decimal> dailyFigures, int period);
 
         ICalculationTool CreateBollingerBandCalculator(Dictionary<DateTime, decimal> dailyFigures,
                                                        Dictionary<DateTime, decimal> dailyStandardDeviation,
                                                        BollingerBandCalculator.Band band);
 
-        ICalculationTool CreateStandardDeviationCalculator(Dictionary<DateTime, decimal> dailyFigures, int sampleSize);
+        ICalculationTool CreateStandardDeviationCalculator(IReadOnlyDictionary<DateTime, decimal> dailyFigures, int sampleSize);
 
         ICalculationTool CreateForceIndexCalculator(IEnumerable<Tuple<DateTime, decimal, long>> data);
 
-        ICalculationTool CreateExponentialMovingAverageCalculator(Dictionary<DateTime, decimal> dailyFigures, int sampleSize);
+        ICalculationTool CreateExponentialMovingAverageCalculator(IReadOnlyDictionary<DateTime, decimal> dailyFigures, int sampleSize);
 
         ICalculationTool CreateMomentumCalculator(Dictionary<DateTime, decimal> dailyFigures, int periodGap);
 

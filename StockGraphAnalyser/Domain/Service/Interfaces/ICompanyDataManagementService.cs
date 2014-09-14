@@ -1,5 +1,7 @@
 namespace StockGraphAnalyser.Domain.Service.Interfaces
 {
+    using System.Collections.Generic;
+
     public interface ICompanyDataManagementService
     {
         /// <summary>
@@ -8,5 +10,7 @@ namespace StockGraphAnalyser.Domain.Service.Interfaces
         void GetNewCompanies();
 
         void UpdateCompanyMetaData();
+
+        IEnumerable<Company> FindAllMatching(string matcher);
     }
 }

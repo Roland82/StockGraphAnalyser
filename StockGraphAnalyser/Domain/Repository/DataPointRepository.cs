@@ -9,6 +9,7 @@ namespace StockGraphAnalyser.Domain.Repository
     using System.Linq;
     using Dapper;
     using Interfaces;
+    using Processing;
 
     public class DataPointRepository  : AbstractRepository, IDataPointRepository
     {
@@ -30,6 +31,18 @@ namespace StockGraphAnalyser.Domain.Repository
                                             @UpperBollingerBandTwoDeviation,@UpperBollingerBandOneDeviation,
                                             @LowerBollingerBandTwoDeviation,@LowerBollingerBandOneDeviation,
                                             @ForceIndexOnePeriod, @ForceIndexThirteenPeriod, @IsProcessed)", dataPoints); 
+            }
+        }
+
+        public IEnumerable<DataPoints> FindAll(Company.ConstituentOfIndex[] indexes) {
+            var commaSeparatedIndexes = Utilities.CommaSeparatedValues(indexes, i => i.GetHashCode());
+
+            using (IDbConnection connection = new SqlConnection(this.connectionString))
+            {
+                connection.Open();
+                return connection.Query<DataPoints>(string.Format(@"SELECT d.* FROM DataPoints d 
+                                                                    INNER JOIN Companies c on c.Symbol = d.Symbol
+                                                                    WHERE c.[Index] IN ({0})", commaSeparatedIndexes));
             }
         }
 

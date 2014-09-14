@@ -20,12 +20,20 @@
                         @Html.Partial("_LoginPartial")
                     </section>
                     <nav>
+
                         <ul id="menu">
                             <li>@Html.ActionLink("Data Update", "Index", "DataUpdate")</li>
-                            <li>@Html.ActionLink("About", "About", "Home")</li>
-                            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                            <li>@Html.ActionLink("Trade Scanner", "Index", "TradeScanner")</li>
+                            <li>
+                                @using(Html.BeginForm("Index", "Technicals", FormMethod.Get))
+                                {
+                                    @Html.TextBox("symbol", "", new { id="symbol-search" })
+                                } 
+                            </li>
                         </ul>
+
                     </nav>
+  
                 </div>
             </div>
         </header>
@@ -42,7 +50,8 @@
                 </div>
             </div>
         </footer>
-        @Scripts.Render("~/bundles/jquery")
+       @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryui")
         @Scripts.Render("~/Scripts/highstock.js")
         @Scripts.Render("~/Scripts/site.js")
         @RenderSection("scripts", required: false)

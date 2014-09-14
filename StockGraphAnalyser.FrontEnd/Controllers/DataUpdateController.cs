@@ -33,31 +33,35 @@
         public ActionResult Update(string symbol)
         {
             dataManagementService.InsertNewQuotesToDb(symbol);
-            return this.View("Update");
+            this.TempData["message"] = string.Format("Datapoints Updated for {0}", symbol);
+            return this.RedirectToAction("Index");
         }
 
         [HttpPost]
         public ActionResult UpdateCandlestickSignals() {
             this.candleStickSignalManagementService.GenerateLatestSignals(DateTime.MinValue);
-            return this.View("Update");
+            this.TempData["message"] = "Candlesticks Updated";
+            return this.RedirectToAction("Index");
         }
 
         [HttpPost]
         public ActionResult UpdateTradeSignals(string symbol)
         {
             this.tradeSignalManagementService.GenerateNewSignals(symbol);
-            return this.View("Update");
+            this.TempData["message"] = "Trading Signals Update for " + symbol;
+            return this.RedirectToAction("Index");
         }
 
         [HttpPost]
         public ActionResult UpdateTradeSignalsForAll()
         {
             this.tradeSignalManagementService.GenerateNewSignals();
-            return this.View("Update");
+            this.TempData["message"] = "Trading signals Updated";
+            return this.RedirectToAction("Index");
         }
 
         [HttpPost]
-        public ActionResult UpdateDatapoints(int? index)
+        public ActionResult UpdateDatapoints(Company.ConstituentOfIndex? index)
         {
             // TODO This can be done in one select
             var companyRepository = new CompanyRepository();
@@ -77,21 +81,24 @@
                 }
             }
 
-            return this.View("Update"); 
+            this.TempData["message"] = "Datapoints Updated For Index " + index;
+            return this.RedirectToAction("Index"); 
         }
 
         [HttpPost]
         public ActionResult UpdateCompanyMetaData()
         {
             this.companyDataManagementService.UpdateCompanyMetaData();
-            return this.View("Update"); 
+            this.TempData["message"] = "Company Metadata updated";
+            return this.RedirectToAction("Index"); 
         }
 
         [HttpPost]
         public ActionResult UpdateCompanies()
         {
             companyDataManagementService.GetNewCompanies();
-            return this.View("Update");
+            this.TempData["message"] = "Updated new companies";
+            return this.RedirectToAction("Index");
         }
     }
 }

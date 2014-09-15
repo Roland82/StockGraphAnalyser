@@ -8,6 +8,7 @@
 
         @Styles.Render("~/Content/css")
         @Scripts.Render("~/bundles/modernizr")
+        @Styles.Render("~/Content/themes/base/css")
     </head>
     <body>
         <header>
@@ -47,7 +48,8 @@
                 </div>
             </div>
         </footer>
-       @Scripts.Render("~/bundles/jquery")
+        <div id="dialog"></div>
+        @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/jqueryui")
         @Scripts.Render("~/Scripts/highstock.js")
         @Scripts.Render("~/Scripts/site.js")

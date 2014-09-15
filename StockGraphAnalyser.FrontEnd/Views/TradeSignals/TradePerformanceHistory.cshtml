@@ -1,0 +1,26 @@
+﻿@model List<StockGraphAnalyser.FrontEnd.Models.Views.TradeHistoryPerformanceEntry>
+@{
+    Layout = null;    
+}
+
+<table>
+   <tr>
+            <th>Date</th>
+            <th>Current Equity</th>
+       <th>Signal</th>
+       <th>Price</th>
+            <th>Percentage Change</th>
+    </tr>
+    @foreach (var trade in Model)
+    {
+        <tr>
+            <td>@trade.DateTime.ToString("dd MMM yyyy")</td>
+            <td>&pound;@Math.Round(trade.CurrentEquity, 2)</td>
+            <td>@trade.SignalType</td>
+            <td>@trade.CurrentPrice</td>
+            <td>@Math.Round(trade.PercentageChange, 2)%</td>
+        </tr>
+    }    
+</table>
+
+

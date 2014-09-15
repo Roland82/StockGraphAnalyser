@@ -1,7 +1,6 @@
 ﻿
 var symbol = $('#symbol').attr('value');
-
-$(function () {
+$(document).ready(function() {
 
     $("#symbol-search input").autocomplete({
         source: "/Ajax/GetMatchingCompanies",
@@ -10,6 +9,24 @@ $(function () {
             .append("<a>" + item.company + "<strong>" + item.symbol + "</strong></a>")
             .appendTo(ul);
     };
+
+    $(".dialog").click(function() {
+        
+
+        $.ajax({
+            url: $(this).attr('href'),
+            success: function (data) {
+                var dialogue = $("#dialog").dialog({
+                    open: function (event, ui) {
+                        
+                    },
+                });
+                dialogue.html(data);
+                dialogue.dialog('open');
+            }
+        });
+        return false;
+    });
 
 
     $.getJSON('/api/ChartResource/Get/?symbol=' + symbol, function(data) {
@@ -94,8 +111,6 @@ $(function () {
         // create the chart
         $('#container').highcharts('StockChart', {
             rangeSelector: { inputEnabled: $('#container').width() > 480, selected: 1 },
-
-            title: { text: symbol },
 
             series: [
                 { type: 'candlestick', name: symbol, data: ohlc },

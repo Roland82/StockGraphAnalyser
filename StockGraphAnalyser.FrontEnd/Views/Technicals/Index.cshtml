@@ -4,10 +4,10 @@
     ViewBag.Title = "Chart for " + @Model.Ticker;
 }
 
-<h2><span style="margin-right: 50px;">@Model.Company.Name (@Model.Company.Symbol)</span>
+<h3><span style="margin-right: 50px;">@Model.Company.Name (@Model.Company.Symbol)</span>
     
     @{ var colour = Model.TradingPerformancePercentage >= 0 ? "green" : "red"; }
-    Trade Signal Performance: <span style="text-align: center; font-size: 14px; color: @colour">@Math.Round(@Model.TradingPerformancePercentage, 2)%</span>    
+    Trade Signal Performance: <span style="text-align: center; font-size: 14px; color: @colour">@Math.Round(@Model.TradingPerformancePercentage, 2)% <a href="/TradeSignals/TradePerformanceHistory?symbol=@Model.Company.Symbol" class="dialog">View</a></span>    
 
     @using (Html.BeginForm("Exclude", "Technicals", FormMethod.Post, new { style="float: right; font-size: 14px;" }))
 {
@@ -21,7 +21,7 @@
     <input type="hidden" name="symbol" value="@Model.Company.Symbol"/>
     <input type="submit" name="refresh" value="Refresh Chart" />
 }
-</h2>
+</h3>
 
 <div id="container" style="height:  1000px;"></div>
 <input type="hidden" id="symbol" value="@Model.Ticker" />

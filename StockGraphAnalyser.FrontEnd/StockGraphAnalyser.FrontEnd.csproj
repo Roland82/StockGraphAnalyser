@@ -232,6 +232,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TechnicalsController.cs" />
     <Compile Include="Controllers\TradeScannerController.cs" />
+    <Compile Include="Controllers\TradeSignalsController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -242,6 +243,7 @@
     <Compile Include="Infrastructure\JsonNetResult.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Views\TechnicalsViewModel.cs" />
+    <Compile Include="Models\Views\TradeHistoryPerformanceEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -355,6 +357,7 @@
     <Content Include="Views\Technicals\Index.cshtml" />
     <Content Include="Views\DataUpdate\Index.cshtml" />
     <Content Include="Views\TradeScanner\Index.cshtml" />
+    <Content Include="Views\TradeSignals\TradePerformanceHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

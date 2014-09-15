@@ -13,19 +13,26 @@ namespace StockGraphAnalyser.Domain.Service
         private readonly IDataPointRepository dataPointRepository;
         private readonly ITradeSignalRepository tradeSignalRepository;
         private readonly ICandleStickSignalRepository candleStickSignalRepository;
+        private readonly ICompanyRepository companyRepository;
 
-        public TradeSignalManagementService(IDataPointRepository dataPointRepository, ITradeSignalRepository tradeSignalRepository, ICandleStickSignalRepository candleStickSignalRepository) {
+        public TradeSignalManagementService(IDataPointRepository dataPointRepository, ITradeSignalRepository tradeSignalRepository, ICandleStickSignalRepository candleStickSignalRepository, ICompanyRepository companyRepository) {
             this.dataPointRepository = dataPointRepository;
             this.tradeSignalRepository = tradeSignalRepository;
             this.candleStickSignalRepository = candleStickSignalRepository;
+            this.companyRepository = companyRepository;
         }
 
-        public IEnumerable<Signal> GetLatestSignals(DateTime fromDate) {
+        public IEnumerable<Signal> GetAll(DateTime fromDate) {
             return this.tradeSignalRepository.GetAll(fromDate);
-        } 
+        }
+
+        public IEnumerable<Signal> GetAll(string symbol) {
+            return this.tradeSignalRepository.GetAllForCompany(symbol);
+        }
 
         public void GenerateNewSignals()
         {
+            this.tradeSignalRepository.DeleteAll();
             this.GenerateSignals();  
         }
 
@@ -40,11 +47,15 @@ namespace StockGraphAnalyser.Domain.Service
             var datapoints = this.dataPointRepository.FindAll(indexes);
             foreach (var datapointsGroup in datapoints.GroupBy(c => c.Symbol))
             {
-                var generator = new MovingAveragePriceCrossSignals(datapointsGroup, this.candleStickSignalRepository.FindAllForCompany(datapointsGroup.Key));
-                var generatedSignals = generator.GenerateSignals();
-                if (generatedSignals.Any())
+                var company = this.companyRepository.FindBySymbol(datapointsGroup.Key);
+                if (company.ExcludeYn == 0)
                 {
-                    signals.AddRange(generatedSignals);
+                    var generator = new MovingAveragePriceCrossSignals(datapointsGroup,this.candleStickSignalRepository.FindAllForCompany(datapointsGroup.Key));
+                    var generatedSignals = generator.GenerateSignals();
+                    if (generatedSignals.Any())
+                    {
+                        signals.AddRange(generatedSignals);
+                    }
                 }
             }
 

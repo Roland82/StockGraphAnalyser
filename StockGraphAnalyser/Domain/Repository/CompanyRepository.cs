@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Linq;
     using Dapper;
     using Interfaces;
 
@@ -14,7 +15,7 @@
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                connection.Execute(@"INSERT INTO Companies VALUES (@Id,@Symbol,@Name, @Index)", companies);
+                connection.Execute(@"INSERT INTO Companies VALUES (@Id,@Symbol,@Name, @Index, @ExcludeYn)", companies);
             }
         }
 
@@ -27,12 +28,21 @@
                 {
                     foreach (var company in companies)
                     {
-                        connection.Execute(
-                            @"UPDATE Companies SET [Index] = @Index Where Id = @Id",
-                            new { Index = company.Index, Id = company.Id }, 
-                            transaction: transaction);
+                        this.UpdateCompany(connection, transaction, company);
                     }  
 
+                    transaction.Commit();
+                }
+            }
+        }
+
+        public void Update(Company company) {
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    this.UpdateCompany(connection, transaction, company);
                     transaction.Commit();
                 }
             }
@@ -63,6 +73,30 @@
                 connection.Open();
                 return connection.Query<Company>(string.Format("SELECT * FROM Companies"));
             }
+        }
+
+        public Company FindBySymbol(string symbol) {
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                return connection.Query<Company>(string.Format("SELECT * FROM Companies WHERE Symbol = '{0}'", symbol)).First();
+            }
+        }
+
+        public Company FindById(string id)
+        {
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                return connection.Query<Company>("SELECT * FROM Companies WHERE Id = @Id", new { Id = Guid.Parse(id) }).First();
+            }
+        }
+
+        private void UpdateCompany(IDbConnection connection, IDbTransaction transaction, Company company) {
+            connection.Execute(
+                @"UPDATE Companies SET [Index] = @Index, ExcludeYn = @ExcludeYn Where Id = @Id",
+                new { Index = company.Index, Id = company.Id, ExcludeYn = company.ExcludeYn },
+                transaction: transaction);
         }
     }
 }

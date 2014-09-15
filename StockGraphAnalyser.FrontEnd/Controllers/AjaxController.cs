@@ -16,7 +16,7 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
 
         [HttpGet]
         public ActionResult GetMatchingCompanies(string term) {
-            var matching = this.companyDataManagementService.FindAllMatching(term).Select(d => new { label = d.Symbol + ":" + d.Name, value =d.Symbol });
+            var matching = this.companyDataManagementService.FindAllMatching(term).Select(d => new { company = d.Name, symbol = d.Symbol });
             return Json(matching, JsonRequestBehavior.AllowGet);
         }
     }

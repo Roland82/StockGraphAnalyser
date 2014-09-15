@@ -19,6 +19,14 @@ namespace StockGraphAnalyser.Domain.Repository
             }
         }
 
+        public void DeleteAll() {
+            using (IDbConnection connection = new SqlConnection(this.connectionString))
+            {
+                connection.Open();
+                connection.Execute(@"DELETE FROM Signals");
+            }
+        }
+
         public IEnumerable<Signal> GetAllForCompany(string symbol)
         {
             using (IDbConnection connection = new SqlConnection(this.connectionString))

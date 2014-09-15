@@ -7,6 +7,7 @@ namespace StockGraphAnalyser.Domain.Service.Interfaces
     {
         void GenerateNewSignals();
         void GenerateNewSignals(string company);
-        IEnumerable<Signal> GetLatestSignals(DateTime fromDate);
+        IEnumerable<Signal> GetAll(DateTime fromDate);
+        IEnumerable<Signal> GetAll(string symbol);
     }
 }

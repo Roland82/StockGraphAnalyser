@@ -105,9 +105,7 @@
     <Compile Include="Domain\Service\Interfaces\ICompanyDataManagementService.cs" />
     <Compile Include="Domain\Service\Interfaces\IDataPointManagementService.cs" />
     <Compile Include="Domain\Service\Interfaces\ITradeSignalManagementService.cs" />
-    <Compile Include="Domain\Service\Interfaces\ITradingSignalService.cs" />
     <Compile Include="Domain\Service\TradeSignalManagementService.cs" />
-    <Compile Include="Domain\Service\TradingSignalService.cs" />
     <Compile Include="Domain\Signal.cs" />
     <Compile Include="Domain\SignalType.cs" />
     <Compile Include="Domain\StockDataProviders\CompanyFinderService.cs" />

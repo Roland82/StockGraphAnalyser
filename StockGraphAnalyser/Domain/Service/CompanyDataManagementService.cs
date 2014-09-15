@@ -19,6 +19,19 @@ namespace StockGraphAnalyser.Domain.Service
             this.companyRepository = companyRepository;
         }
 
+        public Company GetBySymbol(string symbol) {
+            return this.companyRepository.FindBySymbol(symbol);
+        }
+
+        public Company GetById(string id)
+        {
+            return this.companyRepository.FindById(id);
+        }
+
+        public void Update(Company company) {
+            this.companyRepository.Update(company);
+        }
+
         /// <summary>
         /// Gets the new companies that are not in the database currently.
         /// </summary>
@@ -44,7 +57,7 @@ namespace StockGraphAnalyser.Domain.Service
                 if (indexType == Company.ConstituentOfIndex.Unknown) continue;
                 var companiesInIndex = this.companyFinderService.GetFtseIndex(indexType);
                 var companies = this.companyRepository.FindAll();
-                var updatedCompanies = companies.Where(c => companiesInIndex.ContainsKey(c.Symbol.Replace(".L", ""))).Select(c => { c.Index = indexType.GetHashCode(); return c; });
+                var updatedCompanies = companies.Where(c => companiesInIndex.ContainsKey(c.Symbol.Replace(".L", ""))).Select(c => { c.Index = indexType; return c; });
                 this.companyRepository.UpdateAll(updatedCompanies);
             }
         }

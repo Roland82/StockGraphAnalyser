@@ -20,30 +20,37 @@ namespace StockGraphAnalyser.Signals
             this.startingEquity = startingEquity;
         }
 
-        public Dictionary<DateTime, decimal> Calculate()
-        {
-            var returnDictionary = new Dictionary<DateTime, decimal>{{this.signals.ElementAt(0).Date, this.startingEquity}};
+        public Dictionary<DateTime, decimal> Calculate() {
+            var returnDictionary = new Dictionary<DateTime, decimal>();
 
-            var count = this.signals.Count();
-
-            for (var i = 0; i <= count - 2; i++)
+            if (this.signals.Any())
             {
-                var originalSignal = this.signals.ElementAt(i).SignalType;
-                if (originalSignal == SignalType.TakeProfits)
+                returnDictionary.Add(this.signals.ElementAt(0).Date, this.startingEquity);
+
+                var count = this.signals.Count();
+
+                for (var i = 0; i <= count - 2; i++)
                 {
-                    returnDictionary.Add(this.signals.ElementAt(i + 1).Date, returnDictionary.OrderBy(d => d.Key).Last().Value);
-                    continue;
-                }
+                    var originalSignal = this.signals.ElementAt(i).SignalType;
+                    if (originalSignal == SignalType.TakeProfits)
+                    {
+                        returnDictionary.Add(this.signals.ElementAt(i + 1).Date,
+                                             returnDictionary.OrderBy(d => d.Key).Last().Value);
+                        continue;
+                    }
 
-                var startTradePrice = this.signals.ElementAt(i).Price;
-                var finalTradePrice = this.signals.ElementAt(i + 1).Price;              
-                var percentageDifference = (finalTradePrice - startTradePrice) / startTradePrice;
-                var percentageDifferenceToEquity = originalSignal == SignalType.Buy && percentageDifference > 0 || originalSignal == SignalType.Sell && percentageDifference < 0
-                    ? Math.Abs(percentageDifference) : -Math.Abs(percentageDifference);
-                var newEquityValue = returnDictionary.Last().Value + (returnDictionary.Last().Value * percentageDifferenceToEquity);
-                returnDictionary.Add(this.signals.ElementAt(i + 1).Date, newEquityValue);
+                    var startTradePrice = this.signals.ElementAt(i).Price;
+                    var finalTradePrice = this.signals.ElementAt(i + 1).Price;
+                    var percentageDifference = (finalTradePrice - startTradePrice)/startTradePrice;
+                    var percentageDifferenceToEquity = originalSignal == SignalType.Buy && percentageDifference > 0 ||
+                                                       originalSignal == SignalType.Sell && percentageDifference < 0
+                                                           ? Math.Abs(percentageDifference)
+                                                           : -Math.Abs(percentageDifference);
+                    var newEquityValue = returnDictionary.Last().Value +
+                                         (returnDictionary.Last().Value*percentageDifferenceToEquity);
+                    returnDictionary.Add(this.signals.ElementAt(i + 1).Date, newEquityValue);
+                }     
             }
-
 
             return returnDictionary;
         }

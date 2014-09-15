@@ -3,10 +3,14 @@ var symbol = $('#symbol').attr('value');
 
 $(function () {
 
-    $("#symbol-search").autocomplete({
-            source: "/Ajax/GetMatchingCompanies"
-    });                 
-  
+    $("#symbol-search input").autocomplete({
+        source: "/Ajax/GetMatchingCompanies",
+    }).data("autocomplete")._renderItem = function (ul, item) {
+        return $("<li>")
+            .append("<a>" + item.company + "<strong>" + item.symbol + "</strong></a>")
+            .appendTo(ul);
+    };
+
 
     $.getJSON('/api/ChartResource/Get/?symbol=' + symbol, function(data) {
 

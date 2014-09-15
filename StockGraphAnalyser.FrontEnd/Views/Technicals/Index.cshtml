@@ -1,28 +1,30 @@
 ﻿@model StockGraphAnalyser.FrontEnd.Models.Views.TechnicalsViewModel
 
 @{
-    ViewBag.Title = "Technicals for " + @Model.Ticker;
+    ViewBag.Title = "Chart for " + @Model.Ticker;
 }
+
+<h2><span style="margin-right: 50px;">@Model.Company.Name (@Model.Company.Symbol)</span>
+    
+    @{ var colour = Model.TradingPerformancePercentage >= 0 ? "green" : "red"; }
+    Trade Signal Performance: <span style="text-align: center; font-size: 14px; color: @colour">@Math.Round(@Model.TradingPerformancePercentage, 2)%</span>    
+
+    @using (Html.BeginForm("Exclude", "Technicals", FormMethod.Post, new { style="float: right; font-size: 14px;" }))
+{
+    var excludeText = @Model.Company.ExcludeYn == 1 ? "Un-exclude" : "Exclude";
+    <input type="hidden" name="id" value="@Model.Company.Id"/>
+    <input type="submit" name="exclude" value="@excludeText" />
+}
+
+@using (Html.BeginForm("RefreshChart", "Technicals", FormMethod.Post, new { style="float: right; font-size: 14px;" }))
+{
+    <input type="hidden" name="symbol" value="@Model.Company.Symbol"/>
+    <input type="submit" name="refresh" value="Refresh Chart" />
+}
+</h2>
 
 <div id="container" style="height:  1000px;"></div>
-
-@foreach (var signal in Model.CandleStickSignals)
-{
-    <p>@GetSignalTypeName(signal.CandleStickSignalType) on @signal.Date</p>
-}
-
 <input type="hidden" id="symbol" value="@Model.Ticker" />
 
-@functions{
-    public string GetSignalTypeName(int type){
-        switch (type)
-        {
-            case 1:
-                return "Bullish Engulfing";
-            case 2:
-                return "Bearish Engulfing";
-            default:
-                return "Unknown";
-        }
-    }
-}
+
+

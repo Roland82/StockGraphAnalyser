@@ -16,18 +16,15 @@
                     <p class="site-title">@Html.ActionLink("your logo here", "Index", "Home")</p>
                 </div>
                 <div class="float-right">
-                    <section id="login">
-                        @Html.Partial("_LoginPartial")
-                    </section>
                     <nav>
 
                         <ul id="menu">
                             <li>@Html.ActionLink("Data Update", "Index", "DataUpdate")</li>
                             <li>@Html.ActionLink("Trade Scanner", "Index", "TradeScanner")</li>
                             <li>
-                                @using(Html.BeginForm("Index", "Technicals", FormMethod.Get))
+                                @using (Html.BeginForm("Index", "Technicals", FormMethod.Get, new { id = "symbol-search" }))
                                 {
-                                    @Html.TextBox("symbol", "", new { id="symbol-search" })
+                                    @Html.TextBox("symbol", "")
                                 } 
                             </li>
                         </ul>

@@ -9,6 +9,12 @@ namespace StockGraphAnalyser.Domain.Service.Interfaces
         /// </summary>
         void GetNewCompanies();
 
+        void Update(Company company);
+
+        Company GetBySymbol(string symbol);
+
+        Company GetById(string id);
+
         void UpdateCompanyMetaData();
 
         IEnumerable<Company> FindAllMatching(string matcher);

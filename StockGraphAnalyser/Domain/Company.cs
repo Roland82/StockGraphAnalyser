@@ -16,18 +16,20 @@ namespace StockGraphAnalyser.Domain
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Symbol { get; set; }
+        public short ExcludeYn { get; set; }
         
         /// <summary>
         /// TODO: Turn this into an enum when i know how to use dapper properly
         /// </summary>
-        public int Index { get; set; }
+        public ConstituentOfIndex Index { get; set; }
 
         private Company(String name, String symbol, ConstituentOfIndex constituentOfIndex)
         {
             this.Id = Guid.NewGuid();
             this.Name = name;
             this.Symbol = symbol;
-            this.Index = constituentOfIndex.GetHashCode();
+            this.Index = constituentOfIndex;
+            this.ExcludeYn = 0;
         }
 
         public Company() {}

@@ -1,5 +1,5 @@
-﻿@using StockGraphAnalyser.Processing
-@model IEnumerable<StockGraphAnalyser.Domain.Signal>
+﻿@using StockGraphAnalyser.Domain
+@model IEnumerable<Signal>
 
 @{
     ViewBag.Title = "Find New Trades";
@@ -7,15 +7,29 @@
 
 <h2>Potential Trades</h2>
 
-<table>
-    <tr><th>Symbol</th><th>Trade Type</th><th>Date</th></tr>
-    @foreach (var signal in Model)
+<table style="float: left;">
+  <tr><th colspan="2">Buy</th></tr>
+    @foreach (var signal in Model.Where(t => t.SignalType == SignalType.Buy))
     {
         <tr><td>@Html.ActionLink(signal.Symbol, "Index", "Technicals", new{symbol = signal.Symbol}, null)</td>
-            <td>@signal.SignalType</td>
             <td>@signal.Date.ToString("yyyy-MM-dd")</td></tr>
-
     }
-    
+</table>  
 
+<table style="float: left;">
+   <tr><th colspan="2">Sell</th></tr>
+    @foreach (var signal in Model.Where(t => t.SignalType == SignalType.Sell))
+    {
+        <tr><td>@Html.ActionLink(signal.Symbol, "Index", "Technicals", new{symbol = signal.Symbol}, null)</td>
+            <td>@signal.Date.ToString("yyyy-MM-dd")</td></tr>
+    }
+</table>  
+
+<table style="float: left;">
+    <tr><th colspan="2">Take Profits</th></tr>
+    @foreach (var signal in Model.Where(t => t.SignalType == SignalType.TakeProfits))
+    {
+        <tr><td>@Html.ActionLink(signal.Symbol, "Index", "Technicals", new{symbol = signal.Symbol}, null)</td>
+            <td>@signal.Date.ToString("yyyy-MM-dd")</td></tr>
+    }
 </table>

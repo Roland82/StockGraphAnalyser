@@ -21,7 +21,7 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
 
         public ActionResult TradePerformanceHistory(string symbol) {
             var previousEquity = 100m;
-            var trades = this.tradeSignalRepository.GetAllForCompany(symbol).OrderBy(d => d.Date);
+            var trades = this.tradeSignalRepository.GetAllForCompany(symbol);
             var totals = new SignalEquityPositionTotaller(trades, previousEquity).Calculate();
             var model = new List<TradeHistoryPerformanceEntry>();
 
@@ -37,7 +37,7 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
                 previousEquity = total.Value;
             }
 
-            return this.View("TradePerformanceHistory", model.OrderByDescending(d => d.DateTime).ToList());
+            return this.View("TradePerformanceHistory", model);
         }
 
     }

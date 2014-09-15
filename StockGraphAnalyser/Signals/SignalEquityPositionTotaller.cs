@@ -16,7 +16,7 @@ namespace StockGraphAnalyser.Signals
 
         public SignalEquityPositionTotaller(IEnumerable<Signal> signals, decimal startingEquity, SignalType? ignoreSignalType = null)
         {
-            this.signals = signals;
+            this.signals = signals.OrderBy(s => s.Date);
             this.startingEquity = startingEquity;
         }
 

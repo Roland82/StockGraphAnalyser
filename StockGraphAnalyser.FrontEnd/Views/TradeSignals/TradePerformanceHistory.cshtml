@@ -4,7 +4,7 @@
 }
 
 <table>
-   <tr>
+   <tr style="font-size: 12px">
             <th>Date</th>
             <th>Current Equity</th>
        <th>Signal</th>
@@ -13,14 +13,26 @@
     </tr>
     @foreach (var trade in Model)
     {
+
+        var postiveOrNegative = "black";
+        if (trade.PercentageChange > 0)
+        {
+            postiveOrNegative = "green";
+        }
+        else if (trade.PercentageChange < 0)
+        {
+            postiveOrNegative = "red";
+        }
+
+
         <tr>
             <td>@trade.DateTime.ToString("dd MMM yyyy")</td>
             <td>&pound;@Math.Round(trade.CurrentEquity, 2)</td>
             <td>@trade.SignalType</td>
             <td>@trade.CurrentPrice</td>
-            <td>@Math.Round(trade.PercentageChange, 2)%</td>
+            <td style="font-weight: bold; color: @postiveOrNegative">@Math.Round(trade.PercentageChange, 2)%</td>
         </tr>
-    }    
+    }   
 </table>
 
 

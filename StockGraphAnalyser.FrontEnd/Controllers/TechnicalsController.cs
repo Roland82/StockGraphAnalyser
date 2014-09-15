@@ -25,7 +25,7 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
             var tradeSignals = this.tradeSignalManagementService.GetAll(symbol);
             var totaller = new SignalEquityPositionTotaller(tradeSignals, 100);
             var totals = totaller.Calculate();
-            var percentage = totals.Any() ? totals.OrderBy(d => d.Key).Last().Value - 100 : 0;
+            var percentage = totals.Any() ? totals.Last().Value - 100 : 0;
             return View("Index", new TechnicalsViewModel(symbol, company, percentage));
         }
 

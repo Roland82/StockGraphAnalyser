@@ -6,6 +6,7 @@ namespace StockGraphAnalyser.Domain.Repository
     using System.Data;
     using System.Data.SqlClient;
     using Dapper;
+    using System.Linq;
     using StockGraphAnalyser.Domain.Repository.Interfaces;
 
     public class TradeSignalRepository : AbstractRepository, ITradeSignalRepository
@@ -32,7 +33,7 @@ namespace StockGraphAnalyser.Domain.Repository
             using (IDbConnection connection = new SqlConnection(this.connectionString))
             {
                 connection.Open();
-                return connection.Query<Signal>(string.Format("SELECT * FROM Signals WHERE Symbol = '{0}'", symbol));
+                return connection.Query<Signal>(string.Format("SELECT * FROM Signals WHERE Symbol = '{0}'", symbol)).OrderBy(d => d.Date);
             }
         }
 

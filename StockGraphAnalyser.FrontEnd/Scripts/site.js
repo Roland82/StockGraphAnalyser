@@ -17,9 +17,8 @@ $(document).ready(function() {
             url: $(this).attr('href'),
             success: function (data) {
                 var dialogue = $("#dialog").dialog({
-                    open: function (event, ui) {
-                        
-                    },
+                    modal: true,
+                    width: 'auto'
                 });
                 dialogue.html(data);
                 dialogue.dialog('open');
@@ -140,7 +139,7 @@ $(document).ready(function() {
                     title: {
                         text: 'OHLC'
                     },
-                    height: '40%',
+                    height: '35%',
                     lineWidth: 2
                 },
                 {
@@ -151,8 +150,8 @@ $(document).ready(function() {
                     title: {
                         text: 'Volume'
                     },
-                    top: '41%',
-                    height: '7%',
+                    top: '37%',
+                    height: '8%',
                     offset: 0,
                     lineWidth: 2
                 },
@@ -164,8 +163,8 @@ $(document).ready(function() {
                                     title: {
                                         text: 'MACD'
                                     },
-                                    top: '50%',
-                                    height: '12%',
+                                    top: '47%',
+                                    height: '8%',
                                     offset: 0,
                                     lineWidth: 2
                                 },
@@ -177,8 +176,8 @@ $(document).ready(function() {
                     title: {
                         text: 'Force 13 Day'
                     },
-                    top: '64%',
-                    height: '20%',
+                    top: '57%',
+                    height: '8%',
                     offset: 0,
                     lineWidth: 2
                 }

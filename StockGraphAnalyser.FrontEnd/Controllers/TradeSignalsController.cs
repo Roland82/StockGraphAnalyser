@@ -37,7 +37,7 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
                 previousEquity = total.Value;
             }
 
-            return this.View("TradePerformanceHistory", model);
+            return this.View("TradePerformanceHistory", model.OrderByDescending(d => d.DateTime).ToList());
         }
 
     }

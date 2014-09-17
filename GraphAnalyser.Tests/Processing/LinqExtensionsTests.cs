@@ -40,13 +40,23 @@ namespace GraphAnalyser.Tests.Processing
         }
 
         [Test]
-        public void ForEachGroupTest() {
+        public void ForEachGroupWithActionTest() {
             var numbers = new[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             var executedGroups = new List<IEnumerable<int>>();
             numbers.ForEachGroup(9, executedGroups.Add);
             Assert.AreEqual(2, executedGroups.Count);
             Assert.AreEqual(new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }, executedGroups.ElementAt(0));
             Assert.AreEqual(new[] { 2, 3, 4, 5, 6, 7, 8, 9, 10 }, executedGroups.ElementAt(1));
+        }
+
+        [Test]
+        public void ForEachGroupWithReturnValTest()
+        {
+            var numbers = new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var returnList = numbers.ForEachGroup(9, e => e);
+            Assert.AreEqual(2, returnList.Count());
+            Assert.AreEqual(new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }, returnList.ElementAt(0));
+            Assert.AreEqual(new[] { 2, 3, 4, 5, 6, 7, 8, 9, 10 }, returnList.ElementAt(1));
         }
 
         [Test]

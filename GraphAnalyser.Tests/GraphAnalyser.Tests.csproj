@@ -54,7 +54,6 @@
     <Compile Include="Domain\Service\CompanyDataManagementServiceTests.cs" />
     <Compile Include="Domain\Service\DataPointManagementServiceInsertQuotesTests.cs" />
     <Compile Include="Domain\Service\DataPointManagementServiceUpdateProcessedDataTests.cs" />
-    <Compile Include="Processing\Calculators\AverageTrueRangeCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\BollingerBandCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\DirectionalMovementCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\ExponentialMovingAverageTests.cs" />
@@ -62,7 +61,6 @@
     <Compile Include="Processing\Calculators\RangePredictabilityCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\StandardDeviationCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\DailyMovingAverageCalculatorTests.cs" />
-    <Compile Include="Processing\Calculators\Indicators\OverTradedIndicator.cs" />
     <Compile Include="Processing\Calculators\DifferenceCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\MomentumCalculatorTests.cs" />
     <Compile Include="Processing\BullishKickerPatternRecogniserTests.cs" />
@@ -71,7 +69,6 @@
     <Compile Include="Processing\Candlestick\EngulfingPatternRecogniserTests.cs" />
     <Compile Include="Processing\LinqExtensionsTests.cs" />
     <Compile Include="Processing\MathExtensionsTests.cs" />
-    <Compile Include="Processing\TradingSignalDetectors\OverboughtInDowntrendSignalTests.cs" />
     <Compile Include="Processing\Types\QuoteTests.cs" />
     <Compile Include="Processing\UtilitiesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

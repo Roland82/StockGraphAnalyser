@@ -1,15 +1,12 @@
 ﻿
 namespace StockGraphAnalyser.FrontEnd.Controllers
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Web.Mvc;
-    using Domain.Repository;
+    using Domain;
     using Domain.Repository.Interfaces;
     using Models.Views;
     using Processing;
-    using Signals;
 
     public class TradeSignalsController : Controller
     {
@@ -20,21 +17,19 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
         }
 
         public ActionResult TradePerformanceHistory(string symbol) {
-            var previousEquity = 100m;
             var trades = this.tradeSignalRepository.GetAllForCompany(symbol);
-            var totals = new SignalEquityPositionTotaller(trades, previousEquity).Calculate();
             var model = new List<TradeHistoryPerformanceEntry>();
+            Signal lastTrade = null;
 
-            foreach (var total in totals)
+            foreach (var trade in trades)
             {                
-                var trade = trades.First(t => t.Date == total.Key);
                 model.Add(new TradeHistoryPerformanceEntry(
                     trade.Date, 
-                    total.Value, 
+                    trade.CurrentEquity, 
                     trade.SignalType, 
-                    MathExtras.PercentageDifferenceBetween(total.Value, previousEquity),
+                    lastTrade != null ? MathExtras.PercentageDifferenceBetween(lastTrade.CurrentEquity.Value, trade.CurrentEquity.Value) : 0,
                     trade.Price));
-                previousEquity = total.Value;
+                lastTrade = trade;
             }
 
             return this.View("TradePerformanceHistory", model);

@@ -1,5 +1,6 @@
 ﻿namespace GraphAnalyser.Tests.Processing
 {
+    using System;
     using NUnit.Framework;
     using StockGraphAnalyser.Processing;
 
@@ -21,9 +22,13 @@
             Assert.AreEqual(expectedResult, number1.Difference(number2));
         }
 
-        public void PercentageDifferenceBetweenTest()
+        [TestCase(6, 8, 33.33)]
+        [TestCase(6, 3, -50.00)]
+        [TestCase(6, 4, -33.33)]
+        [TestCase(8, 8, 0)]
+        public void PercentageDifferenceBetweenTest(decimal number1, decimal number2, decimal expectedResult)
         {
-            Assert.AreEqual(33.33, MathExtras.PercentageDifferenceBetween(5, 7));
+            Assert.AreEqual(expectedResult, Math.Round(MathExtras.PercentageDifferenceBetween(number1, number2), 2));
         }
     }
 }

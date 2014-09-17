@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Linq.Expressions;
     using Moq;
@@ -54,10 +55,11 @@
 
         [Test]
         public void InsertNewQuotesToDbTest() {
+            this.BuildCalcuatorFactory();
             var latestDataPointDate = monday.AddDays(1);
             this.dataPointRepo.Setup(m => m.FindLatestDataPointDateForSymbol("SGP.L")).Returns(latestDataPointDate);
-
             this.yahooServiceClient.Setup(m => m.GetQuotes("SGP.L")).Returns(TestQuotes);
+            
             var service = new DataPointManagementService(this.dataPointRepo.Object, this.yahooServiceClient.Object, this.calculatorFactory.Object);
             service.InsertNewQuotesToDb("SGP.L");
 
@@ -135,15 +137,15 @@
 
         private void BuildCalcuatorFactory() {
             this.SetupCalculator(
-                factory => factory.CreateMovingAverageCalculator(It.IsAny<Dictionary<DateTime, decimal>>(), 200),
+                factory => factory.CreateMovingAverageCalculator(It.IsAny<ReadOnlyDictionary<DateTime, decimal>>(), 200),
                 new[] {1m, 2m, 3m, 4m, 5m, 6m, 7m });
 
             this.SetupCalculator(
-                factory => factory.CreateMovingAverageCalculator(It.IsAny<Dictionary<DateTime, decimal>>(), 50),
+                factory => factory.CreateMovingAverageCalculator(It.IsAny<ReadOnlyDictionary<DateTime, decimal>>(), 50),
                 new[] {2m, 3m, 4m, 5m, 6m, 7m, 8m });
 
             this.SetupCalculator(
-                factory => factory.CreateMovingAverageCalculator(It.IsAny<Dictionary<DateTime, decimal>>(), 20),
+                factory => factory.CreateMovingAverageCalculator(It.IsAny<ReadOnlyDictionary<DateTime, decimal>>(), 20),
                 new[] {3m, 4m, 5m, 6m, 7m, 8m, 9m });
 
             this.SetupCalculator(
@@ -166,13 +168,28 @@
 
             this.SetupCalculator(
                 factory =>
-                factory.CreateExponentialMovingAverageCalculator(It.IsAny<Dictionary<DateTime, decimal>>(), 13),
+                factory.CreateExponentialMovingAverageCalculator(It.IsAny<ReadOnlyDictionary<DateTime, decimal>>(), 13),
                 new[] {7m, 8m, 9m, 10m, 11m, 12m, 13m });
+
+            this.SetupCalculator(
+                factory =>
+                factory.CreateExponentialMovingAverageCalculator(It.IsAny<ReadOnlyDictionary<DateTime, decimal>>(), 12),
+                new[] { 8m, 9m, 10m, 11m, 12m, 13m, 14m });
+
+            this.SetupCalculator(
+                factory =>
+                factory.CreateDifferenceCalculator(It.IsAny<Dictionary<DateTime, decimal>>(), It.IsAny<Dictionary<DateTime, decimal>>()),
+                new[] { 9m, 10m, 11m, 12m, 13m, 14m, 15m });
+
+            this.SetupCalculator(
+                factory =>
+                factory.CreateExponentialMovingAverageCalculator(It.IsAny<ReadOnlyDictionary<DateTime, decimal>>(), 22),
+                new[] { 9m, 10m, 11m, 12m, 13m, 14m, 15m });
 
             // Standard deviation calculation result doesnt matter for the purposes of the tests we are writing here.
             this.SetupCalculator(
                 factory =>
-                factory.CreateStandardDeviationCalculator(It.IsAny<Dictionary<DateTime, decimal>>(), It.IsAny<int>()),
+                factory.CreateStandardDeviationCalculator(It.IsAny<ReadOnlyDictionary<DateTime, decimal>>(), It.IsAny<int>()),
                 new decimal[] {});
         }
 

@@ -27,7 +27,7 @@
 
         <tr>
             <td>@trade.DateTime.ToString("dd MMM yyyy")</td>
-            <td>&pound;@Math.Round(trade.CurrentEquity, 2)</td>
+            <td>&pound;@Math.Round(trade.CurrentEquity.Value, 2)</td>
             <td>@trade.SignalType</td>
             <td>@trade.CurrentPrice</td>
             <td style="font-weight: bold; color: @postiveOrNegative">@Math.Round(trade.PercentageChange, 2)%</td>

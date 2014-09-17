@@ -12,13 +12,11 @@ namespace StockGraphAnalyser.Domain.Service
     {
         private readonly IDataPointRepository dataPointRepository;
         private readonly ITradeSignalRepository tradeSignalRepository;
-        private readonly ICandleStickSignalRepository candleStickSignalRepository;
         private readonly ICompanyRepository companyRepository;
 
-        public TradeSignalManagementService(IDataPointRepository dataPointRepository, ITradeSignalRepository tradeSignalRepository, ICandleStickSignalRepository candleStickSignalRepository, ICompanyRepository companyRepository) {
+        public TradeSignalManagementService(IDataPointRepository dataPointRepository, ITradeSignalRepository tradeSignalRepository, ICompanyRepository companyRepository) {
             this.dataPointRepository = dataPointRepository;
             this.tradeSignalRepository = tradeSignalRepository;
-            this.candleStickSignalRepository = candleStickSignalRepository;
             this.companyRepository = companyRepository;
         }
 
@@ -33,33 +31,40 @@ namespace StockGraphAnalyser.Domain.Service
         public void GenerateNewSignals()
         {
             this.tradeSignalRepository.DeleteAll();
-            this.GenerateSignals();  
-        }
-
-        public void GenerateNewSignals(string company) {
-            throw new NotImplementedException("Fix this method");
-        }
-
-        private void GenerateSignals()
-        {
             var signals = new List<Signal>();
             var indexes = new[] { Company.ConstituentOfIndex.Ftse100, Company.ConstituentOfIndex.Ftse250, Company.ConstituentOfIndex.SmallCap };
             var datapoints = this.dataPointRepository.FindAll(indexes);
             foreach (var datapointsGroup in datapoints.GroupBy(c => c.Symbol))
             {
-                var company = this.companyRepository.FindBySymbol(datapointsGroup.Key);
-                if (company.ExcludeYn == 0)
+                this.GenerateSignals(datapointsGroup.Key, datapointsGroup);
+            }
+
+            this.tradeSignalRepository.InsertAll(signals); 
+        }
+
+        public void GenerateNewSignals(string symbol) {
+            var datapoints = this.dataPointRepository.FindAll(symbol);   
+            var signals = this.GenerateSignals(symbol, datapoints);
+
+            this.tradeSignalRepository.DeleteAll(symbol);
+            this.tradeSignalRepository.InsertAll(signals);
+        }
+
+        private IEnumerable<Signal> GenerateSignals(string symbol, IEnumerable<DataPoints> dataPoints) {
+            var newSignals = new List<Signal>();
+
+            var company = this.companyRepository.FindBySymbol(symbol);
+            if (company.ExcludeYn == 0)
+            {
+                var generator = new MovingAveragePriceCrossSignals(dataPoints);
+                var generatedSignals = generator.GenerateSignals().ToList();
+                if (generatedSignals.Any())
                 {
-                    var generator = new MovingAveragePriceCrossSignals(datapointsGroup,this.candleStickSignalRepository.FindAllForCompany(datapointsGroup.Key));
-                    var generatedSignals = generator.GenerateSignals();
-                    if (generatedSignals.Any())
-                    {
-                        signals.AddRange(generatedSignals);
-                    }
+                    newSignals.AddRange(generatedSignals);
                 }
             }
 
-            this.tradeSignalRepository.InsertAll(signals);
+            return newSignals;
         }
     }
 }

@@ -177,7 +177,7 @@ $(document).ready(function() {
                         text: 'Force 13 Day'
                     },
                     top: '57%',
-                    height: '8%',
+                    height: '20%',
                     offset: 0,
                     lineWidth: 2
                 }

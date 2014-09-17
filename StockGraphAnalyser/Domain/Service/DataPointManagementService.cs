@@ -144,7 +144,6 @@ namespace StockGraphAnalyser.Domain.Service
             dataPoints = dataPoints.MapNewDataPoint(upperOneDeviationBollingerBandTask.Result, (p, d) => p.UpperBollingerBandOneDeviation = d); 
             dataPoints = dataPoints.MapNewDataPoint(thirteenPeriodForceIndexTask.Result, (p, d) => p.ForceIndexThirteenPeriod = d);
             dataPoints = dataPoints.MapNewDataPoint(macdHistogramTask.Result, (p, d) => p.MacdTwentyTwoOverTwelveDayHistogram = d);
-            dataPoints = dataPoints.UpdateAll(x => x.IsProcessed = 1);
             
             return dataPoints;
         }

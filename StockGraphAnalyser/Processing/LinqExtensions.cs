@@ -42,14 +42,6 @@ namespace StockGraphAnalyser.Processing
                                            });
         }
 
-        public static IEnumerable<T> UpdateAll<T>(this IEnumerable<T> originalList, Action<T> function) {
-            return originalList.Select(x =>
-                {
-                    function(x);
-                    return x;
-                });
-        }
-
         public static void ForEachGroup<T>(this IEnumerable<T> enumerable, int groupSize, Action<IEnumerable<T>> action)
         {
             var count = enumerable.Count();

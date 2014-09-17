@@ -9,6 +9,7 @@ namespace StockGraphAnalyser.Domain.Repository.Interfaces
     {
         void InsertAll(IEnumerable<Signal> signals);
         void DeleteAll();
+        void DeleteAll(string symbol);
         IEnumerable<Signal> GetAllForCompany(string symbol);
         IEnumerable<Signal> GetAll(DateTime fromDate);
     }

@@ -11,6 +11,13 @@ namespace GraphAnalyser.Tests.Signals
     public class SignalEquityPositionTotallerTests
     {
         [Test]
+        public void NoSignalsTest() {
+            var totaller = new SignalEquityPositionTotaller(new List<Signal>(), 1000);
+            var result = totaller.Calculate();
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [Test]
         public void TakeProfitsTest()
         {
             var signals = new[]{

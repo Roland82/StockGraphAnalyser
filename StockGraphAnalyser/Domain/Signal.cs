@@ -10,6 +10,7 @@ namespace StockGraphAnalyser.Domain
         public DateTime Date { get; set; }
         public SignalType SignalType { get; set; }
         public decimal Price { get; set; }
+        public decimal? CurrentEquity { get; set; }
 
         public Signal() { /* For dapper only */ }
 
@@ -20,7 +21,7 @@ namespace StockGraphAnalyser.Domain
                                  Symbol = symbol,
                                  Date = date,
                                  SignalType = signalType,
-                                 Price = price
+                                 Price = price,
                               };
         }
     }

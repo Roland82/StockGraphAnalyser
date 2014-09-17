@@ -9,12 +9,12 @@ namespace StockGraphAnalyser.Signals
     /// <summary>
     /// A class that will take a list of trading signals and work out the profit/loss as trade signals are acted on.
     /// </summary>
-    public class SignalEquityPositionTotaller
+    public class SignalEquityPositionTotaller : ISignalEquityPositionTotaller
     {
         private readonly IEnumerable<Signal> signals;
         private readonly decimal startingEquity;
 
-        public SignalEquityPositionTotaller(IEnumerable<Signal> signals, decimal startingEquity, SignalType? ignoreSignalType = null)
+        public SignalEquityPositionTotaller(IEnumerable<Signal> signals, decimal startingEquity)
         {
             this.signals = signals.OrderBy(s => s.Date);
             this.startingEquity = startingEquity;

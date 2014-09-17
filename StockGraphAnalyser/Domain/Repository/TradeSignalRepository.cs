@@ -16,7 +16,7 @@ namespace StockGraphAnalyser.Domain.Repository
             using (IDbConnection connection = new SqlConnection(this.connectionString))
             {
                 connection.Open();
-                connection.Execute(@"INSERT INTO Signals VALUES (@Id,@Symbol,@Date, @SignalType, @Price)", signals);
+                connection.Execute(@"INSERT INTO Signals VALUES (@Id,@Symbol,@Date, @SignalType, @Price, @CurrentEquity)", signals);
             }
         }
 
@@ -25,6 +25,15 @@ namespace StockGraphAnalyser.Domain.Repository
             {
                 connection.Open();
                 connection.Execute(@"DELETE FROM Signals");
+            }
+        }
+
+        public void DeleteAll(string symbol)
+        {
+            using (IDbConnection connection = new SqlConnection(this.connectionString))
+            {
+                connection.Open();
+                connection.Execute(string.Format(@"DELETE FROM Signals WHERE Symbol = '{0}'", symbol));
             }
         }
 

@@ -4,6 +4,7 @@ namespace StockGraphAnalyser.Domain.Service
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using StockGraphAnalyser.Domain.Repository.Interfaces;
     using StockGraphAnalyser.Domain.Service.Interfaces;
     using StockGraphAnalyser.Signals;
@@ -34,10 +35,15 @@ namespace StockGraphAnalyser.Domain.Service
             var signals = new List<Signal>();
             var indexes = new[] { Company.ConstituentOfIndex.Ftse100, Company.ConstituentOfIndex.Ftse250, Company.ConstituentOfIndex.SmallCap };
             var datapoints = this.dataPointRepository.FindAll(indexes);
-            foreach (var datapointsGroup in datapoints.GroupBy(c => c.Symbol))
-            {
-                this.GenerateSignals(datapointsGroup.Key, datapointsGroup);
-            }
+
+            Parallel.ForEach(datapoints.GroupBy(c => c.Symbol), e =>
+                {
+                    var generatedSignals = this.GenerateSignals(e.Key, e);
+                    lock (signals)
+                    {
+                        signals.AddRange(generatedSignals);
+                    }
+                });
 
             this.tradeSignalRepository.InsertAll(signals); 
         }

@@ -134,13 +134,13 @@
     <Compile Include="Processing\Math.cs" />
     <Compile Include="Processing\Utilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Signals\AbstractTradingStrategy.cs" />
-    <Compile Include="Signals\HighMomentumBuyTradingStrategy.cs" />
-    <Compile Include="Signals\HighMomentumShortTradingStrategy.cs" />
     <Compile Include="Signals\IGenerateSignals.cs" />
     <Compile Include="Signals\ISignalEquityPositionTotaller.cs" />
     <Compile Include="Signals\MovingAveragePriceCrossSignals.cs" />
     <Compile Include="Signals\SignalEquityPositionTotaller.cs" />
+    <Compile Include="Signals\TradingStrategies\AbstractTradingStrategy.cs" />
+    <Compile Include="Signals\TradingStrategies\HighMomentumBuyTradingStrategy.cs" />
+    <Compile Include="Signals\TradingStrategies\HighMomentumShortTradingStrategy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

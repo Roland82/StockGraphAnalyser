@@ -1,12 +1,12 @@
-﻿
 
-namespace GraphAnalyser.Tests.Signals
+
+namespace GraphAnalyser.Tests.Signals.TradingStrategies
 {
     using System;
     using System.Collections.Generic;
     using NUnit.Framework;
     using StockGraphAnalyser.Domain;
-    using StockGraphAnalyser.Signals;
+    using StockGraphAnalyser.Signals.TradingStrategies;
 
     public class HighMomentumBuyTradingStrategyTests
     {

@@ -1,5 +1,5 @@
 
-namespace StockGraphAnalyser.Signals
+namespace StockGraphAnalyser.Signals.TradingStrategies
 {
     using System;
     using System.Collections.Generic;

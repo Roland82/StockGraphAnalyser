@@ -73,6 +73,7 @@
     <Compile Include="Processing\UtilitiesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Signals\SignalEquityPositionTotallerTests.cs" />
+    <Compile Include="Signals\SignalGeneratorTests.cs" />
     <Compile Include="Signals\TradingStrategies\HighMomentumBuyTradingStrategyTests.cs" />
     <Compile Include="Signals\TradingStrategies\HighMomentumShortTradingStrategyTests.cs" />
     <Compile Include="TestUtilities\GraphPlottingUtilities.cs" />

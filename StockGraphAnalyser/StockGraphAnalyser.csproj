@@ -138,6 +138,7 @@
     <Compile Include="Signals\ISignalEquityPositionTotaller.cs" />
     <Compile Include="Signals\MovingAveragePriceCrossSignals.cs" />
     <Compile Include="Signals\SignalEquityPositionTotaller.cs" />
+    <Compile Include="Signals\SignalGenerator.cs" />
     <Compile Include="Signals\TradingStrategies\AbstractTradingStrategy.cs" />
     <Compile Include="Signals\TradingStrategies\HighMomentumBuyTradingStrategy.cs" />
     <Compile Include="Signals\TradingStrategies\HighMomentumShortTradingStrategy.cs" />

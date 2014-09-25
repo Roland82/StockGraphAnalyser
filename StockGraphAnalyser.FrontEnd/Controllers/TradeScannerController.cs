@@ -15,7 +15,7 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
         }
 
         public ActionResult Index() {
-            var signals = this.tradingSignalService.GetAll(DateTime.Today.AddDays(-14));
+            var signals = this.tradingSignalService.GetAll(DateTime.Today.AddDays(-365));
             return View("Index", signals);
         }
     }

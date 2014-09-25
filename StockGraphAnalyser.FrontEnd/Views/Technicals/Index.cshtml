@@ -13,7 +13,7 @@
 {
     var excludeText = @Model.Company.ExcludeYn == 1 ? "Un-exclude" : "Exclude";
     <input type="hidden" name="id" value="@Model.Company.Id"/>
-    <input type="submit" name="exclude" value="@excludeText" />
+    <input type="submit" name="exclude" class="ui-icon ui-button" value="@excludeText" />
 }
 
 @using (Html.BeginForm("RefreshChart", "Technicals", FormMethod.Post, new { style="float: right; font-size: 14px;" }))

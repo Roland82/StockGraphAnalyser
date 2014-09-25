@@ -8,7 +8,12 @@ namespace StockGraphAnalyser.Domain.Service
     using StockGraphAnalyser.Domain.Repository.Interfaces;
     using StockGraphAnalyser.Domain.Service.Interfaces;
     using StockGraphAnalyser.Signals;
+    using StockGraphAnalyser.Signals.TradingStrategies;
 
+    /// <summary>
+    /// TODO: This class needs some serious thought about how it will be more testable due to hard coded dependencies
+    /// and also how equity totalling should be attached to the generated signals
+    /// </summary>
     public class TradeSignalManagementService : ITradeSignalManagementService
     {
         private readonly IDataPointRepository dataPointRepository;
@@ -33,7 +38,7 @@ namespace StockGraphAnalyser.Domain.Service
         {
             this.tradeSignalRepository.DeleteAll();
             var signals = new List<Signal>();
-            var indexes = new[] { Company.ConstituentOfIndex.Ftse100, Company.ConstituentOfIndex.Ftse250, Company.ConstituentOfIndex.SmallCap };
+            var indexes = new[] { Company.ConstituentOfIndex.Ftse100, Company.ConstituentOfIndex.Ftse250 };
             var datapoints = this.dataPointRepository.FindAll(indexes);
 
             Parallel.ForEach(datapoints.GroupBy(c => c.Symbol), e =>
@@ -62,15 +67,27 @@ namespace StockGraphAnalyser.Domain.Service
             var company = this.companyRepository.FindBySymbol(symbol);
             if (company.ExcludeYn == 0)
             {
-                var generator = new MovingAveragePriceCrossSignals(dataPoints);
-                var generatedSignals = generator.GenerateSignals().ToList();
+                var generator = new SignalGenerator(dataPoints, this.CreateStrategies(dataPoints));
+                var generatedSignals = generator.Generate().ToList();
                 if (generatedSignals.Any())
                 {
-                    newSignals.AddRange(generatedSignals);
+                    var totaller = new SignalEquityPositionTotaller(generatedSignals, 100);
+                    var totals = totaller.Calculate();
+                    var signalsToInsert = generatedSignals.Where(s => totals.ContainsKey(s.Date)).Select(s =>
+                        {
+                            s.CurrentEquity = totals[s.Date];
+                            return s;
+                        });
+
+                    newSignals.AddRange(signalsToInsert);
                 }
             }
 
             return newSignals;
         }
+
+        private IEnumerable<AbstractTradingStrategy> CreateStrategies(IEnumerable<DataPoints> dataPoints) {
+            return new AbstractTradingStrategy[] {new HighMomentumShortTradingStrategy(dataPoints), new HighMomentumBuyTradingStrategy(dataPoints)};
+        } 
     }
 }

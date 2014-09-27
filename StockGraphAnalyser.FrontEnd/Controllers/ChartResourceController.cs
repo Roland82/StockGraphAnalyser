@@ -38,8 +38,7 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
                     d.Date.ToEpoch(), d.Open, d.High, d.Low, d.Close, d.Volume, 
                     d.ForceIndexThirteenPeriod, 
                     d.UpperBollingerBandTwoDeviation, d.LowerBollingerBandTwoDeviation,
-                    d.UpperBollingerBandOneDeviation, d.LowerBollingerBandOneDeviation,
-                    d.MacdTwentyTwoOverTwelveDay, d.MacdTwentyTwoOverTwelveDaySignalLine, d.MacdTwentyTwoOverTwelveDayHistogram
+                    d.MacdTwentyTwoOverTwelveDay, d.MacdTwentyTwoOverTwelveDaySignalLine, d.MacdTwentyTwoOverTwelveDayHistogram, d.MovingAverageTwentyDay
                 }).ToList();
 
             return JsonNetResult.Create(list);

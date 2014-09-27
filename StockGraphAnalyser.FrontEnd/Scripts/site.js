@@ -35,9 +35,8 @@ $(document).ready(function() {
             volume = [],
             forceIndexThirteenDay = [],
             upperBollingerBandTwoDeviation = [],
-            upperBollingerBandOneDeviation = [],
             lowerBollingerBandTwoDeviation = [],
-            lowerBollingerBandOneDeviation = [],
+            movingAverage20Day = [],
             macd = [],
             macdSignalLine = [],
             macdHistogram = [],
@@ -71,30 +70,25 @@ $(document).ready(function() {
                 data.Data[i][0],
                 data.Data[i][8]
             ]);
-
-            upperBollingerBandOneDeviation.push([
-                data.Data[i][0],
-                data.Data[i][9]
-            ]);
-
-            lowerBollingerBandOneDeviation.push([
-                data.Data[i][0],
-                data.Data[i][10]
-            ]);
             
             macd.push([
                 data.Data[i][0],
-                data.Data[i][11]
+                data.Data[i][9]
             ]);
             
             macdSignalLine.push([
                 data.Data[i][0],
-                data.Data[i][12]
+                data.Data[i][10]
             ]);
             
             macdHistogram.push([
                 data.Data[i][0],
-                data.Data[i][13]
+                data.Data[i][11]
+            ]);
+            
+            movingAverage20Day.push([
+                data.Data[i][0],
+                data.Data[i][12]
             ]);
         }
 
@@ -115,13 +109,12 @@ $(document).ready(function() {
                 { type: 'candlestick', name: symbol, data: ohlc },
                 { name: 'Upper Bollinger Band 2 Deviation', data: upperBollingerBandTwoDeviation, color: '#FF0000' },
                 { name: 'Lower Bollinger Band 2 Deviation', data: lowerBollingerBandTwoDeviation, color: '#FF0000' },
-                { name: 'Upper Bollinger Band 1 Deviation', data: upperBollingerBandOneDeviation, color: '#FF0000' },
-                { name: 'Lower Bollinger Band 1 Deviation', data: lowerBollingerBandOneDeviation, color: '#FF0000' },
                 { type: 'column', name: 'Volume', data: volume, yAxis: 1 },
                 { name: 'MACD', data: macd, yAxis: 2 },
                 { name: 'MACD Signal Line', data: macdSignalLine, yAxis: 2 },
                 { name: 'MACD Histogram', type: 'column', data: macdHistogram, yAxis: 2 },
-                { name: 'Force (13 Day)', data: forceIndexThirteenDay, yAxis: 3 }
+                { name: 'Force (13 Day)', data: forceIndexThirteenDay, yAxis: 3 },
+                { name: 'MA (20)', data: movingAverage20Day, color: '#000000' },
             ],
 
             plotOptions: {

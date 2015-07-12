@@ -62,7 +62,7 @@ namespace GraphAnalyser.Tests.Domain.Service
             var smallCap = new Dictionary<string, string> { { "SMA", "Small Company" }, { "ASC", "Another small company" } };
             this.companyFinderService.Setup(m => m.GetFtseIndex(Company.ConstituentOfIndex.Ftse100)).Returns(ftse100);
             this.companyFinderService.Setup(m => m.GetFtseIndex(Company.ConstituentOfIndex.Ftse250)).Returns(ftse250);
-            this.companyFinderService.Setup(m => m.GetFtseIndex(Company.ConstituentOfIndex.SmallCap)).Returns(smallCap);
+            this.companyFinderService.Setup(m => m.GetFtseIndex(Company.ConstituentOfIndex.FtseSmallCap)).Returns(smallCap);
 
             var companiesInDb = new[]
                 {
@@ -73,7 +73,7 @@ namespace GraphAnalyser.Tests.Domain.Service
                     Company.Create("", "SMA.L", Company.ConstituentOfIndex.Unknown),
                     Company.Create("", "NOT.L", Company.ConstituentOfIndex.Unknown),
                 };
-            this.companyRepository.Setup(m => m.FindAll()).Returns(companiesInDb);
+            this.companyRepository.Setup(m => m.FindAll()).ReturnsAsync(companiesInDb);
             var service = new CompanyDataManagementService(this.companyFinderService.Object, this.companyRepository.Object);
             service.UpdateCompanyMetaData();
             this.companyRepository.Verify(m => m.UpdateAll(It.Is<IEnumerable<Company>>(c => c.Count() == 2)), Times.Exactly(2));
@@ -82,14 +82,14 @@ namespace GraphAnalyser.Tests.Domain.Service
             this.companyRepository.Verify(m => m.UpdateAll(It.Is<IEnumerable<Company>>(c => c.Any(e => e.Symbol == "HI.L" && e.Index == Company.ConstituentOfIndex.Ftse100))));
             this.companyRepository.Verify(m => m.UpdateAll(It.Is<IEnumerable<Company>>(c => c.Any(e => e.Symbol == "HOD.L" && e.Index == Company.ConstituentOfIndex.Ftse250))));
             this.companyRepository.Verify(m => m.UpdateAll(It.Is<IEnumerable<Company>>(c => c.Any(e => e.Symbol == "HEL.L" && e.Index == Company.ConstituentOfIndex.Ftse250))));
-            this.companyRepository.Verify(m => m.UpdateAll(It.Is<IEnumerable<Company>>(c => c.Any(e => e.Symbol == "SMA.L" && e.Index == Company.ConstituentOfIndex.SmallCap))));
+            this.companyRepository.Verify(m => m.UpdateAll(It.Is<IEnumerable<Company>>(c => c.Any(e => e.Symbol == "SMA.L" && e.Index == Company.ConstituentOfIndex.FtseSmallCap))));
             this.companyRepository.Verify(m => m.UpdateAll(It.Is<IEnumerable<Company>>(c => c.Any(e => e.Symbol == "NOT.L"))), Times.Never);
         }
 
         private void SetupMocks(Dictionary<string, string> companyFinderReturn,
                                 IEnumerable<Company> companyRepositoryFindAllReturn) {
             companyFinderService.Setup(m => m.GetAllSymbols()).Returns(companyFinderReturn);
-            companyRepository.Setup(m => m.FindAll()).Returns(companyRepositoryFindAllReturn);
+            companyRepository.Setup(m => m.FindAll()).ReturnsAsync(companyRepositoryFindAllReturn);
         }
     }
 }

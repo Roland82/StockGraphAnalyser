@@ -10,6 +10,13 @@ namespace StockGraphAnalyser.Domain.StockDataProviders
 
     public class CompanyFinderService : ICompanyFinderService
     {
+        private readonly string[] ExchangeUrls = new []
+                {
+                    "http://www.advfn.com/nyse/newyorkstockexchange.asp?companies=",
+                    "http://www.advfn.com/nasdaq/nasdaq.asp?companies=",
+                    "http://uk.advfn.com/exchanges/LSE/",
+                };
+
         /// <summary>
         /// Gets all symbols.
         /// </summary>
@@ -19,12 +26,26 @@ namespace StockGraphAnalyser.Domain.StockDataProviders
             var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
             var symbolList = new Dictionary<string, string>();
             var document = new HtmlDocument();
-            foreach (var letter in alphabet)
+            foreach (var exchangeUrl in ExchangeUrls)
             {
-                var responseStream = WebRequest.Create("http://uk.advfn.com/exchanges/LSE/" + letter).GetResponse().GetResponseStream();
-                document.LoadHtml(new StreamReader(responseStream).ReadToEnd());
-                var tickerRows = document.DocumentNode.SelectNodes("//tr[@class='even'or @class='odd' or @class='odd first']").Skip(1);
-                tickerRows.ToList().ForEach(r => symbolList.Add(r.ChildNodes.ElementAt(1).InnerText, r.ChildNodes.ElementAt(0).InnerText));
+                foreach (var letter in alphabet)
+                {
+                    var responseStream = WebRequest.Create(exchangeUrl + letter).GetResponse().GetResponseStream();
+                    document.LoadHtml(new StreamReader(responseStream).ReadToEnd());
+                    var tickerRows =
+                        document.DocumentNode.SelectNodes(
+                            "//tr[@class='even'or @class='odd' or @class='ts1' or @class='ts0' or @class='odd first']")
+                                .Skip(1);
+
+                    foreach (var r in tickerRows)
+                    {
+                        if (!symbolList.ContainsKey(r.ChildNodes.ElementAt(1).InnerText))
+                        {
+                            symbolList.Add(r.ChildNodes.ElementAt(1).InnerText, r.ChildNodes.ElementAt(0).InnerText);
+
+                        }
+                    }
+                }
             }
 
             return symbolList;
@@ -41,7 +62,7 @@ namespace StockGraphAnalyser.Domain.StockDataProviders
             var urls = new Dictionary<Company.ConstituentOfIndex, string>();
             urls.Add(Company.ConstituentOfIndex.Ftse100, "http://www.lse.co.uk/index-constituents.asp?index=IDX:UKX&indexname=ftse_100");
             urls.Add(Company.ConstituentOfIndex.Ftse250, "http://www.lse.co.uk/index-constituents.asp?index=IDX:MCX&indexname=ftse_250");
-            urls.Add(Company.ConstituentOfIndex.SmallCap, "http://www.lse.co.uk/index-constituents.asp?index=IDX:SMX&indexname=ftse_small_cap");
+            urls.Add(Company.ConstituentOfIndex.FtseSmallCap, "http://www.lse.co.uk/index-constituents.asp?index=IDX:SMX&indexname=ftse_small_cap");
                                                                              
 
             var responseStream = WebRequest.Create(urls[indexType]).GetResponse().GetResponseStream();

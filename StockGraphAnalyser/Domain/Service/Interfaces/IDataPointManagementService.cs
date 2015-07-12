@@ -8,7 +8,7 @@ namespace StockGraphAnalyser.Domain.Service.Interfaces
         /// <param name="symbol">The symbol.</param>
         void InsertNewQuotesToDb(string symbol);
 
-        void FillInMissingProcessedData(string symbol);
+        void UpdateDatapoints(Company.ConstituentOfIndex index);
 
         IEnumerable<DataPoints> FindAll(Company.ConstituentOfIndex[] indexes);
     }

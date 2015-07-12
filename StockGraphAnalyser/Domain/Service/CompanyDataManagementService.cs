@@ -20,12 +20,12 @@ namespace StockGraphAnalyser.Domain.Service
         }
 
         public Company GetBySymbol(string symbol) {
-            return this.companyRepository.FindBySymbol(symbol);
+            return this.companyRepository.FindBySymbol(symbol).Result;
         }
 
         public Company GetById(string id)
         {
-            return this.companyRepository.FindById(id);
+            return this.companyRepository.FindById(id).Result;
         }
 
         public void Update(Company company) {
@@ -36,7 +36,7 @@ namespace StockGraphAnalyser.Domain.Service
         /// Gets the new companies that are not in the database currently.
         /// </summary>
         public void GetNewCompanies() {
-            var currentCompanySymbols = this.companyRepository.FindAll().Select(c => c.Symbol);
+            var currentCompanySymbols = this.companyRepository.FindAll().Result.Select(c => c.Symbol);
             var allCompanies = this.companyFinderService.GetAllSymbols();
             
             var companiesToInsert = allCompanies
@@ -56,14 +56,14 @@ namespace StockGraphAnalyser.Domain.Service
                 var indexType = (Company.ConstituentOfIndex) i;
                 if (indexType == Company.ConstituentOfIndex.Unknown) continue;
                 var companiesInIndex = this.companyFinderService.GetFtseIndex(indexType);
-                var companies = this.companyRepository.FindAll();
+                var companies = this.companyRepository.FindAll().Result;
                 var updatedCompanies = companies.Where(c => companiesInIndex.ContainsKey(c.Symbol.Replace(".L", ""))).Select(c => { c.Index = indexType; return c; });
                 this.companyRepository.UpdateAll(updatedCompanies);
             }
         }
 
         public IEnumerable<Company> FindAllMatching(string matcher) {
-            return this.companyRepository.FindAll(matcher);
+            return this.companyRepository.FindAll(matcher).Result;
         }
     }
 }

@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Cassandra, Version=2.5.0.0, Culture=neutral, PublicKeyToken=10b231fbfc8c4b4d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CassandraCSharpDriver.2.5.2\lib\net40\Cassandra.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1402.2112\lib\net40\Moq.dll</HintPath>
     </Reference>
@@ -50,6 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\DataPointsTests.cs" />
+    <Compile Include="Domain\Repository\Cassandra\CompanyRepositoryTests.cs" />
+    <Compile Include="Domain\Repository\Cassandra\DataPointRepositoryTests.cs" />
     <Compile Include="Domain\Service\CandleStickSignalManagementServiceTests.cs" />
     <Compile Include="Domain\Service\CompanyDataManagementServiceTests.cs" />
     <Compile Include="Domain\Service\DataPointManagementServiceInsertQuotesTests.cs" />
@@ -59,6 +65,7 @@
     <Compile Include="Processing\Calculators\ExponentialMovingAverageTests.cs" />
     <Compile Include="Processing\Calculators\ForceIndexCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\RangePredictabilityCalculatorTests.cs" />
+    <Compile Include="Processing\Calculators\ResistanceAndSupportPredictabilityCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\StandardDeviationCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\DailyMovingAverageCalculatorTests.cs" />
     <Compile Include="Processing\Calculators\DifferenceCalculatorTests.cs" />
@@ -73,9 +80,6 @@
     <Compile Include="Processing\UtilitiesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Signals\SignalEquityPositionTotallerTests.cs" />
-    <Compile Include="Signals\SignalGeneratorTests.cs" />
-    <Compile Include="Signals\TradingStrategies\HighMomentumBuyTradingStrategyTests.cs" />
-    <Compile Include="Signals\TradingStrategies\HighMomentumShortTradingStrategyTests.cs" />
     <Compile Include="TestUtilities\GraphPlottingUtilities.cs" />
     <Compile Include="Web\SymbolFinderServiceTests.cs" />
     <Compile Include="Web\YahooStockQuoteServiceClientTests.cs" />
@@ -89,6 +93,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

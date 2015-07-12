@@ -23,10 +23,11 @@ namespace GraphAnalyser.Tests.Processing
         }
 
         [Test]
-        public void SubsetBetweenTest(){
-            var graph = GraphPlottingUtilities.CreateGraph(DateTime.Today, new[]{1m, 2m, 3m, 4m});
-            var expectedResult = new Dictionary<DateTime, decimal>{{DateTime.Today.AddDays(1), 2}, {DateTime.Today.AddDays(2), 3}};
-            var result = graph.SubsetBetween(DateTime.Today.AddDays(1), DateTime.Today.AddDays(2));
+        public void SubsetBetweenTest() {
+            var monday = new DateTime(2014, 9, 1);
+            var graph = GraphPlottingUtilities.CreateGraph(monday, new[]{1m, 2m, 3m, 4m});
+            var expectedResult = new Dictionary<DateTime, decimal> { { monday.AddDays(1), 2 }, { monday.AddDays(2), 3 } };
+            var result = graph.SubsetBetween(monday.AddDays(1), monday.AddDays(2));
             Assert.AreEqual(expectedResult, result);
         }
 
@@ -90,6 +91,16 @@ namespace GraphAnalyser.Tests.Processing
             Assert.True(newDatapoints.Any(d => d.Date == DateTime.Today.AddDays(3) && d.MovingAverageFiftyDay == 13));
             Assert.True(newDatapoints.Any(d => d.Date == DateTime.Today.AddDays(4) && d.MovingAverageFiftyDay == 14));
             Assert.True(newDatapoints.Any(d => d.Date == DateTime.Today.AddDays(5) && !d.MovingAverageFiftyDay.HasValue));
+        }
+
+        [Test]
+        public void GroupBatchesTest() {
+            var numbers = new List<int>(new[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+            var batches = numbers.GroupBatches(3);
+            Assert.AreEqual(batches.ElementAt(0), new[] {1,2,3});
+            Assert.AreEqual(batches.ElementAt(1), new[] { 4, 5, 6 });
+            Assert.AreEqual(batches.ElementAt(2), new[] { 7, 8, 9 });
+            Assert.AreEqual(batches.ElementAt(3), new[] {10});
         }
     }
 }

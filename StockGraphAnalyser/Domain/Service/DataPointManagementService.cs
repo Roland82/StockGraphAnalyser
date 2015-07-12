@@ -6,35 +6,59 @@ namespace StockGraphAnalyser.Domain.Service
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
+    using System.Threading.Tasks;
+    using Akka.Actor;
     using Interfaces;
     using Processing;
     using Processing.Calculators;
     using Repository.Interfaces;
     using System.Linq;
     using StockDataProviders.Interfaces;
+    using StockGraphAnalyser.Actors;
 
     public class DataPointManagementService : IDataPointManagementService
     {
         private readonly IDataPointRepository repository;
+        private readonly ICompanyRepository companyRepository;
         private readonly IYahooStockQuoteServiceClient stockQuoteClient;
         private readonly ICalculatorFactory calculatorFactory;
 
-        public DataPointManagementService(IDataPointRepository repository, IYahooStockQuoteServiceClient stockQuoteClient, ICalculatorFactory calculatorFactory) {
+        public DataPointManagementService(IDataPointRepository repository, ICompanyRepository companyRepository, IYahooStockQuoteServiceClient stockQuoteClient, ICalculatorFactory calculatorFactory) {
             this.repository = repository;
+            this.companyRepository = companyRepository;
             this.stockQuoteClient = stockQuoteClient;
             this.calculatorFactory = calculatorFactory;
         }
 
         public IEnumerable<DataPoints> FindAll(Company.ConstituentOfIndex[] indexes) {
-            return this.repository.FindAll(indexes);
+            return this.repository.FindAll(indexes, true);
+        }
+
+        public void UpdateDatapoints(Company.ConstituentOfIndex index) {
+            var system = ActorSystem.Create("StockDataSystem");
+
+            var actor = system.ActorOf(Props.Create<StockDataUpdaterActor>("SGP.L"), "DataUpdater_SGP.L");
+            //var companies = this.companyRepository.FindByIndex(index, true).Result;
+
+            //Parallel.ForEach(companies, company =>
+            //    {
+            //        try
+            //        {
+            //            this.InsertNewQuotesToDb(company.Symbol);
+            //        }
+            //        catch (Exception e)
+            //        {
+            //            // DO Something here
+            //        }
+            //    });
         }
 
         /// <summary>Inserts the new quotes into database.</summary>
         /// <param name="symbol">The symbol.</param>
         public void InsertNewQuotesToDb(string symbol)
         {
-            var storedDatapoints = this.repository.FindAll(symbol).OrderBy(d => d.Date);
-            var dateToInsertFrom = storedDatapoints.Any() ? storedDatapoints.Max(d => d.Date).AddDays(1) : DateTime.Today.AddYears(-2);
+            var storedDatapoints = this.repository.FindAll(symbol).Result.OrderBy(d => d.Date);
+            var dateToInsertFrom = storedDatapoints.Any() ? storedDatapoints.Max(d => d.Date).AddDays(1) : DateTime.Today.AddYears(-3);
             var newDataPoints = this.stockQuoteClient.GetQuotes(symbol).Where(q => q.Date >= dateToInsertFrom).Select(DataPoints.CreateFromQuote);
 
             var fullDataPointsSet = storedDatapoints.ToList();
@@ -50,20 +74,6 @@ namespace StockGraphAnalyser.Domain.Service
             }
         }
 
-
-        public void FillInMissingProcessedData(string symbol) {
-            var datapoints = this.repository.FindAll(symbol).OrderBy(d => d.Date);
-            var lastFullyProcessedDataPoint = datapoints.LastOrDefault(q => q.IsProcessed == 1);
-            
-            // If there are quotes to process then go for it
-            if (lastFullyProcessedDataPoint == null || lastFullyProcessedDataPoint.Date < datapoints.Max(q => q.Date))
-            {
-                var minDateToUpdateInDb = lastFullyProcessedDataPoint == null ? DateTime.MinValue : lastFullyProcessedDataPoint.Date;
-                
-                var datapointsToUpdate = this.AddProcessedData(datapoints, minDateToUpdateInDb).ToList();
-                this.repository.UpdateAll(datapointsToUpdate);
-            }
-        }
 
         /// <summary>Takes in all datapoints and adds all processed data;</summary>
         /// <param name="dataPoints">The data points.</param>

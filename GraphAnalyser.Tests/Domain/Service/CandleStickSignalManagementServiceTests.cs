@@ -32,7 +32,7 @@ namespace GraphAnalyser.Tests.Domain.Service
         /// </summary>
         [Test]
         public void ResultsFromAllSignalDetectorsInserted() {
-            this.mockDatapointRepository.Setup(o => o.FindAll(Symbol)).Returns(new List<DataPoints>());
+            this.mockDatapointRepository.Setup(o => o.FindAll(Symbol)).ReturnsAsync(new List<DataPoints>());
             this.mockCandlestickSignalRepository.Setup(o => o.FindAllForCompany(Symbol)).Returns(new List<CandleStickSignal>());
 
             var mockSignalDetector1 = SetupSignalDetectorMock(new[] { DateTime.Today, DateTime.Today.AddDays(7) }, 1);
@@ -62,7 +62,7 @@ namespace GraphAnalyser.Tests.Domain.Service
         public void SignalAlreadyDetectedForDateTest() {
             var candlestickSignalsInDb = new[] {CandleStickSignal.Create(Symbol, DateTime.Today, 1)};           
             this.mockCandlestickSignalRepository.Setup(o => o.FindAllForCompany(Symbol)).Returns(candlestickSignalsInDb);
-            this.mockDatapointRepository.Setup(o => o.FindAll(Symbol)).Returns(new List<DataPoints>());
+            this.mockDatapointRepository.Setup(o => o.FindAll(Symbol)).ReturnsAsync(new List<DataPoints>());
             var mockSignalDetector = SetupSignalDetectorMock(new[] { DateTime.Today, DateTime.Today.AddDays(5) }, 1);
 
             this.candlestickPatternRecogniserFactory.Setup(o => o.CreateAll(It.IsAny<IEnumerable<DataPoints>>()))

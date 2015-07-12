@@ -27,5 +27,9 @@ namespace StockGraphAnalyser.Processing
             var minNumber = thisNumber > thatNumber ? thatNumber : thisNumber;
             return number >= minNumber && number <= maxNumber;
         }
+
+        public static decimal AddPercentage(this decimal number, decimal percentageToAdd) {
+            return number*(percentageToAdd/100 + 1);
+        }
     }
 }

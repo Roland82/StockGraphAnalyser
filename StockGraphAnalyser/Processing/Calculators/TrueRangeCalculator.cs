@@ -50,7 +50,7 @@ namespace StockGraphAnalyser.Processing.Calculators
                 lastDatapoints = datapoints;
             }
 
-            return ranges.Where(r => r.Key > fromDate).ToDictionary(d => d.Key, d => d.Value);
+            return ranges.Where(r => r.Key >= fromDate).ToDictionary(d => d.Key, d => d.Value);
         } 
     }
 }

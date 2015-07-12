@@ -29,8 +29,8 @@ namespace StockGraphAnalyser.Domain.Service
 
         public void GenerateLatestSignals(DateTime fromDate) {
             var companies = new List<Company>();
-            companies.AddRange(this.companyRepository.FindByIndex(Company.ConstituentOfIndex.Ftse250));
-            companies.AddRange(this.companyRepository.FindByIndex(Company.ConstituentOfIndex.Ftse100));
+            companies.AddRange(this.companyRepository.FindByIndex(Company.ConstituentOfIndex.Ftse250, true).Result);
+            companies.AddRange(this.companyRepository.FindByIndex(Company.ConstituentOfIndex.Ftse100, true).Result);
 
             foreach (var company in companies)
             {
@@ -44,7 +44,7 @@ namespace StockGraphAnalyser.Domain.Service
         }
 
         private void InsertSignalsForCompany(string symbol, DateTime fromDate) {
-            var datapointsToCheck = this.datapointsRepository.FindAll(symbol).Where(d => d.Date >= fromDate).ToList();
+            var datapointsToCheck = this.datapointsRepository.FindAll(symbol).Result.Where(d => d.Date >= fromDate).ToList();
             var calculators = this.candlestickPatternFactory.CreateAll(datapointsToCheck);
             var detectedSignals = new List<CandleStickSignal>();
         

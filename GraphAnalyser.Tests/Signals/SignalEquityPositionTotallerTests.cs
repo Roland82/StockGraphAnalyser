@@ -21,11 +21,11 @@ namespace GraphAnalyser.Tests.Signals
         public void TakeProfitsTest()
         {
             var signals = new[]{
-                Signal.Create("SGP.L", DateTime.Today, SignalType.Buy, 1000), 
-                Signal.Create("SGP.L", DateTime.Today.AddDays(1), SignalType.TakeProfits, 1100),
-                Signal.Create("SGP.L", DateTime.Today.AddDays(2), SignalType.Sell, 1000), 
-                Signal.Create("SGP.L", DateTime.Today.AddDays(3), SignalType.Buy, 800), 
-                Signal.Create("SGP.L", DateTime.Today.AddDays(4), SignalType.TakeProfits, 880), 
+                Signal.Create("SGP.L", DateTime.Today, SignalType.Buy, 1000, 0m), 
+                Signal.Create("SGP.L", DateTime.Today.AddDays(1), SignalType.TakeProfits, 1100, 0m),
+                Signal.Create("SGP.L", DateTime.Today.AddDays(2), SignalType.Sell, 1000, 0m),
+                Signal.Create("SGP.L", DateTime.Today.AddDays(3), SignalType.Buy, 800, 0m),
+                Signal.Create("SGP.L", DateTime.Today.AddDays(4), SignalType.TakeProfits, 880, 0m) 
             };
 
             var totaller = new SignalEquityPositionTotaller(signals, 2000);
@@ -44,8 +44,8 @@ namespace GraphAnalyser.Tests.Signals
         public void BuyIsSucessfulTest()
         {
             var signals = new[]{
-                Signal.Create("SGP.L", DateTime.Today, SignalType.Buy, 1000), 
-                Signal.Create("SGP.L", DateTime.Today.AddDays(1), SignalType.Sell, 1100)
+                Signal.Create("SGP.L", DateTime.Today, SignalType.Buy, 1000, 0m), 
+                Signal.Create("SGP.L", DateTime.Today.AddDays(1), SignalType.Sell, 1100, 0m),
             };
 
             var totaller = new SignalEquityPositionTotaller(signals, 2000);
@@ -61,8 +61,8 @@ namespace GraphAnalyser.Tests.Signals
         public void ShortIsSucessfulTest()
         {
             var signals = new[]{
-                Signal.Create("SGP.L", DateTime.Today, SignalType.Sell, 1000), 
-                Signal.Create("SGP.L", DateTime.Today.AddDays(1), SignalType.Buy, 900)
+                Signal.Create("SGP.L", DateTime.Today, SignalType.Sell, 1000, 0m),
+                Signal.Create("SGP.L", DateTime.Today.AddDays(1), SignalType.Buy, 900, 0m),
             };
 
             var totaller = new SignalEquityPositionTotaller(signals, 2000);
@@ -78,8 +78,8 @@ namespace GraphAnalyser.Tests.Signals
         public void ShortIsNotSucessfulTest()
         {
             var signals = new[]{
-                Signal.Create("SGP.L", DateTime.Today, SignalType.Sell, 1000), 
-                Signal.Create("SGP.L", DateTime.Today.AddDays(1), SignalType.Buy, 1100)
+                Signal.Create("SGP.L", DateTime.Today, SignalType.Sell, 1000, 0m),
+                Signal.Create("SGP.L", DateTime.Today.AddDays(1), SignalType.Buy, 1100, 0m),
             };
 
             var totaller = new SignalEquityPositionTotaller(signals, 2000);
@@ -95,8 +95,8 @@ namespace GraphAnalyser.Tests.Signals
         public void BuyIsNotSucessfulTest()
         {
             var signals = new[]{
-                Signal.Create("SGP.L", DateTime.Today, SignalType.Buy, 1000), 
-                Signal.Create("SGP.L", DateTime.Today.AddDays(1), SignalType.Sell, 900)
+                Signal.Create("SGP.L", DateTime.Today, SignalType.Buy, 1000, 0m), 
+                Signal.Create("SGP.L", DateTime.Today.AddDays(1), SignalType.Sell, 900, 0m),
             };
 
             var totaller = new SignalEquityPositionTotaller(signals, 2000);

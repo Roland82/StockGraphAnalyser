@@ -18,6 +18,7 @@
     {
         private readonly DateTime monday = new DateTime(2014, 8, 4);
         private Mock<IDataPointRepository> dataPointRepo;
+        private Mock<ICompanyRepository> companyRepository;
         private Mock<IYahooStockQuoteServiceClient> yahooServiceClient;
         private Mock<ICalculatorFactory> calculatorFactory;
 
@@ -60,7 +61,7 @@
             this.dataPointRepo.Setup(m => m.FindLatestDataPointDateForSymbol("SGP.L")).Returns(latestDataPointDate);
             this.yahooServiceClient.Setup(m => m.GetQuotes("SGP.L")).Returns(TestQuotes);
             
-            var service = new DataPointManagementService(this.dataPointRepo.Object, this.yahooServiceClient.Object, this.calculatorFactory.Object);
+            var service = new DataPointManagementService(this.dataPointRepo.Object, this.companyRepository.Object, this.yahooServiceClient.Object, this.calculatorFactory.Object);
             service.InsertNewQuotesToDb("SGP.L");
 
             var expectedDataPoints = TestQuotes.Where(q => q.Date > latestDataPointDate).Select(DataPoints.CreateFromQuote).ToList();
@@ -77,7 +78,7 @@
             this.dataPointRepo.Setup(m => m.FindLatestDataPointDateForSymbol("SGP.L")).Returns(monday.AddDays(6));
             this.yahooServiceClient.Setup(m => m.GetQuotes("SGP.L")).Returns(TestQuotes);
 
-            var service = new DataPointManagementService(this.dataPointRepo.Object, this.yahooServiceClient.Object, this.calculatorFactory.Object);
+            var service = new DataPointManagementService(this.dataPointRepo.Object, this.companyRepository.Object, this.yahooServiceClient.Object, this.calculatorFactory.Object);
             service.InsertNewQuotesToDb("SGP.L");
 
             this.dataPointRepo.Verify(m => m.InsertAll(It.IsAny<IEnumerable<DataPoints>>()), Times.Never);
@@ -86,9 +87,8 @@
         [Test]
         public void TestUpdate() {
             this.BuildCalcuatorFactory();
-            this.dataPointRepo.Setup(f => f.FindAll("SGP.L")).Returns(TestDataPoints);
-            var service = new DataPointManagementService(this.dataPointRepo.Object, this.yahooServiceClient.Object, this.calculatorFactory.Object);
-            service.FillInMissingProcessedData("SGP.L");
+            this.dataPointRepo.Setup(f => f.FindAll("SGP.L")).ReturnsAsync(TestDataPoints);
+            var service = new DataPointManagementService(this.dataPointRepo.Object, this.companyRepository.Object, this.yahooServiceClient.Object, this.calculatorFactory.Object);
 
             var expectedDatapointsUpdated = new List<DataPoints>
                 {

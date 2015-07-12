@@ -1,11 +1,8 @@
 ﻿namespace StockGraphAnalyser.FrontEnd.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Web.Mvc;
     using Domain;
-    using Domain.Repository;
-    using Domain.Service;
     using Domain.Service.Interfaces;
 
     public class DataUpdateController : Controller
@@ -63,24 +60,7 @@
         [HttpPost]
         public ActionResult UpdateDatapoints(Company.ConstituentOfIndex? index)
         {
-            // TODO This can be done in one select
-            var companyRepository = new CompanyRepository();
-            var companyList = new List<Company>();
-            companyList.AddRange(companyRepository.FindByIndex(Company.ConstituentOfIndex.Ftse100));
-            companyList.AddRange(companyRepository.FindByIndex(Company.ConstituentOfIndex.Ftse250));
-            companyList.AddRange(companyRepository.FindByIndex(Company.ConstituentOfIndex.SmallCap));
-            foreach (var company in companyList)
-            {
-                try
-                {
-                    dataManagementService.InsertNewQuotesToDb(company.Symbol);
-                }
-                catch (Exception)
-                {
-                    //TODO: Remove this once bug fixed
-                }
-            }
-
+            this.dataManagementService.UpdateDatapoints(index.Value);
             this.TempData["message"] = "Datapoints Updated For Index " + index;
             return this.RedirectToAction("Index"); 
         }

@@ -9,7 +9,6 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
     using Domain;
     using Domain.Repository;
     using Infrastructure;
-    using StockGraphAnalyser.Domain.Repository.Cassandra;
 
     public class ChartResourceController : ApiController
     {
@@ -25,7 +24,7 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
 
             var repository = new DataPointRepository();
             var dataPointToUse = indicatorMap[indicatorName];
-            var datapoints = repository.FindAll(symbol).Result;           
+            var datapoints = repository.FindAll(symbol);           
             var list = datapoints.Select(d => new object[] { d.Date.ToEpoch(), dataPointToUse(d) }).ToList();
             return JsonNetResult.Create(list);
         }
@@ -33,7 +32,7 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
         public ActionResult Get(string symbol)
         {
             var repository = new DataPointRepository();
-            var datapoints = repository.FindAll(symbol).Result;
+            var datapoints = repository.FindAll(symbol);
             var list = datapoints.Select(d => new []
                 {
                     d.Date.ToEpoch(), d.Open, d.High, d.Low, d.Close, d.Volume, 
@@ -49,7 +48,7 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
         {
             var repository = new DataPointRepository();
             var datapoints = repository.FindAll(ticker);
-            return JsonNetResult.Create(datapoints.Result.Select(d => new object[] { d.Date.ToEpoch(), d.Open, d.High, d.Low, d.Close }));
+            return JsonNetResult.Create(datapoints.Select(d => new object[] { d.Date.ToEpoch(), d.Open, d.High, d.Low, d.Close }));
         }
     }
 }

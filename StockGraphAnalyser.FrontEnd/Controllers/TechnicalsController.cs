@@ -42,12 +42,5 @@ namespace StockGraphAnalyser.FrontEnd.Controllers
             this.dataPointManagementService.InsertNewQuotesToDb(symbol);
             return this.RedirectToAction("Index", new { symbol = symbol });
         }
-
-        [HttpPost]
-        public ActionResult RefreshTradingSignals(string symbol)
-        {
-            this.tradeSignalManagementService.GenerateNewSignals(symbol);
-            return this.RedirectToAction("Index", new { symbol = symbol });
-        }
     }
 }

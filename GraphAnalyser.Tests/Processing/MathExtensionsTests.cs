@@ -30,13 +30,5 @@
         {
             Assert.AreEqual(expectedResult, Math.Round(MathExtras.PercentageDifferenceBetween(number1, number2), 2));
         }
-
-        [TestCase(50, 10, 55)]
-        [TestCase(50, -10, 45)]
-        [TestCase(50, 100, 100)]
-        [TestCase(50, -100, 0)]
-        public void AddPercentageTest(decimal number, decimal percentageToAdd, decimal expectedResult) {
-            Assert.AreEqual(expectedResult, number.AddPercentage(percentageToAdd));
-        }
     }
 }

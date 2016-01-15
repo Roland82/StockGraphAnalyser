@@ -8,6 +8,7 @@ namespace StockGraphAnalyser.Domain.Service
     using StockGraphAnalyser.Domain.Repository.Interfaces;
     using StockGraphAnalyser.Domain.Service.Interfaces;
     using StockGraphAnalyser.Signals;
+    using StockGraphAnalyser.Signals.TradingStrategies;
 
     /// <summary>
     /// TODO: This class needs some serious thought about how it will be more testable due to hard coded dependencies
@@ -37,8 +38,8 @@ namespace StockGraphAnalyser.Domain.Service
         {
             this.tradeSignalRepository.DeleteAll();
             var signals = new List<Signal>();
-            var indexes = new[] { Company.ConstituentOfIndex.Ftse100, Company.ConstituentOfIndex.Ftse250, Company.ConstituentOfIndex.FtseSmallCap, Company.ConstituentOfIndex.Unknown };
-            var datapoints = this.dataPointRepository.FindAll(indexes, true);
+            var indexes = new[] { Company.ConstituentOfIndex.Ftse100, Company.ConstituentOfIndex.Ftse250 };
+            var datapoints = this.dataPointRepository.FindAll(indexes);
 
             Parallel.ForEach(datapoints.GroupBy(c => c.Symbol), e =>
                 {
@@ -53,7 +54,7 @@ namespace StockGraphAnalyser.Domain.Service
         }
 
         public void GenerateNewSignals(string symbol) {
-            var datapoints = this.dataPointRepository.FindAll(symbol).Result;   
+            var datapoints = this.dataPointRepository.FindAll(symbol);   
             var signals = this.GenerateSignals(symbol, datapoints);
 
             this.tradeSignalRepository.DeleteAll(symbol);
@@ -63,19 +64,30 @@ namespace StockGraphAnalyser.Domain.Service
         private IEnumerable<Signal> GenerateSignals(string symbol, IEnumerable<DataPoints> dataPoints) {
             var newSignals = new List<Signal>();
 
-            var company = this.companyRepository.FindBySymbol(symbol).Result;
+            var company = this.companyRepository.FindBySymbol(symbol);
             if (company.ExcludeYn == 0)
             {
-                var generator = new MovingAveragePriceCrossSignals(dataPoints);
-                var generatedSignals = generator.GenerateSignals().ToList();
+                var generator = new SignalGenerator(dataPoints, this.CreateStrategies(dataPoints));
+                var generatedSignals = generator.Generate().ToList();
                 if (generatedSignals.Any())
                 {
+                    var totaller = new SignalEquityPositionTotaller(generatedSignals, 100);
+                    var totals = totaller.Calculate();
+                    var signalsToInsert = generatedSignals.Where(s => totals.ContainsKey(s.Date)).Select(s =>
+                        {
+                            s.CurrentEquity = totals[s.Date];
+                            return s;
+                        });
 
-                    newSignals.AddRange(generatedSignals);
+                    newSignals.AddRange(signalsToInsert);
                 }
             }
 
             return newSignals;
         }
+
+        private IEnumerable<AbstractTradingStrategy> CreateStrategies(IEnumerable<DataPoints> dataPoints) {
+            return new AbstractTradingStrategy[] {new HighMomentumShortTradingStrategy(dataPoints), new HighMomentumBuyTradingStrategy(dataPoints)};
+        } 
     }
 }

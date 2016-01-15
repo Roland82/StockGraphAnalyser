@@ -50,12 +50,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Akka">
-      <HintPath>..\packages\Akka.1.0.3\lib\net45\Akka.dll</HintPath>
-    </Reference>
-    <Reference Include="Cassandra">
-      <HintPath>..\packages\CassandraCSharpDriver.2.5.2\lib\net40\Cassandra.dll</HintPath>
-    </Reference>
     <Reference Include="CsvHelper">
       <HintPath>..\packages\CsvHelper.2.5.0\lib\net20\CsvHelper.dll</HintPath>
     </Reference>
@@ -67,9 +61,6 @@
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
@@ -90,26 +81,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actors\Children\LocalStockDataActor.cs" />
-    <Compile Include="Actors\Children\YahooStockDataActor.cs" />
-    <Compile Include="Actors\StockDataUpdaterActor.cs" />
     <Compile Include="DependencyResolver.cs" />
     <Compile Include="Domain\CandleStickSignal.cs" />
     <Compile Include="Domain\Company.cs" />
     <Compile Include="Domain\DataPoints.cs" />
     <Compile Include="Domain\Quote.cs" />
-    <Compile Include="Domain\Repository\Cassandra\AbstractCassandraRepository.cs" />
-    <Compile Include="Domain\Repository\Cassandra\CandlestickSignalRepository.cs" />
-    <Compile Include="Domain\Repository\Cassandra\CompanyRepository.cs" />
-    <Compile Include="Domain\Repository\Cassandra\ConnectionManager.cs" />
-    <Compile Include="Domain\Repository\Cassandra\DataPointRepository.cs" />
-    <Compile Include="Domain\Repository\Cassandra\IConnectionManager.cs" />
-    <Compile Include="Domain\Repository\Cassandra\TradeSignalRepository.cs" />
+    <Compile Include="Domain\Repository\AbstractRepository.cs" />
+    <Compile Include="Domain\Repository\CandleStickSignalRepository.cs" />
+    <Compile Include="Domain\Repository\CompanyRepository.cs" />
+    <Compile Include="Domain\Repository\DataPointRepository.cs" />
     <Compile Include="Domain\Repository\Interfaces\ICandleStickSignalRepository.cs" />
     <Compile Include="Domain\Repository\Interfaces\ICompanyRepository.cs" />
     <Compile Include="Domain\Repository\Interfaces\IDataPointRepository.cs" />
     <Compile Include="Domain\Repository\Interfaces\ITradeScannerRepository.cs" />
     <Compile Include="Domain\Repository\Interfaces\ITradeSignalRepository.cs" />
+    <Compile Include="Domain\Repository\TradeScannerRepository.cs" />
+    <Compile Include="Domain\Repository\TradeSignalRepository.cs" />
     <Compile Include="Domain\SentimentType.cs" />
     <Compile Include="Domain\Service\CandleStickSignalManagementService.cs" />
     <Compile Include="Domain\Service\CompanyDataManagementService.cs" />
@@ -135,7 +122,6 @@
     <Compile Include="Processing\Calculators\DifferenceCalculator.cs" />
     <Compile Include="Processing\Calculators\MomentumCalculator.cs" />
     <Compile Include="Processing\Calculators\RangePredictabilityCalculator.cs" />
-    <Compile Include="Processing\Calculators\ResistanceAndSupportPredictabilityCalculator.cs" />
     <Compile Include="Processing\Calculators\StandardDeviationCalculator.cs" />
     <Compile Include="Processing\Calculators\TrueRangeCalculator.cs" />
     <Compile Include="Processing\Candlestick\CandlestickPatternRecogniserFactory.cs" />
@@ -152,6 +138,10 @@
     <Compile Include="Signals\ISignalEquityPositionTotaller.cs" />
     <Compile Include="Signals\MovingAveragePriceCrossSignals.cs" />
     <Compile Include="Signals\SignalEquityPositionTotaller.cs" />
+    <Compile Include="Signals\SignalGenerator.cs" />
+    <Compile Include="Signals\TradingStrategies\AbstractTradingStrategy.cs" />
+    <Compile Include="Signals\TradingStrategies\HighMomentumBuyTradingStrategy.cs" />
+    <Compile Include="Signals\TradingStrategies\HighMomentumShortTradingStrategy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

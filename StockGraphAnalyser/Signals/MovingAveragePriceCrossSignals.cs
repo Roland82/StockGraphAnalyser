@@ -13,7 +13,6 @@ namespace StockGraphAnalyser.Signals
     public class MovingAveragePriceCrossSignals : IGenerateSignals
     {
         private readonly IEnumerable<DataPoints> dataPoints;
-        private const decimal AcceptableRangePredictability = 80m;
 
         public MovingAveragePriceCrossSignals(IEnumerable<DataPoints> dataPoints) {
             this.dataPoints = dataPoints;
@@ -23,48 +22,46 @@ namespace StockGraphAnalyser.Signals
         {
             Signal lastSignal = null;
 
-            var signals = this.dataPoints.Where(d => d.Date > DateTime.Today.AddDays(-60)).ForEachGroup(20, group =>
+            var signals = this.dataPoints.ForEachGroup(20, group =>
                 {
                     if (!this.IsThereEnoughData(group)) return null;
                     var currentDatapoint = group.ElementAt(19);
+                    var previousDatapoint = group.ElementAt(18);
 
-                    var isTrendPositive = group.All(d => d.MovingAverageTwentyDay > d.MovingAverageTwoHundredDay);
-                    var isTrendNegative = group.All(d => d.MovingAverageTwentyDay < d.MovingAverageTwoHundredDay);
+                    var isTrendInMovingAveragePositive = MathExtras.PercentageDifferenceBetween(previousDatapoint.MovingAverageFiftyDay.Value, currentDatapoint.MovingAverageFiftyDay.Value) > 0m;
+                    var isTrendInMovingAverageNegative = MathExtras.PercentageDifferenceBetween(previousDatapoint.MovingAverageFiftyDay.Value, currentDatapoint.MovingAverageFiftyDay.Value) < -0m;
+                   
 
-
-                    if (lastSignal != null && lastSignal.SignalType == SignalType.Sell && isTrendPositive)
+                    if (lastSignal != null && lastSignal.SignalType == SignalType.Sell && (currentDatapoint.Close < currentDatapoint.LowerBollingerBandOneDeviation || isTrendInMovingAveragePositive))
                     {
                         lastSignal = Signal.Create(currentDatapoint.Symbol, currentDatapoint.Date, SignalType.TakeProfits, currentDatapoint.Close);
                         return lastSignal;
                     }
 
-                    if (lastSignal != null && lastSignal.SignalType == SignalType.Buy && isTrendNegative)
+                    if (lastSignal != null && lastSignal.SignalType == SignalType.Buy
+                       && (currentDatapoint.Close > currentDatapoint.UpperBollingerBandOneDeviation || isTrendInMovingAverageNegative))
                     {
                         lastSignal = Signal.Create(currentDatapoint.Symbol, currentDatapoint.Date, SignalType.TakeProfits, currentDatapoint.Close);
                         return lastSignal;
                     }
 
-
-                    if (isTrendNegative && currentDatapoint.Close > currentDatapoint.MovingAverageTwentyDay.Value.AddPercentage(-2))
+                    if (this.IsTradingRangePredictableEnough(group))
                     {
-                        if (lastSignal != null && lastSignal.SignalType == SignalType.Sell) { return null; }
-             
-                        if (this.IsTradingRangePredictableEnough(group, d => d.MovingAverageTwentyDay.Value, ResistanceAndSupportPredictabilityCalculator.Type.Resistance))
+                        if (isTrendInMovingAverageNegative && currentDatapoint.Close > currentDatapoint.UpperBollingerBandTwoDeviation)
                         {
+                            if (lastSignal != null && lastSignal.SignalType == SignalType.Sell) { return null; }
                             lastSignal = Signal.Create(currentDatapoint.Symbol, currentDatapoint.Date, SignalType.Sell, currentDatapoint.Close);
                             return lastSignal;
                         }
-                    }
 
-                    if (isTrendPositive && currentDatapoint.Close < currentDatapoint.MovingAverageTwentyDay.Value.AddPercentage(2))
-                    {
-                        if (lastSignal != null && lastSignal.SignalType == SignalType.Buy) { return null; }
-
-                        if (this.IsTradingRangePredictableEnough(group, d => d.MovingAverageTwentyDay.Value, ResistanceAndSupportPredictabilityCalculator.Type.Support))
+                        if (isTrendInMovingAveragePositive && currentDatapoint.Close < currentDatapoint.LowerBollingerBandTwoDeviation)
                         {
+                            if (lastSignal != null && lastSignal.SignalType == SignalType.Buy) { return null; }
                             lastSignal = Signal.Create(currentDatapoint.Symbol, currentDatapoint.Date, SignalType.Buy, currentDatapoint.Close);
                             return lastSignal;
                         }
+
+                        return null;
                     }
 
                     return null;
@@ -75,24 +72,20 @@ namespace StockGraphAnalyser.Signals
 
         private bool IsThereEnoughData(IEnumerable<DataPoints> group) {
             return group.ElementAt(0).MovingAverageFiftyDay.HasValue &&
-                   group.ElementAt(0).LowerBollingerBandTwoDeviation.HasValue && group.ElementAt(0).MovingAverageTwoHundredDay.HasValue;
+                   group.ElementAt(0).LowerBollingerBandTwoDeviation.HasValue;
         }
 
-        private bool IsTradingRangePredictableEnough(IEnumerable<DataPoints> group, Func<DataPoints, decimal> bound, ResistanceAndSupportPredictabilityCalculator.Type predictabilityType)
+        private bool IsTradingRangePredictableEnough(IEnumerable<DataPoints> group)
         {
-            var calculator = new ResistanceAndSupportPredictabilityCalculator(predictabilityType,
+            var rangePredictabilityCalculator = new RangePredictabilityCalculator(
                                                          group.Select(d => new Tuple<DateTime, decimal, decimal>(d.Date, d.Open, d.Close)),
-                                                         group.ToDictionary(d => d.Date, bound));
-            var isInPredictableRange = calculator.Calculate() > 80m;
+                                                         group.ToDictionary(d => d.Date,d => d.LowerBollingerBandTwoDeviation.Value),
+                                                         group.ToDictionary(d => d.Date, d => d.UpperBollingerBandTwoDeviation.Value));
+            var isInPredictableRange = rangePredictabilityCalculator.Calculate() > 80m;
             return isInPredictableRange;
         }
 
         private IEnumerable<Signal> AddEquityTotalling(IEnumerable<Signal> signals) {
-            if (!signals.Any())
-            {
-                return signals;
-            }
-
             var equityTotaller = new SignalEquityPositionTotaller(signals, 100m);
             var totals = equityTotaller.Calculate();
 
